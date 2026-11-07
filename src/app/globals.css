@@ -974,8 +974,8 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
   .foot-shot-mid{grid-template-columns:1fr;gap:36px}
   .foot-circle{width:88px;height:88px}
   .foot-circle-arrow{font-size:1.8rem}
-  .foot-shot-top{padding-bottom:48px;gap:24px}
-  .foot-shot-mid{padding:48px 0 32px}
+  .foot-shot-top{padding-bottom:64px;gap:24px}
+  .foot-shot-mid{padding:64px 0 32px}
 }
 
 /* Dark-theme CTA refinements (kept after the main dark block so they win):
@@ -1106,6 +1106,9 @@ html{overflow-x:clip}
 @media (max-width:400px){
   body{font-size:16px}
   .wrap{padding:0 16px}
+  /* The .wrap shorthand above also zeroes the hero's top padding —
+     restore it so the hero never sits flush under the header. */
+  .page-hero{padding-top:64px;padding-bottom:32px}
   h2{font-size:clamp(1.6rem,5.5vw,2.4rem)}
 
   /* Stack hero CTAs so they don't wrap awkwardly at 320-400px. */
