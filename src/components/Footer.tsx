@@ -95,10 +95,16 @@ export default function Footer() {
           <p className="foot-shot-talk">
             <span>United Kingdom</span>
             <a href={site.phoneUKHref}>{site.phoneUK}</a>
+            <Link className="foot-shot-book" href="/meet">
+              Book a meeting <span aria-hidden="true">↗</span>
+            </Link>
           </p>
           <p className="foot-shot-talk">
             <span>United States</span>
             <a href={site.phoneUSHref}>{site.phoneUS}</a>
+            <Link className="foot-shot-book" href="/discovery">
+              Book a discovery call <span aria-hidden="true">↗</span>
+            </Link>
           </p>
           <p className="foot-shot-note">
             These are contact numbers, not statements that DigitalFalconz maintains physical offices in the UK or USA.

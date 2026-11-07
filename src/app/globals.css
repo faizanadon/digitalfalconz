@@ -932,6 +932,8 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
 .foot-shot-talk span{display:block;color:#8a8a84;font-size:.82rem;margin-bottom:4px}
 .foot-shot-talk a{color:#fff;text-decoration:none;font-weight:600;font-size:.95rem}
 .foot-shot-talk a:hover{color:var(--gold-light)}
+.foot-shot-talk a.foot-shot-book{display:block;color:var(--gold-light);font-weight:600;font-size:.95rem;margin-top:6px}
+.foot-shot-talk a.foot-shot-book:hover{color:#fff}
 .foot-shot-note{color:#8a8a84;font-size:.82rem;line-height:1.6;margin:14px 0 0}
 .foot-wordmark-wrap{overflow:hidden;padding:8px 0 0}
 .foot-wordmark{font-family:var(--font-head),"Inter Tight",sans-serif;font-weight:900;color:var(--gold-light);font-size:clamp(3.4rem,12.5vw,10.5rem);line-height:.95;letter-spacing:-.04em;white-space:nowrap}
