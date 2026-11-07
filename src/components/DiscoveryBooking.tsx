@@ -1,7 +1,8 @@
 "use client";
 import Script from "next/script";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, type CSSProperties } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight,
   Asterisk,
@@ -15,7 +16,6 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Motion";
 import { EASE } from "@/components/Graphics";
-import type { CSSProperties } from "react";
 
 /**
  * Shared body for /meet and /discovery — both mirror the
@@ -38,8 +38,30 @@ const GROWTH: { num: string; tag: string; title: string; sub: string; Icon: Luci
   { num: "04", tag: "Optimise", title: "Analytics", sub: "Learn and improve", Icon: TrendingUp, top: 180 },
 ];
 
+/** The dashed gold curve the growth cards sit on. */
+const GROWTH_PATH =
+  "M 20 250 C 120 250, 180 100, 300 88 S 500 190, 625 175 S 800 300, 875 265 S 960 220, 990 205";
+/** Fixed gold dots where the curve meets each card (last node is the open ring at the end). */
+const GROWTH_NODES: [number, number][] = [
+  [20, 250],
+  [375, 85],
+  [625, 175],
+  [875, 265],
+];
+const GROWTH_END: [number, number] = [990, 205];
+/** How long the curve takes to draw, and the travelling dot to cross it. */
+const DRAW_SECONDS = 2.4;
+/** Seconds into the draw when the dot reaches each card's node — cards and nodes appear then. */
+const CARD_DELAYS = [0, 0.85, 1.45, 2.0];
+
 export default function DiscoveryBooking() {
   const reduce = useReducedMotion();
+  const diagramRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<SVGAnimateMotionElement>(null);
+  const diagramInView = useInView(diagramRef, { once: true, margin: "-80px" });
+  useEffect(() => {
+    if (diagramInView && !reduce) dotRef.current?.beginElement();
+  }, [diagramInView, reduce]);
   return (
     <>
       {/* Booking hero — copy left, calendar right */}
@@ -122,28 +144,74 @@ export default function DiscoveryBooking() {
                   Designed to work together <ArrowUpRight size={13} strokeWidth={2} aria-hidden="true" />
                 </span>
               </div>
-              <div className="growth-diagram">
+              <div className="growth-diagram" ref={diagramRef}>
                 <svg viewBox="0 0 1000 360" preserveAspectRatio="none" aria-hidden="true">
-                  <motion.path
-                    d="M 20 250 C 120 250, 180 100, 300 88 S 500 190, 625 175 S 800 300, 875 265 S 960 220, 990 205"
-                    fill="none"
-                    stroke="#fcc04c"
-                    strokeWidth="2.5"
-                    strokeDasharray="7 8"
-                    initial={{ pathLength: 0 }}
-                    whileInView={{ pathLength: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.6, ease: EASE }}
-                  />
-                  {[
-                    [20, 250],
-                    [375, 85],
-                    [625, 175],
-                    [875, 265],
-                    [990, 205],
-                  ].map(([cx, cy]) => (
-                    <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="6" fill="#fcc04c" stroke="#0b0b0a" strokeWidth="2" />
-                  ))}
+                  {reduce ? (
+                    <>
+                      <path d={GROWTH_PATH} fill="none" stroke="#fcc04c" strokeWidth="2.5" strokeDasharray="7 8" />
+                      {GROWTH_NODES.map(([cx, cy]) => (
+                        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="6" fill="#fcc04c" stroke="#0b0b0a" strokeWidth="2" />
+                      ))}
+                      <circle cx={GROWTH_END[0]} cy={GROWTH_END[1]} r="6.5" fill="none" stroke="#fcc04c" strokeWidth="2" />
+                    </>
+                  ) : (
+                    <>
+                      {/* The dashed curve is revealed by a drawing mask, so the dashes stay dashed while it draws. */}
+                      <defs>
+                        <mask id="growth-curve-mask">
+                          <motion.path
+                            d={GROWTH_PATH}
+                            fill="none"
+                            stroke="#ffffff"
+                            strokeWidth="20"
+                            initial={{ pathLength: 0 }}
+                            animate={diagramInView ? { pathLength: 1 } : { pathLength: 0 }}
+                            transition={{ duration: DRAW_SECONDS, ease: "linear" }}
+                          />
+                        </mask>
+                      </defs>
+                      <g mask="url(#growth-curve-mask)">
+                        <path id="growth-curve-path" d={GROWTH_PATH} fill="none" stroke="#fcc04c" strokeWidth="2.5" strokeDasharray="7 8" />
+                        {GROWTH_NODES.map(([cx, cy], i) => (
+                          <motion.circle
+                            key={`${cx}-${cy}`}
+                            cx={cx}
+                            cy={cy}
+                            r="6"
+                            fill="#fcc04c"
+                            stroke="#0b0b0a"
+                            strokeWidth="2"
+                            initial={{ opacity: 0 }}
+                            animate={diagramInView ? { opacity: 1 } : { opacity: 0 }}
+                            transition={{ duration: 0.35, delay: CARD_DELAYS[i], ease: "easeOut" }}
+                          />
+                        ))}
+                        <motion.circle
+                          cx={GROWTH_END[0]}
+                          cy={GROWTH_END[1]}
+                          r="6.5"
+                          fill="none"
+                          stroke="#fcc04c"
+                          strokeWidth="2"
+                          initial={{ opacity: 0 }}
+                          animate={diagramInView ? { opacity: 1 } : { opacity: 0 }}
+                          transition={{ duration: 0.35, delay: DRAW_SECONDS - 0.05, ease: "easeOut" }}
+                        />
+                      </g>
+                      {/* Glowing dot that travels the curve as it draws, then rests at the end. */}
+                      <motion.g
+                        initial={{ opacity: 0 }}
+                        animate={diagramInView ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <animateMotion ref={dotRef} dur={`${DRAW_SECONDS}s`} begin="indefinite" fill="freeze">
+                          <mpath href="#growth-curve-path" />
+                        </animateMotion>
+                        <circle r="14" fill="#fcc04c" opacity="0.25" />
+                        <circle r="6.5" fill="#fcc04c" />
+                      </motion.g>
+                    </>
+                  )}
                 </svg>
                 <div className="growth-cards">
                   {GROWTH.map((g, i) => (
@@ -152,9 +220,8 @@ export default function DiscoveryBooking() {
                       className="growth-card"
                       style={{ "--top": `${g.top}px` } as CSSProperties}
                       initial={reduce ? false : { opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-60px" }}
-                      transition={{ duration: 0.5, delay: i * 0.12, ease: EASE }}
+                      animate={diagramInView || reduce ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.5, delay: CARD_DELAYS[i], ease: EASE }}
                     >
                       <span className="mono">
                         {g.num} / {g.tag}
