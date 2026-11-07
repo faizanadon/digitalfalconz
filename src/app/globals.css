@@ -71,10 +71,15 @@ a.btn:not(.small)::after{content:"\2192";flex:none;width:27px;height:27px;border
 a.btn:not(.small):hover::after{background:var(--ink);color:var(--gold-light)}
 .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;color:var(--ink);font-family:inherit;font-weight:600;font-size:.92rem}
 .mobile-menu a{display:block;padding:10px 0;text-decoration:none;font-weight:600}
-/* Mobile menu overlay: fixed to the viewport below the header, with its
-   own scroll. It must NOT live inside the sticky header — a tall menu
-   trapped there cannot scroll on mobile and the page freezes beneath it. */
-.mobile-menu{position:fixed;top:67px;left:0;right:0;bottom:0;z-index:60;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);border-top:1px solid var(--line);padding:12px 24px 32px;-webkit-overflow-scrolling:touch}
+/* Mobile menu overlay: full-screen, with its own scroll and its own
+   header row (logo + Close) so it never depends on the page header.
+   It must NOT live inside the sticky header, and the body must NOT get
+   overflow:hidden while it is open — either one hides the header and
+   traps the user with no way to close the menu. */
+.mobile-menu{position:fixed;inset:0;z-index:60;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);-webkit-overflow-scrolling:touch}
+.mobile-menu-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:1}
+.mobile-menu-head .menu-btn{display:inline-flex;align-items:center;gap:6px}
+.mobile-menu-body{padding:12px 24px 32px}
 nav.links a.btn{color:#fffdf8}
 nav.links a.btn:hover{color:var(--ink)}
 
@@ -312,7 +317,7 @@ footer.site .brand{color:#fff}
 }
 @media (max-width:640px){
   nav.links{display:none}
-  .menu-btn{display:block}
+  .menu-btn{display:inline-flex;align-items:center;gap:6px}
   section{padding:72px 0}
   .hero{padding:64px 0 56px}
   h1{line-height:1.14}
@@ -325,6 +330,11 @@ footer.site .brand{color:#fff}
   .phone{width:280px;height:564px}
   .stats{grid-template-columns:1fr}
   .card-grid{grid-template-columns:1fr}
+  /* CTA pairs: stack full-width with an even gap instead of wrapping
+     unevenly on one line with dead space beside them. */
+  p:has(> a.btn){display:flex;flex-direction:column;gap:12px;align-items:stretch}
+  p:has(> a.btn) a.btn{justify-content:center}
+  .cta-band .side .btn{width:100%;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -964,6 +974,8 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
   .foot-shot-mid{grid-template-columns:1fr;gap:36px}
   .foot-circle{width:88px;height:88px}
   .foot-circle-arrow{font-size:1.8rem}
+  .foot-shot-top{padding-bottom:32px;gap:24px}
+  .foot-shot-mid{padding:32px 0}
 }
 
 /* Dark-theme CTA refinements (kept after the main dark block so they win):

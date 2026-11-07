@@ -28,21 +28,24 @@ export default function Header() {
 
   // Close mega-menu on navigation, outside click, Escape.
   useEffect(() => { setMegaOpen(false); setMobileOpen(false); }, [pathname]);
-  // While the mobile menu is open, lock the page beneath it: Lenis owns
-  // the wheel, so without this a scroll over the menu moves the page
-  // instead (the menu is taller than the viewport with all 30 services).
+  // While the mobile menu is open, stop Lenis so the page beneath it
+  // cannot scroll. NOTE: do NOT set overflow:hidden on <body> here — that
+  // makes the body the scroll container, which breaks the sticky header:
+  // the header reverts to its flow position and scrolls out of view,
+  // taking the menu's only Close button with it. Lenis stop() freezes the
+  // viewport scroll without touching the body's overflow, so the header
+  // stays put. The menu itself is a full-screen overlay with its own
+  // header row and Close button, so it never depends on the page header.
   useEffect(() => {
     if (!mobileOpen) return;
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     lenis?.stop();
-    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileOpen(false);
     };
     document.addEventListener("keydown", onKey);
     return () => {
       lenis?.start();
-      document.body.style.overflow = "";
       document.removeEventListener("keydown", onKey);
     };
   }, [mobileOpen]);
@@ -143,12 +146,23 @@ export default function Header() {
             {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />} {mobileOpen ? "Close" : "Menu"}
           </button>
         </div>
-        {/* Mobile menu — rendered as a fixed overlay on <body>, NOT inside
-            the sticky header: a tall menu trapped in the sticky header
-            cannot scroll on mobile (the header pins and the page scrolls
-            beneath instead). As an overlay it scrolls on its own. */}
+        {/* Mobile menu — a full-screen overlay on <body> with its own
+            header row (logo + Close), so it never depends on the page
+            header staying visible. Earlier versions lived inside the
+            sticky header: a tall menu trapped there could not scroll, and
+            locking the body hid the header — taking the only Close button
+            with it and freezing the site. */}
         {mobileOpen && typeof document !== "undefined" && createPortal(
           <div className="mobile-menu" id="mobileMenu" data-lenis-prevent>
+            <div className="mobile-menu-head">
+              <Link className="brand" href="/" onClick={() => setMobileOpen(false)} aria-label="DigitalFalconz home">
+                <Image src="/logo-light-hires.png" alt="DigitalFalconz" width={220} height={47} />
+              </Link>
+              <button type="button" className="menu-btn" onClick={() => setMobileOpen(false)} aria-label="Close menu">
+                <X size={18} aria-hidden="true" /> Close
+              </button>
+            </div>
+            <div className="mobile-menu-body">
             <button type="button" className="mobile-services-btn" aria-expanded={mobileServicesOpen} onClick={() => setMobileServicesOpen((v) => !v)}>
               Services <ChevronDown size={15} className={`mega-chevron${mobileServicesOpen ? " open" : ""}`} aria-hidden="true" />
             </button>
@@ -178,6 +192,7 @@ export default function Header() {
             {NAV.map((n) => <Link key={n.href} href={n.href} onClick={() => setMobileOpen(false)}>{n.label}</Link>)}
             <Link href="/contact" onClick={() => setMobileOpen(false)}>Free growth audit</Link>
             <div className="mobile-theme-row"><ThemeToggle withLabel /></div>
+            </div>
           </div>,
           document.body
         )}
