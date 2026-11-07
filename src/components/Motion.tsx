@@ -3,7 +3,7 @@ import { motion, useReducedMotion, useScroll, useSpring, useInView, AnimatePrese
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { Briefcase, Building2, Check, CircleHelp, LayoutGrid, Megaphone, MessageSquare, MousePointerClick, ShieldCheck, Sparkles, TrendingUp, Users } from "lucide-react";
+import { Briefcase, Building2, CalendarDays, Check, CircleHelp, LayoutGrid, Megaphone, MessageSquare, MousePointerClick, ShieldCheck, Sparkles, TrendingUp, Users } from "lucide-react";
 import { serviceIcon } from "@/data/serviceIcons";
 
 /** Animated arrow for text CTAs. The arrow itself is static markup;
@@ -89,7 +89,7 @@ export function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?
 }
 
 const PAGE_ICONS: Record<string, LucideIcon> = {
-  "briefcase": Briefcase, "building": Building2, "help": CircleHelp,
+  "briefcase": Briefcase, "building": Building2, "calendar": CalendarDays, "help": CircleHelp,
   "grid": LayoutGrid, "message": MessageSquare, "shield": ShieldCheck, "sparkles": Sparkles,
 };
 /** Animated page hero used on every non-home page. Each page passes its OWN
