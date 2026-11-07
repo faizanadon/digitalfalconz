@@ -96,14 +96,20 @@ export default function Footer() {
             <span>United Kingdom</span>
             <a href={site.phoneUKHref}>{site.phoneUK}</a>
             <Link className="foot-shot-book" href="/meet">
-              Book a meeting <span aria-hidden="true">↗</span>
+              Book a{" "}
+              <span className="keep">
+                meeting <span aria-hidden="true">↗</span>
+              </span>
             </Link>
           </p>
           <p className="foot-shot-talk">
             <span>United States</span>
             <a href={site.phoneUSHref}>{site.phoneUS}</a>
             <Link className="foot-shot-book" href="/discovery">
-              Book a discovery call <span aria-hidden="true">↗</span>
+              Book a discovery{" "}
+              <span className="keep">
+                call <span aria-hidden="true">↗</span>
+              </span>
             </Link>
           </p>
           <p className="foot-shot-note">
