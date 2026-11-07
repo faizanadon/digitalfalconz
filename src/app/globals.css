@@ -72,7 +72,7 @@ a.btn:not(.small):hover::after{background:var(--ink);color:var(--gold-light)}
 .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;color:var(--ink);font-family:inherit;font-weight:600;font-size:.92rem}
 .mobile-menu{display:none;border-top:1px solid var(--line);padding:12px 0 18px}
 .mobile-menu a{display:block;padding:10px 0;text-decoration:none;font-weight:600}
-.mobile-menu.open{display:block}
+.mobile-menu.open{display:block;max-height:calc(100vh - 67px);max-height:calc(100dvh - 67px);overflow-y:auto;overscroll-behavior:contain;background:var(--bg);-webkit-overflow-scrolling:touch}
 nav.links a.btn{color:#fffdf8}
 nav.links a.btn:hover{color:var(--ink)}
 
@@ -350,7 +350,7 @@ footer.site .brand{color:#fff}
    positioned against the full-width sticky header, not the 1180px .wrap).
    Intro lives in a top strip, so all 5 category columns get ~260px each
    and every label fits on ONE line. */
-.mega-menu{position:absolute;left:0;right:0;top:100%;width:100%;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 34px 60px -22px rgba(0,0,0,.3);z-index:60;max-height:calc(100vh - 72px);overflow-y:auto}
+.mega-menu{position:absolute;left:0;right:0;top:100%;width:100%;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 34px 60px -22px rgba(0,0,0,.3);z-index:60;max-height:calc(100vh - 72px);overflow-y:auto;overscroll-behavior:contain}
 .mega-inner{max-width:1520px;margin:0 auto;padding:36px 48px 24px}
 .mega-top{display:flex;align-items:center;justify-content:space-between;gap:32px;padding-bottom:22px;margin-bottom:26px;border-bottom:1px solid var(--line)}
 .mega-top .kicker{margin-bottom:6px}
@@ -443,6 +443,15 @@ footer.site .brand{color:#fff}
   .foot-services-grid{grid-template-columns:repeat(3,minmax(160px,1fr))}
   .foot-top{grid-template-columns:1fr 1fr}
   .foot-cta{grid-template-columns:1fr}
+  .mega-inner{padding:28px 28px 20px}
+  .mega-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mega-foot{padding:14px 28px 18px}
+}
+@media (max-width:900px){
+  .mega-top{flex-direction:column;align-items:flex-start;gap:14px}
+  .mega-inner{padding:24px 20px 16px}
+  .mega-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mega-foot{padding:14px 20px 18px}
 }
 @media (max-width:640px){
   .flow{grid-template-columns:1fr 1fr}

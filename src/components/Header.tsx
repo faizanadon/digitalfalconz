@@ -27,6 +27,19 @@ export default function Header() {
 
   // Close mega-menu on navigation, outside click, Escape.
   useEffect(() => { setMegaOpen(false); setMobileOpen(false); }, [pathname]);
+  // While the mobile menu is open, lock the page beneath it: Lenis owns
+  // the wheel, so without this a scroll over the menu moves the page
+  // instead (the menu is taller than the viewport with all 30 services).
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    lenis?.stop();
+    document.body.style.overflow = "hidden";
+    return () => {
+      lenis?.start();
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
   useEffect(() => {
     if (!megaOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -72,6 +85,7 @@ export default function Header() {
                     id="servicesMegaMenu"
                     className="mega-menu"
                     role="menu"
+                    data-lenis-prevent
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
@@ -123,7 +137,7 @@ export default function Header() {
             {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />} {mobileOpen ? "Close" : "Menu"}
           </button>
         </div>
-        <div className={`mobile-menu${mobileOpen ? " open" : ""}`} id="mobileMenu">
+        <div className={`mobile-menu${mobileOpen ? " open" : ""}`} id="mobileMenu" data-lenis-prevent>
           <button type="button" className="mobile-services-btn" aria-expanded={mobileServicesOpen} onClick={() => setMobileServicesOpen((v) => !v)}>
             Services <ChevronDown size={15} className={`mega-chevron${mobileServicesOpen ? " open" : ""}`} aria-hidden="true" />
           </button>
