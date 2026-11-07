@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "@/components/Markdown";
 import Reveal from "@/components/Reveal";
-import { PageHero, Stagger, StaggerItem } from "@/components/Motion";
-import { Mail, Phone } from "lucide-react";
+import { Stagger, StaggerItem } from "@/components/Motion";
+import { Mail, MessageSquare, Phone } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import { JourneyDiagram, PageHeroGraphic } from "@/components/Graphics";
 import { pages } from "@/data/pages";
@@ -36,12 +36,23 @@ export default function ContactPage() {
   const rest = secs.filter((s) => s.heading && !s.heading.startsWith("Tell us about your project") && !s.heading.startsWith("Get in touch"));
   return (
     <>
-      <PageHero kicker={p.kicker} title={p.h1} icon="message" enter="right"
-        lede={<><Markdown text={intro} /><p><a className="btn" href="#enquiry-form">Send a project enquiry</a> <Link className="btn ghost" href="/services">Explore services</Link></p></>}
-      />
-
-      <div className="wrap">
-        <Reveal><PageHeroGraphic page="contact" /></Reveal>
+      {/* HERO — graphic left, content right (mirror of the home hero) */}
+      <div className="wrap page-hero contact-hero">
+        <Reveal>
+          <div className="contact-hero-grid">
+            <div className="contact-hero-gfx">
+              <PageHeroGraphic page="contact" />
+            </div>
+            <div className="contact-hero-copy">
+              <span className="hero-icon-tile" aria-hidden="true"><MessageSquare size={30} strokeWidth={1.9} /></span>
+              <span className="mono kicker">{p.kicker}</span>
+              <h1>{p.h1}</h1>
+              <span className="hero-rule" aria-hidden="true" />
+              <Markdown text={intro} />
+              <p><a className="btn" href="#enquiry-form">Send a project enquiry</a> <Link className="btn ghost" href="/services">Explore services</Link></p>
+            </div>
+          </div>
+        </Reveal>
       </div>
       <div className="wrap">
         <Reveal>
