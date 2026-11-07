@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import Link from "next/link";
 import { PageHero } from "@/components/Motion";
 import Reveal from "@/components/Reveal";
-import { JourneyDiagram } from "@/components/Graphics";
 import { Phone } from "lucide-react";
 import { site } from "@/data/site";
 
@@ -18,7 +16,7 @@ export default function DiscoveryPage() {
   return (
     <>
       <PageHero
-        kicker="DigitalFalconz / Private Consultations"
+        kicker="DigitalFalconz / Private Consultations 01 / 01"
         title="Let's make your next move count."
         icon="calendar"
         enter="left"
@@ -34,11 +32,8 @@ export default function DiscoveryPage() {
             </p>
             <p>
               <a className="btn" href="#book">
-                Choose a time
-              </a>{" "}
-              <Link className="btn ghost" href="/contact">
-                Send a project enquiry
-              </Link>
+                Choose a time <span aria-hidden="true">↗</span>
+              </a>
             </p>
           </>
         }
@@ -48,16 +43,26 @@ export default function DiscoveryPage() {
         <div className="wrap">
           <Reveal>
             <span className="mono kicker">What we&apos;ll cover</span>
-            <JourneyDiagram
-              steps={[
-                { label: "Your priorities", sub: "Where you are today and what you want to achieve." },
-                { label: "The opportunities", sub: "Where the right strategy or technology may help." },
-                { label: "A practical direction", sub: "Useful next steps, without unnecessary complexity." },
-              ]}
-            />
+            <ol className="steps-list">
+              <li>
+                <strong>Your priorities</strong>
+                <br />
+                Where you are today and what you want to achieve.
+              </li>
+              <li>
+                <strong>The opportunities</strong>
+                <br />
+                Where the right strategy or technology may help.
+              </li>
+              <li>
+                <strong>A practical direction</strong>
+                <br />
+                Useful next steps, without unnecessary complexity.
+              </li>
+            </ol>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="plain-p" style={{ marginTop: 24 }}>
+            <p className="plain-p">
               In this 30-minute call, we will review your current marketing
               and lead generation, identify your biggest growth opportunities,
               and map out clear next steps for your business. No obligation
@@ -109,10 +114,6 @@ export default function DiscoveryPage() {
                 <h3>
                   <a href={site.phoneUKHref}>{site.phoneUK}</a>
                 </h3>
-                <p>
-                  Contact number — not a statement that DigitalFalconz
-                  maintains a physical office in the UK.
-                </p>
               </div>
               <div className="card">
                 <span className="svc-icon" aria-hidden="true">
@@ -122,10 +123,6 @@ export default function DiscoveryPage() {
                 <h3>
                   <a href={site.phoneUSHref}>{site.phoneUS}</a>
                 </h3>
-                <p>
-                  Contact number — not a statement that DigitalFalconz
-                  maintains a physical office in the USA.
-                </p>
               </div>
             </div>
           </Reveal>

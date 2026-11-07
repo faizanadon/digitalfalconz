@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import Link from "next/link";
 import { PageHero } from "@/components/Motion";
 import Reveal from "@/components/Reveal";
+import { Phone } from "lucide-react";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Book a meeting | DigitalFalconz",
+  title: "Let's make your next move count. | DigitalFalconz",
   description:
-    "Book a call with DigitalFalconz to discuss your marketing, website, software or AI project. Pick a time that suits you.",
+    "In this 30-minute call, we will review your current marketing and lead generation, identify your biggest growth opportunities, and map out clear next steps for your business. No obligation and no pressure — just a clear plan.",
   alternates: { canonical: "https://digitalfalconz.com/meet" },
 };
 
@@ -16,21 +16,24 @@ export default function MeetPage() {
   return (
     <>
       <PageHero
-        kicker="Let's talk"
-        title="Book a meeting"
+        kicker="DigitalFalconz / Private Consultations 01 / 01"
+        title="Let's make your next move count."
         icon="calendar"
         enter="right"
         lede={
           <>
             <p>
-              Pick a time that suits you to discuss your marketing, website,
-              software or AI project. A senior strategist will join the call —
-              never a salesperson.
+              A focused, 30-minute conversation about your business, your
+              ambitions, and where <strong>marketing, software or AI</strong>{" "}
+              could create meaningful opportunities.
+            </p>
+            <p className="mono" style={{ letterSpacing: ".14em" }}>
+              30 minutes · Google Meet · Complimentary
             </p>
             <p>
-              <Link className="btn ghost" href="/contact">
-                Send a project enquiry instead
-              </Link>
+              <a className="btn" href="#book">
+                Choose a time <span aria-hidden="true">↗</span>
+              </a>
             </p>
           </>
         }
@@ -39,7 +42,46 @@ export default function MeetPage() {
       <section className="tight">
         <div className="wrap">
           <Reveal>
+            <span className="mono kicker">What we&apos;ll cover</span>
+            <ol className="steps-list">
+              <li>
+                <strong>Your priorities</strong>
+                <br />
+                Where you are today and what you want to achieve.
+              </li>
+              <li>
+                <strong>The opportunities</strong>
+                <br />
+                Where the right strategy or technology may help.
+              </li>
+              <li>
+                <strong>A practical direction</strong>
+                <br />
+                Useful next steps, without unnecessary complexity.
+              </li>
+            </ol>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="plain-p">
+              In this 30-minute call, we will review your current marketing
+              and lead generation, identify your biggest growth opportunities,
+              and map out clear next steps for your business. No obligation
+              and no pressure — just a clear plan.
+            </p>
+            <p className="plain-p">
+              A considered conversation. No obligation to proceed.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="tight">
+        <div className="wrap">
+          <Reveal>
+            <span className="mono kicker">Free Discovery Call</span>
+            <h2>Choose a time</h2>
             <div
+              id="book"
               style={{
                 background: "#ffffff",
                 borderRadius: 24,
@@ -49,7 +91,7 @@ export default function MeetPage() {
             >
               <iframe
                 src="https://api.leadconnectorhq.com/widget/booking/3uyvXhd8aw8baaZKsCb2"
-                title="Book a meeting with DigitalFalconz"
+                title="Book a free discovery call with DigitalFalconz"
                 style={{
                   width: "100%",
                   border: "none",
@@ -63,12 +105,26 @@ export default function MeetPage() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="plain-p" style={{ marginTop: 24 }}>
-              If the calendar doesn&apos;t load, email us at{" "}
-              <a href={`mailto:${site.email}`}>{site.email}</a> or call us on{" "}
-              <a href={site.phoneUKHref}>{site.phoneUK}</a> (UK) or{" "}
-              <a href={site.phoneUSHref}>{site.phoneUS}</a> (US).
-            </p>
+            <div className="contact-cards" style={{ marginTop: 32 }}>
+              <div className="card">
+                <span className="svc-icon" aria-hidden="true">
+                  <Phone size={20} strokeWidth={1.9} />
+                </span>
+                <span className="tag">United Kingdom</span>
+                <h3>
+                  <a href={site.phoneUKHref}>{site.phoneUK}</a>
+                </h3>
+              </div>
+              <div className="card">
+                <span className="svc-icon" aria-hidden="true">
+                  <Phone size={20} strokeWidth={1.9} />
+                </span>
+                <span className="tag">United States</span>
+                <h3>
+                  <a href={site.phoneUSHref}>{site.phoneUS}</a>
+                </h3>
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
