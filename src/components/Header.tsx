@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,9 +36,14 @@ export default function Header() {
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     lenis?.stop();
     document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
     return () => {
       lenis?.start();
       document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
     };
   }, [mobileOpen]);
   useEffect(() => {
@@ -137,37 +143,44 @@ export default function Header() {
             {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />} {mobileOpen ? "Close" : "Menu"}
           </button>
         </div>
-        <div className={`mobile-menu${mobileOpen ? " open" : ""}`} id="mobileMenu" data-lenis-prevent>
-          <button type="button" className="mobile-services-btn" aria-expanded={mobileServicesOpen} onClick={() => setMobileServicesOpen((v) => !v)}>
-            Services <ChevronDown size={15} className={`mega-chevron${mobileServicesOpen ? " open" : ""}`} aria-hidden="true" />
-          </button>
-          <AnimatePresence initial={false}>
-            {mobileServicesOpen && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden" }}>
-                <div className="mobile-services">
-                  {groups.map((g) => (
-                    <div key={g.category}>
-                      <h4>{g.short}</h4>
-                      {g.services.map((s) => {
-                        const Icon = serviceIcon(s.slug);
-                        return (
-                          <Link key={s.slug} href={`/services/${s.slug}`} onClick={() => setMobileOpen(false)}>
-                            <span className="mega-icon" aria-hidden="true"><Icon size={18} strokeWidth={2} /></span>
-                            {serviceShortLabel(s.slug)}
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  ))}
-                  <Link href="/services" onClick={() => setMobileOpen(false)}><strong>View all services <CtaArrow /></strong></Link>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          {NAV.map((n) => <Link key={n.href} href={n.href} onClick={() => setMobileOpen(false)}>{n.label}</Link>)}
-          <Link href="/contact" onClick={() => setMobileOpen(false)}>Free growth audit</Link>
-          <div className="mobile-theme-row"><ThemeToggle withLabel /></div>
-        </div>
+        {/* Mobile menu — rendered as a fixed overlay on <body>, NOT inside
+            the sticky header: a tall menu trapped in the sticky header
+            cannot scroll on mobile (the header pins and the page scrolls
+            beneath instead). As an overlay it scrolls on its own. */}
+        {mobileOpen && typeof document !== "undefined" && createPortal(
+          <div className="mobile-menu" id="mobileMenu" data-lenis-prevent>
+            <button type="button" className="mobile-services-btn" aria-expanded={mobileServicesOpen} onClick={() => setMobileServicesOpen((v) => !v)}>
+              Services <ChevronDown size={15} className={`mega-chevron${mobileServicesOpen ? " open" : ""}`} aria-hidden="true" />
+            </button>
+            <AnimatePresence initial={false}>
+              {mobileServicesOpen && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden" }}>
+                  <div className="mobile-services">
+                    {groups.map((g) => (
+                      <div key={g.category}>
+                        <h4>{g.short}</h4>
+                        {g.services.map((s) => {
+                          const Icon = serviceIcon(s.slug);
+                          return (
+                            <Link key={s.slug} href={`/services/${s.slug}`} onClick={() => setMobileOpen(false)}>
+                              <span className="mega-icon" aria-hidden="true"><Icon size={18} strokeWidth={2} /></span>
+                              {serviceShortLabel(s.slug)}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    ))}
+                    <Link href="/services" onClick={() => setMobileOpen(false)}><strong>View all services <CtaArrow /></strong></Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {NAV.map((n) => <Link key={n.href} href={n.href} onClick={() => setMobileOpen(false)}>{n.label}</Link>)}
+            <Link href="/contact" onClick={() => setMobileOpen(false)}>Free growth audit</Link>
+            <div className="mobile-theme-row"><ThemeToggle withLabel /></div>
+          </div>,
+          document.body
+        )}
       </div>
     </header>
   );

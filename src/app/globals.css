@@ -70,9 +70,11 @@ nav.links a:hover{color:var(--ink)}
 a.btn:not(.small)::after{content:"\2192";flex:none;width:27px;height:27px;border-radius:50%;background:var(--gold-light);color:var(--ink);display:inline-grid;place-items:center;font-size:1rem;font-weight:800}
 a.btn:not(.small):hover::after{background:var(--ink);color:var(--gold-light)}
 .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;color:var(--ink);font-family:inherit;font-weight:600;font-size:.92rem}
-.mobile-menu{display:none;border-top:1px solid var(--line);padding:12px 0 18px}
 .mobile-menu a{display:block;padding:10px 0;text-decoration:none;font-weight:600}
-.mobile-menu.open{display:block;max-height:calc(100vh - 67px);max-height:calc(100dvh - 67px);overflow-y:auto;overscroll-behavior:contain;background:var(--bg);-webkit-overflow-scrolling:touch}
+/* Mobile menu overlay: fixed to the viewport below the header, with its
+   own scroll. It must NOT live inside the sticky header — a tall menu
+   trapped there cannot scroll on mobile and the page freezes beneath it. */
+.mobile-menu{position:fixed;top:67px;left:0;right:0;bottom:0;z-index:60;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);border-top:1px solid var(--line);padding:12px 24px 32px;-webkit-overflow-scrolling:touch}
 nav.links a.btn{color:#fffdf8}
 nav.links a.btn:hover{color:var(--ink)}
 
