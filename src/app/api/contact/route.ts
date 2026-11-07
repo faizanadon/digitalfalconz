@@ -64,11 +64,19 @@ export async function POST(request: Request) {
       brief: String(body.brief ?? "").trim() || undefined,
     };
 
-    // Dispatch concurrently to GHL and Email notification
+    // Dispatch concurrently to GHL and Email notification.
+    // Fail loudly: if NEITHER delivery worked, the visitor must be told
+    // the enquiry was not delivered instead of seeing a success message
+    // for a lead that went nowhere.
     const [ghlResult, emailResult] = await Promise.allSettled([
       sendToGHL(formData),
       sendContactNotificationEmail(formData),
     ]);
+
+    const ghlOk =
+      ghlResult.status === "fulfilled" && ghlResult.value.success;
+    const emailOk =
+      emailResult.status === "fulfilled" && emailResult.value.success;
 
     if (ghlResult.status === "rejected") {
       console.error("[GHL Error]", ghlResult.reason);
@@ -80,6 +88,17 @@ export async function POST(request: Request) {
       console.error("[Email Error]", emailResult.reason);
     } else if (!emailResult.value.success) {
       console.warn("[Email Warning]", emailResult.value.error);
+    }
+
+    if (!ghlOk && !emailOk) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "We could not deliver your enquiry just now. Please try again, or email us directly at contact@digitalfalconz.com.",
+        },
+        { status: 502 }
+      );
     }
 
     return NextResponse.json({

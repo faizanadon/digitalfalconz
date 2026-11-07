@@ -95,7 +95,7 @@ export default function ContactForm() {
           Thank you. Your enquiry has been received. We&apos;ll review the details and respond through the contact information you provided.
         </div>
         <p className="form-note" style={{ marginTop: 16 }}>
-          A confirmation and copy has been delivered to our team at {site.email}. If you need immediate assistance, you can also email us directly at{" "}
+          Your enquiry has been received. We&apos;ll review the details and respond through the contact information you provided. If you need immediate assistance, you can also email us directly at{" "}
           <a href={`mailto:${site.email}`}>{site.email}</a>.
         </p>
       </div>
@@ -129,15 +129,15 @@ export default function ContactForm() {
       </div>
       <div>
         <label htmlFor="c-help">What would you like help with? *</label>
-        <select id="c-help" name="help" disabled={isSubmitting}>{HELP_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+        <select id="c-help" name="help" disabled={isSubmitting}><option value="" disabled>Select what you need help with</option>{HELP_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
       </div>
       <div>
         <label htmlFor="c-investment">Approximate project investment</label>
-        <select id="c-investment" name="investment" disabled={isSubmitting}>{INVESTMENT_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+        <select id="c-investment" name="investment" disabled={isSubmitting}><option value="" disabled>Select an approximate investment</option>{INVESTMENT_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
       </div>
       <div>
         <label htmlFor="c-start">Desired start</label>
-        <select id="c-start" name="start" disabled={isSubmitting}>{START_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+        <select id="c-start" name="start" disabled={isSubmitting}><option value="" disabled>Select a desired start</option>{START_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
       </div>
       <div className="full">
         <label htmlFor="c-goals">What are you trying to achieve? *</label>
@@ -155,7 +155,7 @@ export default function ContactForm() {
         {isSubmitting ? "Sending enquiry..." : "Send project enquiry"}
       </button>
       <p className="form-note">
-        Your enquiry is delivered directly to our senior team and CRM. We respect your privacy and will never share your information.
+        Your enquiry is sent to our senior team and CRM. We respect your privacy and will never share your information.
       </p>
       {status && <div className={`form-status show${isError ? " error" : ""}`} role="status">{status}</div>}
     </form>

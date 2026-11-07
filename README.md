@@ -88,14 +88,24 @@ python3 /tmp/gen_data.py   # reads /tmp/df (the unzipped DigitalFalconz_Premium_
 
 Do not hand-edit the generated files; edit the source `.md` files and regenerate.
 
-## Forms — front-end only for now
+## Contact form
 
-There is **no backend yet**, so neither form submits to a server:
+The project enquiry form on `/contact` (`src/components/ContactForm.tsx`, all 11 fields) submits to a Next.js Route Handler, `src/app/api/contact/route.ts`. The handler validates the submission (name, work email, goals, privacy acknowledgement, plus a honeypot spam check) and then delivers it to **GoHighLevel** (`src/lib/ghl.ts`) and to the team by email (`src/lib/email.ts`, Resend first if `RESEND_API_KEY` is set, otherwise SMTP via nodemailer). If **neither** delivery works, the API returns `502` with an error instead of a false success, so a lead is never silently lost. Success is only shown after the server confirms receipt.
 
-- **Free growth audit**: there is no audit form on the home page any more — every audit CTA links to `/contact#enquiry-form`. `src/components/AuditForm.tsx` is kept in the repo but unused.
-- **Contact / project enquiry** (`/contact`, `src/components/ContactForm.tsx`): same pattern — validates, shows the success message from the supplied copy, and opens a pre-filled email to **contact@digitalfalconz.com**.
+### GoHighLevel — REST API only
 
-To make them submit properly, wire them to an email/API endpoint (e.g. a Next.js Route Handler + Resend/SendGrid, or a form service) and update the components + this note.
+The form sends each enquiry to GoHighLevel via the v2 REST API (`src/lib/ghl.ts`): `POST https://services.leadconnectorhq.com/contacts/upsert` with the `Version: 2021-07-28` header, creating or updating the contact by email, tagged `website-lead` / `contact-form` / `digitalfalconz`. It needs `GHL_API_KEY` (a Private Integration token with the `contacts.write` scope) and `GHL_LOCATION_ID` (`dcts1IzmzaWnBUYWaPws`, the "Digital Falconz" sub-account). No webhook is used. Until both values are configured, enquiries are **not** delivered to HighLevel (the API returns `502`).
+
+### Required env vars
+
+Copy `.env.example` to `.env.local` and fill in the values (never commit `.env.local` or paste real keys into chat):
+
+- GHL: `GHL_API_KEY` + `GHL_LOCATION_ID` (`dcts1IzmzaWnBUYWaPws`)
+- Email fallback: `NOTIFICATION_EMAIL` (default `contact@digitalfalconz.com`), plus either SMTP (`SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, …) or `RESEND_API_KEY` (+ `RESEND_FROM` to send from `@digitalfalconz.com` — without a verified domain Resend only sends from `onboarding@resend.dev` to the account owner).
+
+### Audit form
+
+There is no audit form on the home page any more — every audit CTA links to `/contact#enquiry-form`. `src/components/AuditForm.tsx` is kept in the repo but unused.
 
 ## Brand
 
