@@ -22,7 +22,7 @@ export default function Header() {
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const pathname = usePathname();
   const megaRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLAnchorElement>(null);
   const groups = servicesByCategory();
 
   // Close mega-menu on navigation, outside click, Escape.
@@ -48,18 +48,24 @@ export default function Header() {
             <Image src="/logo-light-hires.png" alt="DigitalFalconz" width={220} height={47} priority />
           </Link>
           <nav className="links" aria-label="Primary">
-            <div className="mega-wrap" ref={megaRef} onMouseEnter={() => setMegaOpen(true)} onMouseLeave={() => setMegaOpen(false)}>
-              <button
+            <div
+              className="mega-wrap"
+              ref={megaRef}
+              onMouseEnter={() => setMegaOpen(true)}
+              onMouseLeave={() => setMegaOpen(false)}
+              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setMegaOpen(false); }}
+            >
+              <Link
                 ref={triggerRef}
-                type="button"
+                href="/services"
                 className="mega-trigger"
                 aria-expanded={megaOpen}
                 aria-haspopup="true"
                 aria-controls="servicesMegaMenu"
-                onClick={() => setMegaOpen((v) => !v)}
+                onFocus={() => setMegaOpen(true)}
               >
                 Services <ChevronDown size={15} className={`mega-chevron${megaOpen ? " open" : ""}`} aria-hidden="true" />
-              </button>
+              </Link>
               <AnimatePresence>
                 {megaOpen && (
                   <motion.div

@@ -595,7 +595,14 @@ export function PageHeroGraphic({ page }: { page: MainPageKey }) {
           <motion.span className="phg-ring" animate={reduce ? {} : { rotate: 360 }} transition={{ duration: 36, repeat: Infinity, ease: "linear" }} aria-hidden="true" />
           <span className="phg-core">DF</span>
           {["Growth", "Web", "AI", "Brand", "Analytics"].map((l, i) => (
-            <motion.span key={l} className="phg-chip" style={{ transform: `rotate(${i * 72}deg) translateY(-72px) rotate(${-i * 72}deg)` }} animate={reduce ? {} : { scale: [1, 1.08, 1] }} transition={{ duration: 2.6, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{l}</motion.span>
+            <span
+              key={l}
+              className="phg-chip-pos"
+              style={{ transform: `rotate(${i * 72}deg) translateY(var(--orbit-r)) rotate(${-i * 72}deg) translate(-50%, -50%)` }}
+              aria-hidden="true"
+            >
+              <motion.span className="phg-chip" animate={reduce ? {} : { scale: [1, 1.08, 1] }} transition={{ duration: 2.6, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{l}</motion.span>
+            </span>
           ))}
         </div>
       )}
