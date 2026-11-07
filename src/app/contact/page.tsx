@@ -36,13 +36,10 @@ export default function ContactPage() {
   const rest = secs.filter((s) => s.heading && !s.heading.startsWith("Tell us about your project") && !s.heading.startsWith("Get in touch"));
   return (
     <>
-      {/* HERO — graphic left, content right (mirror of the home hero) */}
+      {/* HERO — content left, graphic right (like the home hero) */}
       <div className="wrap page-hero contact-hero">
         <Reveal>
           <div className="contact-hero-grid">
-            <div className="contact-hero-gfx">
-              <PageHeroGraphic page="contact" />
-            </div>
             <div className="contact-hero-copy">
               <span className="hero-icon-tile" aria-hidden="true"><MessageSquare size={30} strokeWidth={1.9} /></span>
               <span className="mono kicker">{p.kicker}</span>
@@ -50,6 +47,9 @@ export default function ContactPage() {
               <span className="hero-rule" aria-hidden="true" />
               <Markdown text={intro} />
               <p><a className="btn" href="#enquiry-form">Send a project enquiry</a> <Link className="btn ghost" href="/services">Explore services</Link></p>
+            </div>
+            <div className="contact-hero-gfx">
+              <PageHeroGraphic page="contact" />
             </div>
           </div>
         </Reveal>
