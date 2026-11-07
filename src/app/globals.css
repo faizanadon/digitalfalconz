@@ -971,6 +971,7 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
 }
 @media (max-width:640px){
   .footer-shot{padding-top:52px}
+  .footer-shot{margin-top:48px}
   .foot-shot-mid{grid-template-columns:1fr;gap:36px}
   .foot-circle{width:88px;height:88px}
   .foot-circle-arrow{font-size:1.8rem}
@@ -1109,6 +1110,13 @@ html{overflow-x:clip}
   /* The .wrap shorthand above also zeroes the hero's top padding —
      restore it so the hero never sits flush under the header. */
   .page-hero{padding-top:64px;padding-bottom:32px}
+  /* The same .wrap shorthand zeroes the footer sections' vertical
+     padding — restore it, or the CTA ("Discuss your project") and the
+     footer body (logo) collapse together with no gap between them. */
+  .foot-shot-top{padding-bottom:64px}
+  .foot-shot-mid{padding-top:64px;padding-bottom:32px}
+  .foot-shot-bottom{padding-top:22px;padding-bottom:28px}
+  .foot-wordmark-wrap{padding-top:8px}
   h2{font-size:clamp(1.6rem,5.5vw,2.4rem)}
 
   /* Stack hero CTAs so they don't wrap awkwardly at 320-400px. */
