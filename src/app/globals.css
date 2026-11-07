@@ -1173,11 +1173,12 @@ html{overflow-x:clip}
 .growth-head .mono:last-child{color:#c9c9c2}
 .gold-dot{width:8px;height:8px;border-radius:50%;background:var(--gold-light);display:inline-block;flex:none}
 .growth-diagram{position:relative;padding:20px 0 12px}
-.growth-diagram svg{position:absolute;inset:0;width:100%;height:100%}
+.growth-diagram > svg{position:absolute;inset:0;width:100%;height:100%}
 .growth-cards{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:start}
 .growth-card{background:#141412;border:1px solid #2a2a26;border-radius:16px;padding:20px;margin-top:var(--top,0)}
 .growth-card .mono{color:var(--gold-light);display:block;margin-bottom:14px}
 .growth-ico{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:12px;background:rgba(252,192,76,.14);color:var(--gold-light);margin-bottom:14px}
+.growth-ico svg{width:22px;height:22px;flex:none}
 .growth-card strong{display:block;color:#fff;font-size:1.05rem;margin-bottom:2px}
 .growth-card span:last-child{color:#c9c9c2;font-size:.92rem}
 .growth-demand{position:absolute;left:0;bottom:0;color:#8a8a84}
@@ -1194,6 +1195,6 @@ html{overflow-x:clip}
   .book-hero{grid-template-columns:1fr}
   .growth-cards{grid-template-columns:1fr}
   .growth-card{margin-top:0}
-  .growth-diagram svg,.growth-demand,.growth-momentum{display:none}
+  .growth-diagram > svg,.growth-demand,.growth-momentum{display:none}
   .dots-band{flex-direction:column;align-items:flex-start}
 }
