@@ -7,6 +7,47 @@ export interface GHLResponse {
 }
 
 /**
+ * Normalises a form value into a tag-safe slug: lowercase, no punctuation,
+ * words joined with hyphens. e.g. "Websites & e-commerce" -> "websites-e-commerce".
+ */
+function slugifyTag(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[–—]/g, "-")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/**
+ * Builds the tag list for a contact from the enquiry itself, so every form
+ * submission is tagged with everything relevant: the service they asked
+ * about, the investment range, when they want to start, and their
+ * country/time zone — on top of the fixed base tags.
+ *
+ * Note: the GHL upsert endpoint replaces a contact's tags with the tags
+ * sent, so a repeat enquiry from the same email refreshes their tags to
+ * the latest submission. That is the intended behaviour.
+ */
+export function buildContactTags(data: ContactFormData): string[] {
+  const tags = ["website-lead", "contact-form", "digitalfalconz"];
+
+  const add = (prefix: string, value?: string) => {
+    const slug = value ? slugifyTag(value) : "";
+    if (slug) tags.push(`${prefix}-${slug}`);
+  };
+
+  add("service", data.help);
+  add("investment", data.investment);
+  add("start", data.start);
+  add("country", data.country);
+
+  return [...new Set(tags)];
+}
+
+/**
  * Sends contact enquiry data to GoHighLevel (GHL) via the v2 REST API
  * (LeadConnector HQ) — the only delivery method this site uses.
  *
@@ -52,7 +93,7 @@ export async function sendToGHL(data: ContactFormData): Promise<GHLResponse> {
         companyName: data.company,
         website: data.website,
         country: data.country,
-        tags: ["website-lead", "contact-form", "digitalfalconz"],
+        tags: buildContactTags(data),
         source: "DigitalFalconz Website Contact Form",
       }),
     });

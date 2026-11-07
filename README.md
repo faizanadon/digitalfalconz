@@ -94,7 +94,7 @@ The project enquiry form on `/contact` (`src/components/ContactForm.tsx`, all 11
 
 ### GoHighLevel — REST API only
 
-The form sends each enquiry to GoHighLevel via the v2 REST API (`src/lib/ghl.ts`): `POST https://services.leadconnectorhq.com/contacts/upsert` with the `Version: 2021-07-28` header, creating or updating the contact by email, tagged `website-lead` / `contact-form` / `digitalfalconz`. It needs `GHL_API_KEY` (a Private Integration token with the `contacts.write` scope) and `GHL_LOCATION_ID` (`dcts1IzmzaWnBUYWaPws`, the "Digital Falconz" sub-account). No webhook is used. Until both values are configured, enquiries are **not** delivered to HighLevel (the API returns `502`).
+The form sends each enquiry to GoHighLevel via the v2 REST API (`src/lib/ghl.ts`): `POST https://services.leadconnectorhq.com/contacts/upsert` with the `Version: 2021-07-28` header, creating or updating the contact by email. Every contact is tagged with `website-lead` / `contact-form` / `digitalfalconz`, plus tags built from the enquiry itself — the service asked about (`service-websites-e-commerce`), the investment range (`investment-us5000-10000`), when they want to start (`start-within-30-days`) and their country/time zone (`country-united-kingdom-gmt`). Note the upsert replaces a contact's tags, so a repeat enquiry refreshes them to the latest submission. It needs `GHL_API_KEY` (a Private Integration token with the `contacts.write` scope) and `GHL_LOCATION_ID` (`dcts1IzmzaWnBUYWaPws`, the "Digital Falconz" sub-account). No webhook is used. Until both values are configured, enquiries are **not** delivered to HighLevel (the API returns `502`).
 
 ### Required env vars
 
