@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "@/components/Markdown";
 import Reveal from "@/components/Reveal";
-import { PageHero } from "@/components/Motion";
+import { TwoColumnHero } from "@/components/Motion";
 import FaqAccordion from "@/components/FaqAccordion";
 import { PageHeroGraphic } from "@/components/Graphics";
 import { faqGroups, allFaqs } from "@/data/faqs";
@@ -30,12 +30,10 @@ export default function FaqPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <PageHero kicker={p.kicker} title={p.h1} icon="help" enter="up"
-        lede={<><Markdown text={intro} /><p><Link className="btn" href="/contact">Ask a question</Link> <Link className="btn ghost" href="/services">Explore services</Link></p></>}
-      />
-      <div className="wrap">
-        <Reveal><PageHeroGraphic page="faq" /></Reveal>
-      </div>
+      <TwoColumnHero kicker={p.kicker} title={p.h1} icon="help" graphic={<PageHeroGraphic page="faq" />}>
+        <Markdown text={intro} />
+        <p><Link className="btn" href="/contact">Ask a question</Link> <Link className="btn ghost" href="/services">Explore services</Link></p>
+      </TwoColumnHero>
       <section className="tight">
         <div className="wrap">
           <Reveal>

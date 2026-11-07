@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "@/components/Markdown";
 import Reveal from "@/components/Reveal";
-import { PageHero, Stagger, StaggerItem } from "@/components/Motion";
+import { TwoColumnHero, Stagger, StaggerItem } from "@/components/Motion";
 import { Flame, ShieldCheck, Leaf, Droplets, Bug, Briefcase, Cloud, ShoppingBag, HeartPulse, KeyRound, Factory, Rocket, Building2 } from "lucide-react";
 import { PageHeroGraphic } from "@/components/Graphics";
 import { pages } from "@/data/pages";
@@ -50,12 +50,12 @@ export default function IndustriesPage() {
   const p = pages.industries;
   return (
     <>
-      <PageHero kicker={p.kicker} title={p.h1} icon="building" enter="rotate"
-        lede={<><p className="lede"><strong>Different buying decisions require different digital systems.</strong></p><p className="plain-p">A service-survey enquiry, a SaaS trial and an e-commerce purchase do not follow the same journey. We adapt acquisition channels, digital experiences, data flows and automation to the way your customers make decisions — and to the operating constraints of your business.</p><p className="plain-p">The industries below represent relevant use cases, not claims of sector certifications or published case studies. We assess each engagement on its requirements, access to appropriate expertise and practical delivery fit.</p><p><Link className="btn" href="/contact">Discuss your industry</Link> <Link className="btn ghost" href="/services">View our services</Link></p></>}
-      />
-      <div className="wrap">
-        <Reveal><PageHeroGraphic page="industries" /></Reveal>
-      </div>
+      <TwoColumnHero kicker={p.kicker} title={p.h1} icon="building" graphic={<PageHeroGraphic page="industries" />}>
+        <p className="lede"><strong>Different buying decisions require different digital systems.</strong></p>
+        <p className="plain-p">A service-survey enquiry, a SaaS trial and an e-commerce purchase do not follow the same journey. We adapt acquisition channels, digital experiences, data flows and automation to the way your customers make decisions — and to the operating constraints of your business.</p>
+        <p className="plain-p">The industries below represent relevant use cases, not claims of sector certifications or published case studies. We assess each engagement on its requirements, access to appropriate expertise and practical delivery fit.</p>
+        <p><Link className="btn" href="/contact">Discuss your industry</Link> <Link className="btn ghost" href="/services">View our services</Link></p>
+      </TwoColumnHero>
       <div className="wrap">
         <Stagger className="card-grid industry-grid" aria-label="Industries">
           {INDUSTRY_HEADINGS.map((h) => { const Ico = INDUSTRY_ICONS[h] ?? Building2; return (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHero } from "@/components/Motion";
+import { TwoColumnHero } from "@/components/Motion";
 import Reveal from "@/components/Reveal";
 import { PageHeroGraphic } from "@/components/Graphics";
 import { site } from "@/data/site";
@@ -14,10 +14,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <>
-      <PageHero kicker="Legal" title="Privacy Policy" icon="shield" enter="tilt" />
-      <div className="wrap">
-        <Reveal><PageHeroGraphic page="privacy" /></Reveal>
-      </div>
+      <TwoColumnHero kicker="Legal" title="Privacy Policy" icon="shield" graphic={<PageHeroGraphic page="privacy" />} />
       <div className="wrap" style={{ paddingBottom: 72 }}>
         <Reveal>
         <div className="md">

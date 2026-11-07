@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "@/components/Markdown";
-import { Reveal, PageHero, Stagger, StaggerItem, ServiceIconTile, CtaArrow } from "@/components/Motion";
+import { Reveal, TwoColumnHero, Stagger, StaggerItem, ServiceIconTile, CtaArrow } from "@/components/Motion";
 import { PageHeroGraphic } from "@/components/Graphics";
 import { pages } from "@/data/pages";
 import { metaFor } from "@/data/site";
@@ -17,12 +17,12 @@ export default function ServicesPage() {
   const groups = servicesByCategory();
   return (
     <>
-      <PageHero kicker={p.kicker} title={p.h1} icon="grid" enter="scale"
-        lede={<><p className="lede"><strong>Specialist expertise. Connected when it matters.</strong></p><p className="plain-p">Choose the capabilities your business needs now — and connect them when a wider challenge requires more than one discipline. DigitalFalconz brings customer acquisition, websites and software, AI-enabled operations, branding and creative, analytics and optimisation under one approach.</p><p className="plain-p">Our services are organised around how they contribute to the customer journey, not simply the tools used to deliver them.</p><p><Link className="btn" href="/contact">Discuss your requirements</Link> <Link className="btn ghost" href="/work">See our work</Link></p></>}
-      />
-      <div className="wrap">
-        <Reveal><PageHeroGraphic page="services" /></Reveal>
-      </div>
+      <TwoColumnHero kicker={p.kicker} title={p.h1} icon="grid" graphic={<PageHeroGraphic page="services" />}>
+        <p className="lede"><strong>Specialist expertise. Connected when it matters.</strong></p>
+        <p className="plain-p">Choose the capabilities your business needs now — and connect them when a wider challenge requires more than one discipline. DigitalFalconz brings customer acquisition, websites and software, AI-enabled operations, branding and creative, analytics and optimisation under one approach.</p>
+        <p className="plain-p">Our services are organised around how they contribute to the customer journey, not simply the tools used to deliver them.</p>
+        <p><Link className="btn" href="/contact">Discuss your requirements</Link> <Link className="btn ghost" href="/work">See our work</Link></p>
+      </TwoColumnHero>
       <div className="wrap" style={{ paddingBottom: 16 }}>
         <div className="pill-row" aria-label="Service categories">
           {groups.map((g) => (

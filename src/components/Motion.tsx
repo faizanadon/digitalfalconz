@@ -132,6 +132,43 @@ export function PageHero({ kicker, title, lede, icon, children, enter = "up" }: 
   );
 }
 
+/**
+ * Two-column page hero — the same layout as /contact: copy on the left,
+ * the page's hero graphic on the right. Stacks below 1100px with the
+ * copy first. Used by every page that used to stack its heading above
+ * its graphic (services, work, industries, faq, privacy-policy, terms).
+ */
+export function TwoColumnHero({ kicker, title, icon, children, graphic, graphicClassName = "" }: {
+  kicker: string;
+  title: string;
+  icon?: string;
+  children?: ReactNode;
+  graphic: ReactNode;
+  graphicClassName?: string;
+}) {
+  const Icon = icon ? PAGE_ICONS[icon] : undefined;
+  return (
+    <div className="wrap page-hero">
+      <Reveal>
+        <div className="hero-2col">
+          <div className="hero-2col-copy">
+            {Icon && (
+              <span className="hero-icon-tile" aria-hidden="true">
+                <Icon size={30} strokeWidth={1.9} />
+              </span>
+            )}
+            <span className="mono kicker">{kicker}</span>
+            <h1>{title}</h1>
+            <span className="hero-rule" aria-hidden="true" />
+            {children}
+          </div>
+          <div className={`hero-2col-gfx${graphicClassName ? ` ${graphicClassName}` : ""}`}>{graphic}</div>
+        </div>
+      </Reveal>
+    </div>
+  );
+}
+
 /** Animated flow: Traffic in → Landing → CRM → Revenue. Dots travel the path. */
 /** Flow nodes use real Lucide icons (24px, gold on black) in 60px circles —
     never unicode glyphs, which render illegibly small. */
