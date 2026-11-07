@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import Header from "@/components/Header";
 import { ScrollProgress } from "@/components/Motion";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -7,9 +7,30 @@ import Footer from "@/components/Footer";
 import { metaFor, orgJsonLd, site } from "@/data/site";
 import "./globals.css";
 
-const interTight = Inter_Tight({ subsets: ["latin"], weight: ["600", "700", "800", "900"], variable: "--font-head", display: "swap" });
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body", display: "swap" });
-const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-mono", display: "swap" });
+// Fonts are self-hosted from @fontsource packages (installed via npm) so the
+// build never has to fetch from Google Fonts. next/font/google used to
+// download font CSS at build time and Vercel builds kept failing on it
+// ("Cannot read properties of null (reading '1')" in the font loader when
+// Google returned an extensionless font URL). Same families, same weights,
+// same CSS variable names, so nothing on any page changes appearance.
+const interTight = localFont({
+  src: [{ path: "../../node_modules/@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
+  variable: "--font-head",
+  display: "swap",
+});
+const inter = localFont({
+  src: [{ path: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2", weight: "100 900", style: "normal" }],
+  variable: "--font-body",
+  display: "swap",
+});
+const spaceMono = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource/space-mono/files/space-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../../node_modules/@fontsource/space-mono/files/space-mono-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 const home = metaFor("/");
 
