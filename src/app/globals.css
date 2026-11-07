@@ -1142,3 +1142,58 @@ html{overflow-x:clip}
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){
   .rule,.faq-list,.journey-track,.process-line{border-width:.5px}
 }
+
+/* ---- Booking pages: /meet + /discovery, mirroring meet.digitalfalconz.com ----
+   Dark in both themes (like the footer): the provided page is a dark design. */
+.book-hero{background:#0b0b0a;border:1px solid #262622;border-radius:28px;padding:clamp(28px,4vw,52px);display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,56px)}
+.book-top{display:flex;justify-content:space-between;gap:16px;margin-bottom:22px}
+.book-top .mono{color:var(--gold-light)}
+.book-top .book-page{color:#8a8a84}
+.book-copy h1{color:#fff;font-size:clamp(2.4rem,4.4vw,3.8rem);line-height:1.04;margin:0 0 20px}
+.book-gold{color:var(--gold-light)}
+.book-lede{color:#d8d8d0;font-size:1.12rem;line-height:1.6;margin:0 0 22px;max-width:32em}
+.book-lede strong{color:#fff}
+.book-meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:#c9c9c2;font-family:var(--font-mono),"Space Mono",monospace;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px}
+.book-meta span{display:inline-flex;align-items:center;gap:8px}
+.book-meta svg{color:var(--gold-light)}
+.book-cover-label{color:var(--gold-light);margin:34px 0 6px}
+.book-cover-label::before{content:"";display:inline-block;width:8px;height:8px;border:2px solid var(--gold);margin-right:11px;vertical-align:1px}
+.book-cover-row{display:grid;grid-template-columns:40px 1fr 24px;gap:14px;align-items:start;padding:16px 0;border-top:1px solid #262622}
+.book-cover-row .mono{color:var(--gold-light);padding-top:3px}
+.book-cover-row strong{display:block;color:#fff;font-size:1.02rem}
+.book-cover-sub{color:#c9c9c2;font-size:.95rem}
+.book-cover-row svg{color:var(--gold-light);margin-top:4px}
+.book-note{display:flex;align-items:flex-start;gap:10px;color:#c9c9c2;font-size:.98rem;margin:26px 0 0}
+.book-note svg{color:var(--gold-light);flex:none;margin-top:3px}
+.book-cal{background:#fff;border-radius:20px;padding:20px;box-shadow:0 30px 60px -30px rgba(0,0,0,.5);align-self:start}
+.book-cal iframe{display:block;width:100%;border:none;overflow:hidden;min-height:750px}
+.growth{background:#0b0b0a;border:1px solid #262622;border-radius:28px;padding:clamp(24px,3.5vw,44px)}
+.growth-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid #262622}
+.growth-head .mono{color:#fff;display:inline-flex;align-items:center;gap:10px}
+.growth-head .mono:last-child{color:#c9c9c2}
+.gold-dot{width:8px;height:8px;border-radius:50%;background:var(--gold-light);display:inline-block;flex:none}
+.growth-diagram{position:relative;padding:20px 0 12px}
+.growth-diagram svg{position:absolute;inset:0;width:100%;height:100%}
+.growth-cards{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:start}
+.growth-card{background:#141412;border:1px solid #2a2a26;border-radius:16px;padding:20px;margin-top:var(--top,0)}
+.growth-card .mono{color:var(--gold-light);display:block;margin-bottom:14px}
+.growth-ico{display:inline-grid;place-items:center;width:46px;height:46px;border-radius:12px;background:rgba(252,192,76,.14);color:var(--gold-light);margin-bottom:14px}
+.growth-card strong{display:block;color:#fff;font-size:1.05rem;margin-bottom:2px}
+.growth-card span:last-child{color:#c9c9c2;font-size:.92rem}
+.growth-demand{position:absolute;left:0;bottom:0;color:#8a8a84}
+.growth-momentum{position:absolute;right:0;top:44%;color:#8a8a84}
+.growth-foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #262622;padding-top:18px;margin-top:20px}
+.growth-foot .mono{color:#c9c9c2;display:inline-flex;align-items:center;gap:10px}
+.growth-foot .mono:last-child{color:#fff}
+.dots-band{background:#0b0b0a;border:1px solid #262622;border-radius:28px;padding:clamp(28px,4vw,48px);display:flex;justify-content:space-between;align-items:center;gap:28px}
+.dots-band h2{color:#fff;margin:0 0 12px}
+.dots-band p{color:#c9c9c2;margin:0;max-width:34em}
+.dots-circle{flex:none;width:76px;height:76px;border-radius:50%;border:1px solid #3a3a34;display:grid;place-items:center;color:var(--gold-light);text-decoration:none;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.dots-circle:hover{background:var(--gold-light);border-color:var(--gold-light);color:#000}
+@media (max-width:900px){
+  .book-hero{grid-template-columns:1fr}
+  .growth-cards{grid-template-columns:1fr}
+  .growth-card{margin-top:0}
+  .growth-diagram svg,.growth-demand,.growth-momentum{display:none}
+  .dots-band{flex-direction:column;align-items:flex-start}
+}
