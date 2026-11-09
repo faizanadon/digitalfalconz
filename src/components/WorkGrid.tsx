@@ -114,28 +114,34 @@ function WorkCard({ project }: { project: WorkProject }) {
     image on the other side. Image and text alternate sides. */
 function FeatureCard({ project, index }: { project: WorkProject; index: number }) {
   const img = caseStudyImage(project.caseStudy);
+  const cs = CASE_STUDIES.find((c) => c.slug === project.caseStudy);
+  const campaignCount = cs?.campaigns?.length ?? 0;
   const [logoFailed, setLogoFailed] = useState(false);
   const logo = project.logo;
   const showLogo = !!logo && !logoFailed;
   const num = String(index + 1).padStart(2, "0");
   return (
     <motion.article
-      className={`work-ed-card${index % 2 === 1 ? " work-ed-flip" : ""}`}
+      className={`work-ed-card${index % 2 === 0 ? " work-ed-flip" : ""}`}
       layout
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 0.61, 0.21, 1] }}
     >
       <div className="work-ed-copy">
-        <span className="work-ed-num">{num}</span>
+        <span className="work-ed-num">
+          {num} — {project.category}
+        </span>
         <h3 className="work-ed-name">{project.title}</h3>
-        <p className="work-ed-sub">
-          <em>{project.platform}</em>
-        </p>
         <p className="work-ed-desc">{project.description}</p>
         <div className="work-tags">
           <span className="pill">{project.category}</span>
           <span className="pill">{project.platform}</span>
+          {campaignCount > 0 && (
+            <span className="pill">
+              {campaignCount} campaign{campaignCount === 1 ? "" : "s"}
+            </span>
+          )}
         </div>
         <p className="work-role">
           <strong>Role:</strong> {project.role}
