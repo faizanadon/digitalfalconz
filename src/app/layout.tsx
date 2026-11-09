@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Header from "@/components/Header";
-import { ScrollProgress } from "@/components/Motion";
+import SiteChrome from "@/components/SiteChrome";
 import SmoothScroll from "@/components/SmoothScroll";
-import Footer from "@/components/Footer";
 import { metaFor, orgJsonLd, site } from "@/data/site";
 import "./globals.css";
 
@@ -31,6 +29,17 @@ const spaceMono = localFont({
   variable: "--font-mono",
   display: "swap",
 });
+// Premium serif used ONLY by the standalone website templates
+// (e.g. /templates/bali-retreat). The variable is defined here so the
+// template can use it, but no site page applies this family.
+const cormorant = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-normal.woff2", weight: "300 700", style: "normal" },
+    { path: "../../node_modules/@fontsource-variable/cormorant-garamond/files/cormorant-garamond-latin-wght-italic.woff2", weight: "300 700", style: "italic" },
+  ],
+  variable: "--font-retreat-serif",
+  display: "swap",
+});
 
 const home = metaFor("/");
 
@@ -53,7 +62,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="top" className={`${interTight.variable} ${inter.variable} ${spaceMono.variable}`}>
+      <body id="top" className={`${interTight.variable} ${inter.variable} ${spaceMono.variable} ${cormorant.variable}`}>
         {/* Set data-theme before paint so there is no light/dark flash.
             Dark mode is default; stored choice wins if user toggled. */}
         <script
@@ -64,10 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip-link" href="#main">Skip to content</a>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
         <SmoothScroll />
-        <ScrollProgress />
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

@@ -489,6 +489,32 @@ export const pageMeta = {
     "words": 405,
     "source_file": "pages/services/wordpress-cms-development.md",
     "publication_priority": "Priority 2"
+  },
+  "/templates": {
+    "page_type": "main",
+    "url_path": "/templates",
+    "canonical": "https://digitalfalconz.com/templates",
+    "seo_title": "Website Templates | DigitalFalconz",
+    "title_chars": 33,
+    "meta_description": "Ready-made premium website templates from DigitalFalconz. Preview a complete design, then have it tailored to your business.",
+    "description_chars": 133,
+    "h1": "Website templates, ready to make yours",
+    "words": 200,
+    "source_file": "templates",
+    "publication_priority": "Core"
+  },
+  "/templates/bali-retreat": {
+    "page_type": "main",
+    "url_path": "/templates/bali-retreat",
+    "canonical": "https://digitalfalconz.com/templates/bali-retreat",
+    "seo_title": "Amara Bali Retreat — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A premium Bali retreat website template: villas, experiences, gallery and booking, built around real photography from Ubud.",
+    "description_chars": 135,
+    "h1": "Amara — a Bali retreat",
+    "words": 600,
+    "source_file": "templates/bali-retreat",
+    "publication_priority": "Core"
   }
 };
 export const orgJsonLd = {
