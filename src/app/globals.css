@@ -494,8 +494,8 @@ html.lenis, html.lenis body{height:auto}
 a.btn:not(.small)::after{transition:transform .25s ease,background .25s ease,color .25s ease}
 a.btn:not(.small):hover::after{transform:translateX(4px)}
 .card a, .md a{transition:color .2s ease}
-.pill{transition:border-color .2s ease,background .2s ease,transform .2s ease}
-.pill:hover{transform:translateY(-2px);background:var(--gold-light)}
+.pill{transition:border-color .2s ease,transform .2s ease}
+.pill:hover{transform:translateY(-2px)}
 nav.links a{transition:color .2s ease}
 .mega-col a, .agency-footer .foot-col a{transition:color .2s ease,background .2s ease}
 
@@ -985,7 +985,6 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
 [data-theme="dark"] .cap-cta .btn,[data-theme="dark"] .duo-dark .btn{background:var(--gold-light);border-color:var(--gold-light);color:#000}
 [data-theme="dark"] .cta-band .btn:hover,[data-theme="dark"] .contact-form-panel .btn:hover,
 [data-theme="dark"] .cap-cta .btn:hover,[data-theme="dark"] .duo-dark .btn:hover{background:#fff;border-color:#fff;color:#000}
-[data-theme="dark"] .pill:hover{color:#000}
 
 /* Inline Lucide icons inside text rows sit on the baseline. */
 .slug-plug-box svg,.slug-cart-item svg,.phg-answered svg,.cap-bubble svg{vertical-align:-3px}

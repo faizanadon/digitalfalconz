@@ -8,6 +8,8 @@ export interface TemplateEntry {
   slug: string;
   name: string;
   category: string;
+  /** Niche this template belongs to (used to group the index page). */
+  niche: "retreats" | "lev";
   tagline: string;
   description: string;
   /** Hero/preview image (Unsplash). */
@@ -21,6 +23,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "bali-retreat",
     name: "Amara — Bali Retreat",
     category: "Hospitality & Wellness",
+    niche: "retreats",
     tagline: "A premium retreat in the Ubud jungle",
     description:
       "A full retreat website: sunrise yoga, spa rituals, jungle villas, a gallery, daily rhythm, packages and booking — built around real photography from Bali.",
@@ -32,9 +35,10 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "soma-retreat",
     name: "Soma — Yoga & Retreat",
     category: "Wellness & Retreats",
+    niche: "retreats",
     tagline: "Come home to your body",
     description:
-      "A soft, minimal yoga and retreat template in the Hollow style: three paths, upcoming retreats, teachers, first-time guidance and booking — built around calm, real photography.",
+      "A soft, minimal yoga and retreat template in the Hollow style: three paths, upcoming retreats, teachers and first-time guidance — built around calm, real photography.",
     image:
       "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/soma-retreat",
@@ -43,6 +47,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "ember-restaurant",
     name: "Ember — Fine Dining",
     category: "Food & Dining",
+    niche: "retreats",
     tagline: "Fire, smoke & season",
     description:
       "A dark, moody fine-dining template: signature dishes, the chef, a gallery and table reservations — built around warm, cinematic food photography.",
@@ -54,6 +59,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "keystone-real-estate",
     name: "Keystone — Real Estate",
     category: "Real Estate",
+    niche: "retreats",
     tagline: "Find where you belong",
     description:
       "A clean, modern property template: featured listings with prices and specs, neighbourhoods, agents and a viewing request form — built around bright, real home photography.",
@@ -65,6 +71,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "forge-fitness",
     name: "Forge — Fitness & Gym",
     category: "Fitness & Wellness",
+    niche: "retreats",
     tagline: "Stronger every day",
     description:
       "A bold, high-energy gym template: training programmes, coaches, membership pricing, a class schedule and a join form — built around powerful, dark training photography.",
@@ -76,6 +83,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "atelier-interior",
     name: "Atelier — Interior Design",
     category: "Design & Architecture",
+    niche: "retreats",
     tagline: "Spaces that speak softly",
     description:
       "A minimal, editorial interior-design template: a project portfolio, services, the design process and the studio — built around calm, architectural photography.",
@@ -87,6 +95,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "lumiere-salon",
     name: "Lumière — Beauty Salon & Spa",
     category: "Beauty & Wellness",
+    niche: "retreats",
     tagline: "Beauty, unhurried",
     description:
       "A soft, elegant salon and spa template: services with prices, a gallery, stylists, testimonials and booking — built around warm, graceful beauty photography.",
@@ -98,6 +107,7 @@ export const TEMPLATES: TemplateEntry[] = [
     slug: "ventsure-lev-testing",
     name: "VentSure — LEV Testing & COSHH Compliance",
     category: "Industrial & Compliance",
+    niche: "lev",
     tagline: "LEV Testing & COSHH Compliance, Handled.",
     description:
       "A clean, serious industrial template for a LEV testing company: statutory 14-month testing, services, sectors, a 4-step process, testimonials, FAQ and a quote form — built for trust and compliance, with LocalBusiness and FAQ schema.",

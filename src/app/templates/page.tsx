@@ -11,6 +11,33 @@ export const metadata: Metadata = (() => {
 })();
 
 export default function TemplatesPage() {
+  const retreats = TEMPLATES.filter((t) => t.niche === "retreats");
+  const lev = TEMPLATES.filter((t) => t.niche === "lev");
+  const card = (t: (typeof TEMPLATES)[number]) => (
+    <StaggerItem key={t.slug}>
+      <article className="card work-card">
+        <div className="work-card-media">
+          <Image
+            src={t.image}
+            alt={`${t.name} — ${t.tagline}`}
+            width={800}
+            height={500}
+            sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
+          />
+        </div>
+        <div className="work-card-body">
+          <h3>{t.name}</h3>
+          <p>{t.description}</p>
+          <div className="work-tags">
+            <span className="pill">{t.category}</span>
+          </div>
+          <p className="work-live">
+            <Link href={t.href}>View the live template →</Link>
+          </p>
+        </div>
+      </article>
+    </StaggerItem>
+  );
   return (
     <>
       <TwoColumnHero
@@ -52,37 +79,31 @@ export default function TemplatesPage() {
           <Reveal>
             <h2>Available templates</h2>
             <p className="plain-p">
-              One template live today. More are on the way — each one a complete,
-              working site you can walk through before you commit.
+              Two niches live today — Retreats and LEV Testing &amp; Compliance —
+              with more niches on the way. Each template is a complete, working
+              site you can walk through before you commit.
             </p>
           </Reveal>
-          <Stagger className="card-grid">
-            {TEMPLATES.map((t) => (
-              <StaggerItem key={t.slug}>
-                <article className="card work-card">
-                  <div className="work-card-media">
-                    <Image
-                      src={t.image}
-                      alt={`${t.name} — ${t.tagline}`}
-                      width={800}
-                      height={500}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="work-card-body">
-                    <h3>{t.name}</h3>
-                    <p>{t.description}</p>
-                    <div className="work-tags">
-                      <span className="pill">{t.category}</span>
-                    </div>
-                    <p className="work-live">
-                      <Link href={t.href}>View the live template →</Link>
-                    </p>
-                  </div>
-                </article>
-              </StaggerItem>
-            ))}
-          </Stagger>
+          <div className="cat-block">
+            <Reveal>
+              <h2>Retreats</h2>
+              <p className="plain-p">
+                Retreat, wellness and hospitality templates — from a Bali retreat
+                to a yoga studio, a restaurant, a gym and a salon.
+              </p>
+            </Reveal>
+            <Stagger className="card-grid">{retreats.map(card)}</Stagger>
+          </div>
+          <div className="cat-block">
+            <Reveal>
+              <h2>LEV Testing &amp; Compliance</h2>
+              <p className="plain-p">
+                A clean, serious industrial template for a LEV testing company —
+                statutory 14-month testing, services, sectors and a quote form.
+              </p>
+            </Reveal>
+            <Stagger className="card-grid">{lev.map(card)}</Stagger>
+          </div>
           <Reveal>
             <p className="plain-p" style={{ marginTop: 28 }}>
               Want a template for a different kind of business — a restaurant, a
