@@ -503,6 +503,32 @@ export const pageMeta = {
     "source_file": "templates",
     "publication_priority": "Core"
   },
+  "/templates-retreats": {
+    "page_type": "main",
+    "url_path": "/templates-retreats",
+    "canonical": "https://digitalfalconz.com/templates-retreats",
+    "seo_title": "Retreat & Hospitality Website Templates | DigitalFalconz",
+    "title_chars": 57,
+    "meta_description": "Seven ready-made retreat and hospitality website templates: a Bali retreat, yoga studio, restaurant, gym, salon and more. Preview a complete design, then have it tailored to your business.",
+    "description_chars": 201,
+    "h1": "Retreat & hospitality templates",
+    "words": 200,
+    "source_file": "templates-retreats",
+    "publication_priority": "Core"
+  },
+  "/templates-lev": {
+    "page_type": "main",
+    "url_path": "/templates-lev",
+    "canonical": "https://digitalfalconz.com/templates-lev",
+    "seo_title": "LEV Testing Website Template | DigitalFalconz",
+    "title_chars": 44,
+    "meta_description": "VentSure: a ready-made website template for LEV testing companies — statutory 14-month testing, services, sectors, FAQ and a quote form. Preview it live, then have it tailored to your business.",
+    "description_chars": 202,
+    "h1": "LEV testing templates",
+    "words": 200,
+    "source_file": "templates-lev",
+    "publication_priority": "Core"
+  },
   "/templates/bali-retreat": {
     "page_type": "main",
     "url_path": "/templates/bali-retreat",

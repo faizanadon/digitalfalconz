@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Reveal, TwoColumnHero, Stagger, StaggerItem } from "@/components/Motion";
+import { Reveal, TwoColumnHero, Stagger } from "@/components/Motion";
 import { metaFor } from "@/data/site";
 import { TEMPLATES } from "@/data/templates";
+import TemplateCard from "@/components/TemplateCard";
 
 export const metadata: Metadata = (() => {
   const m = metaFor("/templates");
@@ -13,31 +14,6 @@ export const metadata: Metadata = (() => {
 export default function TemplatesPage() {
   const retreats = TEMPLATES.filter((t) => t.niche === "retreats");
   const lev = TEMPLATES.filter((t) => t.niche === "lev");
-  const card = (t: (typeof TEMPLATES)[number]) => (
-    <StaggerItem key={t.slug}>
-      <article className="card work-card">
-        <div className="work-card-media">
-          <Image
-            src={t.image}
-            alt={`${t.name} — ${t.tagline}`}
-            width={800}
-            height={500}
-            sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
-          />
-        </div>
-        <div className="work-card-body">
-          <h3>{t.name}</h3>
-          <p>{t.description}</p>
-          <div className="work-tags">
-            <span className="pill">{t.category}</span>
-          </div>
-          <p className="work-live">
-            <Link href={t.href}>View the live template →</Link>
-          </p>
-        </div>
-      </article>
-    </StaggerItem>
-  );
   return (
     <>
       <TwoColumnHero
@@ -92,7 +68,16 @@ export default function TemplatesPage() {
                 to a yoga studio, a restaurant, a gym and a salon.
               </p>
             </Reveal>
-            <Stagger className="card-grid">{retreats.map(card)}</Stagger>
+            <Stagger className="card-grid">
+              {retreats.map((t) => (
+                <TemplateCard key={t.slug} t={t} />
+              ))}
+            </Stagger>
+            <Reveal>
+              <p className="plain-p" style={{ marginTop: 20 }}>
+                <Link href="/templates-retreats">See all retreat templates →</Link>
+              </p>
+            </Reveal>
           </div>
           <div className="cat-block">
             <Reveal>
@@ -102,7 +87,16 @@ export default function TemplatesPage() {
                 statutory 14-month testing, services, sectors and a quote form.
               </p>
             </Reveal>
-            <Stagger className="card-grid">{lev.map(card)}</Stagger>
+            <Stagger className="card-grid">
+              {lev.map((t) => (
+                <TemplateCard key={t.slug} t={t} />
+              ))}
+            </Stagger>
+            <Reveal>
+              <p className="plain-p" style={{ marginTop: 20 }}>
+                <Link href="/templates-lev">See the LEV template →</Link>
+              </p>
+            </Reveal>
           </div>
           <Reveal>
             <p className="plain-p" style={{ marginTop: 28 }}>
