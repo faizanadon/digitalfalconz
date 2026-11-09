@@ -1,302 +1,198 @@
 "use client";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import { Reveal } from "@/components/Motion";
 
 const U = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
 
-const HERO = U("1499209974431-9dddcece7f88", 2400); // arms open at sunrise
-const YOGA = U("1575052814086-f385e2e2ad1b"); // indoor yoga, soft
-const PILATES = U("1518611012118-696072aa579a"); // pilates class
-const MEDITATION = U("1552196563-55cd4e45efb3"); // minimal meditation
-const MUDRA = U("1591228127791-8e2eaef098d3"); // mudra by the sea
-const FOREST = U("1441974231531-c6227db76b6e"); // sunlit forest path
-const LAKE = U("1508672019048-805c876b67e2"); // meditation on a mountain lake
-const BEACH_YOGA = U("1545205597-3d9d02c29597"); // group yoga on the beach
-const SPA = U("1600334129128-685c5582fd35"); // hot stone massage
+/* Hollow's own demo videos (publicly served on framerusercontent.com) —
+   used here so the hero and class cards move like the reference. Swap for
+   stock video any time; the layout does not depend on them. */
+const HERO_VIDEO =
+  "https://framerusercontent.com/assets/PZXDlESkejc7HzJ14V8qRSWoXFE.mp4";
+const YOGA_VIDEO =
+  "https://framerusercontent.com/assets/YgF6U7ohT0jDSA7rRoqeXIoh9VY.mp4";
+const PILATES_VIDEO =
+  "https://framerusercontent.com/assets/sbuxtDIPvFOAcWoDh0v5nKFPIQ.mp4";
+const MEDITATION_VIDEO =
+  "https://framerusercontent.com/assets/ErO0BFzv8kHWcump8GVZ7oJs8Sk.mp4";
 
-const PATHS = [
+const STUDIO_IMG = U("1575052814086-f385e2e2ad1b", 1200); // indoor yoga, soft
+const LAKE_IMG = U("1508672019048-805c876b67e2", 1200); // meditation on a mountain lake
+const FOREST_IMG = U("1441974231531-c6227db76b6e", 1600); // sunlit forest path
+const MEDITATION_IMG = U("1552196563-55cd4e45efb3", 1200); // minimal meditation
+const SPA_IMG = U("1600334129128-685c5582fd35", 1400); // hot stone massage
+const BEACH_YOGA_IMG = U("1545205597-3d9d02c29597", 1400); // group yoga on the beach
+
+const CLASSES = [
   {
-    img: YOGA,
-    num: "Path 01",
+    video: YOGA_VIDEO,
     title: "Yoga",
-    text: "Gentle rhythms, stillness, and a deeper kind of strength. Breath-led, unhurried, and always yours.",
-    meta: "60–75 min · All levels",
+    text: "Gentle rhythms, stillness, and a deeper kind of strength.",
   },
   {
-    img: PILATES,
-    num: "Path 02",
+    video: PILATES_VIDEO,
     title: "Pilates Mat",
-    text: "Low to the ground. High focus. Full-body tone, balance and the quiet confidence of a strong centre.",
-    meta: "50 min · All levels",
+    text: "Low to the ground. High focus. Full body tone and balance.",
   },
   {
-    img: MEDITATION,
-    num: "Path 03",
+    video: MEDITATION_VIDEO,
     title: "Meditation",
-    text: "Stillness, practised gently. Breathwork, body scans and sitting in good company — no experience needed.",
-    meta: "30–45 min · Beginners welcome",
+    text: "Spring-loaded strength, deeper control, moving with precision.",
   },
 ];
 
-const RETREATS = [
-  {
-    img: FOREST,
-    tag: "Autumn · 4 days",
-    title: "Autumn Forest Retreat",
-    text: "Four days in a quiet forest house, surrounded by water and silence. Morning flows, evening meditations, shared meals and sacred rest — the season turning, and you with it.",
-    when: ["October 9–12", "Forest house · Lakeside", "8 places left"],
-  },
-  {
-    img: LAKE,
-    tag: "Winter · 3 days",
-    title: "Winter Stillness Retreat",
-    text: "Three days of doing less, on purpose. Long sits by the lake, slow yoga, hot stone rituals and early nights. Come tired; leave rested in a way sleep alone never manages.",
-    when: ["January 16–18", "Mountain lake house", "10 places left"],
-  },
-  {
-    img: BEACH_YOGA,
-    tag: "Spring · 5 days",
-    title: "Spring Awakening Retreat",
-    text: "Five days to shake off the winter. Sunrise practice on the sand, breathwork, cold water, and long lunches in the sun. A gentle return to energy.",
-    when: ["April 10–14", "Coastal retreat centre", "12 places left"],
-  },
+const FLOATS = [
+  { img: U("1499209974431-9dddcece7f88", 500), x: "6%", y: "14%", w: 150, r: "-6deg", d: "0s" },
+  { img: U("1544367567-0f2fcb009e0b", 500), x: "14%", y: "62%", w: 120, r: "4deg", d: "1.2s" },
+  { img: U("1441974231531-c6227db76b6e", 500), x: "80%", y: "10%", w: 140, r: "5deg", d: "0.6s" },
+  { img: U("1476231682828-37e571bc172f", 500), x: "86%", y: "60%", w: 130, r: "-4deg", d: "1.8s" },
+  { img: U("1518611012118-696072aa579a", 500), x: "30%", y: "78%", w: 110, r: "3deg", d: "0.9s" },
+  { img: U("1502082553048-f009c37129b9", 500), x: "64%", y: "80%", w: 120, r: "-5deg", d: "1.5s" },
 ];
-
-const TEACHERS = [
-  {
-    initials: "EM",
-    bg: "#7d8b6a",
-    name: "Elena Marsh",
-    role: "Yoga · Founder",
-    text: "Fifteen years of teaching, and still a student. Elena holds the room the way a forest holds light — quietly, and completely.",
-  },
-  {
-    initials: "JK",
-    bg: "#a87b5f",
-    name: "Jonas Keller",
-    role: "Pilates · Breathwork",
-    text: "A former dancer who found stillness slower than speed. Jonas teaches precision with a soft voice and a lighter touch.",
-  },
-  {
-    initials: "AR",
-    bg: "#8a7a5f",
-    name: "Aya Rahman",
-    role: "Meditation · Sound",
-    text: "Aya guides the sits and the sound baths. Her rule is simple: nothing to achieve, everything to notice.",
-  },
-];
-
-const PLANS = [
-  {
-    name: "A Weekend",
-    nights: "3 days · 2 nights",
-    price: "$420",
-    per: "per person",
-    feats: ["Forest house stay", "Daily yoga & meditation", "One spa ritual", "All shared meals", "Guided forest walk"],
-    featured: false,
-  },
-  {
-    name: "The Retreat",
-    nights: "4 days · 3 nights",
-    price: "$680",
-    per: "per person",
-    feats: ["Forest house stay", "Daily yoga, Pilates & meditation", "Two spa rituals", "All meals included", "Lake & forest excursions", "Sound bath evening"],
-    featured: true,
-  },
-  {
-    name: "A Full Week",
-    nights: "7 days · 6 nights",
-    price: "$1,150",
-    per: "per person",
-    feats: ["Forest house stay", "Full daily programme", "Four spa rituals", "All meals included", "Two excursions", "Private session with a teacher"],
-    featured: false,
-  },
-];
-
-function useAutoAdvance(length: number, ms: number, paused: boolean) {
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    if (paused) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % length), ms);
-    return () => clearInterval(t);
-  }, [length, ms, paused]);
-  return [index, setIndex] as const;
-}
 
 export default function SomaRetreat() {
-  const [paused, setPaused] = useState(false);
-  const [retreat, setRetreat] = useAutoAdvance(RETREATS.length, 6000, paused);
-  const [booked, setBooked] = useState(false);
-
-  const onBook = (e: FormEvent<HTMLFormElement>) => {
+  const [subscribed, setSubscribed] = useState(false);
+  const onSubscribe = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setBooked(true);
+    setSubscribed(true);
   };
-
-  const now = RETREATS[retreat];
 
   return (
     <div className="sm">
-      {/* ---- announcement ---- */}
-      <div className="sm-announce">
-        <strong>A small change in the air</strong> — Autumn retreat dates are
-        live. <a href="#retreats">See what&apos;s new →</a>
-      </div>
-
-      {/* ---- nav ---- */}
+      {/* ---- floating pill nav ---- */}
       <header className="sm-nav">
         <div className="sm-nav-inner">
           <a className="sm-brand" href="#top">
             SOMA
           </a>
           <nav className="sm-nav-links" aria-label="Retreat">
-            <a href="#paths">Paths</a>
-            <a href="#retreats">Retreats</a>
-            <a href="#teachers">Teachers</a>
+            <a href="#classes">Classes</a>
+            <a href="#retreat">Retreat</a>
+            <a href="#studio">Studio</a>
             <a href="#first-time">First time</a>
+            <a href="#journal">Journal</a>
           </nav>
-          <a className="sm-btn" href="#reserve">
+          <a className="sm-btn" href="#retreat">
             Book a retreat
           </a>
         </div>
       </header>
 
-      {/* ---- hero ---- */}
+      {/* ---- hero: full-viewport video ---- */}
       <section className="sm-hero" id="top">
-        <div className="sm-hero-copy">
-          <Reveal>
-            <span className="sm-kicker">A yoga &amp; retreat studio</span>
-            <h1>
-              Come home to <em>your body.</em>
-            </h1>
-            <p className="sm-hero-sub">
-              A quiet studio and a forest house for retreats — where practice
-              is gentle, breath is the teacher, and you are allowed to arrive
-              exactly as you are.
-            </p>
-            <div className="sm-hero-cta">
-              <a className="sm-btn" href="#reserve">
-                Book a retreat →
-              </a>
-              <a className="sm-btn ghost" href="#paths">
-                Explore the paths
-              </a>
-            </div>
-          </Reveal>
-        </div>
-        <div className="sm-hero-media">
-          <Image
-            src={HERO}
-            alt="A person with arms open at sunrise over misty mountains"
-            fill
-            priority
-            sizes="(max-width: 900px) 100vw, 50vw"
+        <div className="sm-hero-frame">
+          <video
+            src={HERO_VIDEO}
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={U("1499209974431-9dddcece7f88", 2000)}
           />
-          <figcaption>Sunrise practice, first light</figcaption>
+          <svg
+            className="sm-squiggle"
+            viewBox="0 0 280 110"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M10 66 C 30 22, 50 22, 66 58 C 82 94, 102 94, 118 58 C 134 22, 154 22, 170 58 C 186 94, 206 94, 222 58 C 238 22, 258 22, 272 56"
+              stroke="#e6f6ba"
+              strokeWidth="11"
+              strokeLinecap="round"
+            />
+          </svg>
+          <h1 className="sm-hero-h1">
+            Come home
+            <br />
+            <em>to your body.</em>
+          </h1>
+          <a className="sm-news" href="#retreat">
+            <span className="sm-lime-pill">News</span>
+            <p>
+              A Small Change in the Air — Updated Schedule Starting September
+              <span className="sm-news-arrow">↗</span>
+            </p>
+          </a>
         </div>
       </section>
 
-      {/* ---- belief ---- */}
+      {/* ---- manifesto ---- */}
       <section className="sm-section">
         <div className="sm-wrap">
-          <div className="sm-belief">
+          <div className="sm-manifesto">
             <Reveal>
-              <span className="sm-kicker">What we believe</span>
-              <p className="sm-big">
+              <p className="sm-state">
                 We believe in embodied practice that nourishes every part of
-                you — <em>body, mind and spirit.</em> Our classes aren&apos;t
-                about perfect shapes. They&apos;re about real presence, deep
-                listening and joyful strength.
+                you — body, mind and spirit. Our classes aren&apos;t about
+                perfect shapes. They&apos;re about real presence, deep
+                listening, and joyful strength.
               </p>
             </Reveal>
+            <div className="sm-divider" aria-hidden="true" />
             <div className="sm-values">
               <Reveal delay={0}>
                 <div className="sm-value">
-                  <span className="sm-num">01</span>
-                  <h3>Rooted in softness</h3>
-                  <p>
-                    Nothing here is forced. We move the way the body wants to
-                    move — slowly, kindly, and without apology.
-                  </p>
+                  <span className="sm-ico">✦</span>
+                  <span className="sm-label">Rooted in softness</span>
                 </div>
               </Reveal>
               <Reveal delay={0.08}>
                 <div className="sm-value">
-                  <span className="sm-num">02</span>
-                  <h3>Designed for presence</h3>
-                  <p>
-                    Small rooms, quiet mornings, no mirrors shouting at you.
-                    The space is built so you can actually arrive in it.
-                  </p>
+                  <span className="sm-ico">❋</span>
+                  <span className="sm-label">Designed for presence</span>
                 </div>
               </Reveal>
               <Reveal delay={0.16}>
                 <div className="sm-value">
-                  <span className="sm-num">03</span>
-                  <h3>Real energy</h3>
-                  <p>
-                    Not hype, not hustle. The steady energy that comes from
-                    breath, rest and being honestly looked after.
-                  </p>
+                  <span className="sm-ico">☀</span>
+                  <span className="sm-label">Real energy</span>
                 </div>
               </Reveal>
             </div>
           </div>
-          <Reveal delay={0.1}>
-            <div
-              style={{
-                marginTop: 56,
-                borderRadius: 24,
-                overflow: "hidden",
-              }}
-            >
-              <Image
-                src={MUDRA}
-                alt="A hand in meditation mudra by the sea"
-                width={1600}
-                height={700}
-                sizes="(max-width: 900px) 100vw, 90vw"
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
-            </div>
-          </Reveal>
         </div>
       </section>
 
-      {/* ---- three paths ---- */}
-      <section className="sm-section" id="paths" style={{ paddingTop: 0 }}>
+      {/* ---- classes ---- */}
+      <section className="sm-section" id="classes" style={{ paddingTop: 0 }}>
         <div className="sm-wrap">
-          <Reveal>
-            <span className="sm-kicker">Classes</span>
-            <h2 className="sm-h2">
-              Three paths. <em>One intention.</em>
-            </h2>
-            <p className="sm-lede">
-              Each session is a different way to return — to your body, to
-              presence, to breath.
-            </p>
-          </Reveal>
-          <div className="sm-paths">
-            {PATHS.map((p, i) => (
-              <Reveal key={p.title} delay={i * 0.08}>
-                <article className="sm-path">
-                  <div className="sm-path-media">
-                    <Image
-                      src={p.img}
-                      alt={p.title}
-                      width={800}
-                      height={1000}
-                      sizes="(max-width: 900px) 100vw, 33vw"
-                    />
-                    <span className="sm-path-num">{p.num}</span>
+          <div className="sm-sec-head">
+            <Reveal>
+              <span className="sm-label">Classes</span>
+              <h2 className="sm-h2">
+                Three <em>paths.</em>
+                <br />
+                One <em>intention.</em>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div>
+                <p>
+                  Each session is a different way to return — to your body,
+                  to presence, to breath.
+                </p>
+                <a className="sm-btn" href="#retreat" style={{ marginTop: 18 }}>
+                  All classes →
+                </a>
+              </div>
+            </Reveal>
+          </div>
+          <div className="sm-classes-grid">
+            {CLASSES.map((c, i) => (
+              <Reveal key={c.title} delay={i * 0.08}>
+                <article className="sm-class">
+                  <div className="sm-class-media">
+                    <video src={c.video} autoPlay muted loop playsInline />
+                    <div className="sm-class-eye" aria-hidden="true">
+                      <span>◉</span>
+                    </div>
                   </div>
-                  <div className="sm-path-body">
-                    <h3>{p.title}</h3>
-                    <p>{p.text}</p>
-                    <div className="sm-path-meta">{p.meta}</div>
+                  <div className="sm-class-body">
+                    <p>{c.text}</p>
+                    <h3>{c.title}</h3>
                   </div>
                 </article>
               </Reveal>
@@ -305,160 +201,129 @@ export default function SomaRetreat() {
         </div>
       </section>
 
-      {/* ---- upcoming retreats carousel ---- */}
-      <section className="sm-section" id="retreats" style={{ paddingTop: 0 }}>
+      {/* ---- studio / about teaser ---- */}
+      <section className="sm-section" id="studio" style={{ paddingTop: 0 }}>
         <div className="sm-wrap">
-          <Reveal>
-            <span className="sm-kicker">Events</span>
-            <h2 className="sm-h2">
-              Upcoming <em>retreats.</em>
-            </h2>
-            <p className="sm-lede">
-              Step away from the noise. Join us for a few days of stillness,
-              movement and deep connection in nature.
-            </p>
-          </Reveal>
-          <div
-            style={{ marginTop: 48 }}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-          >
-            <div className="sm-retreat">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={retreat}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.55, ease: "easeInOut" }}
-                >
-                  <div className="sm-retreat-grid">
-                    <div className="sm-retreat-media">
-                      <Image
-                        src={now.img}
-                        alt={now.title}
-                        width={1400}
-                        height={1000}
-                        sizes="(max-width: 860px) 100vw, 50vw"
-                      />
-                    </div>
-                    <div className="sm-retreat-body">
-                      <span className="sm-kicker">{now.tag}</span>
-                      <h3>{now.title}</h3>
-                      <p>{now.text}</p>
-                      <div className="sm-retreat-when">
-                        {now.when.map((w) => (
-                          <span key={w}>{w}</span>
-                        ))}
-                      </div>
-                      <a className="sm-btn" href="#reserve">
-                        Reserve a place →
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-              <button
-                className="sm-arrow prev"
-                aria-label="Previous retreat"
-                onClick={() =>
-                  setRetreat((retreat - 1 + RETREATS.length) % RETREATS.length)
-                }
-              >
-                ←
-              </button>
-              <button
-                className="sm-arrow next"
-                aria-label="Next retreat"
-                onClick={() => setRetreat((retreat + 1) % RETREATS.length)}
-              >
-                →
-              </button>
-            </div>
-            <div className="sm-dots" role="tablist" aria-label="Retreats">
-              {RETREATS.map((r, i) => (
-                <button
-                  key={r.title}
-                  className={i === retreat ? "on" : ""}
-                  aria-label={r.title}
-                  onClick={() => setRetreat(i)}
+          <div className="sm-studio">
+            <Reveal>
+              <div className="sm-studio-img">
+                <Image
+                  src={STUDIO_IMG}
+                  alt="A teacher practising yoga in a bright, pale studio"
+                  width={1200}
+                  height={1440}
+                  sizes="(max-width: 860px) 100vw, 45vw"
                 />
-              ))}
-            </div>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div>
+                <span className="sm-byline">Elena Marsh</span>
+                <div style={{ marginTop: 14 }}>
+                  <span className="sm-label">Our studio</span>
+                </div>
+                <h2>
+                  More than a studio. <em>It&apos;s a way of coming home.</em>
+                </h2>
+                <p>
+                  Soma was born from the need for softness. For a space that
+                  doesn&apos;t ask you to perform — just to be. A quiet room,
+                  a forest house, and teachers who meet you exactly where you
+                  are.
+                </p>
+                <a className="sm-btn" href="#first-time">
+                  About →
+                </a>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ---- teachers ---- */}
-      <section className="sm-section" id="teachers" style={{ paddingTop: 0 }}>
+      {/* ---- events / featured retreat ---- */}
+      <section className="sm-events" id="retreat">
+        <div
+          className="sm-events-bg"
+          style={{ backgroundImage: `url(${FOREST_IMG})` }}
+          aria-hidden="true"
+        />
         <div className="sm-wrap">
           <Reveal>
-            <span className="sm-kicker">Teachers</span>
-            <h2 className="sm-h2">
-              Held by <em>good hands.</em>
-            </h2>
-            <p className="sm-lede">
-              We guide you with care, not pressure. Every class meets you
-              where you are.
-            </p>
+            <div className="sm-events-card">
+              <div className="sm-events-body">
+                <span className="sm-label">Events</span>
+                <h2>
+                  Upcoming <em>Retreat</em>
+                </h2>
+                <p>
+                  Step away from the noise. Join us for a weekend of
+                  stillness, movement and deep connection in nature.
+                </p>
+                <a className="sm-btn" href="#first-time">
+                  See all events →
+                </a>
+                <div style={{ marginTop: 28 }}>
+                  <span className="sm-lime-pill">September 12–15</span>
+                </div>
+                <p style={{ margin: "14px 0 0", fontWeight: 700, color: "#594a3c" }}>
+                  Late Summer Yoga Retreat · Kaszuby, Poland
+                </p>
+                <p style={{ margin: "6px 0 0" }}>
+                  A 4-day escape into nature. Morning flows, evening
+                  meditations, shared meals and sacred rest.
+                </p>
+                <a className="sm-btn lime" href="#first-time" style={{ marginTop: 22 }}>
+                  View details →
+                </a>
+              </div>
+              <div className="sm-events-media">
+                <span className="sm-events-when">
+                  <span className="sm-lime-pill">Sept 12–15</span>
+                </span>
+                <Image
+                  src={LAKE_IMG}
+                  alt="A person meditating on a wooden deck over a mountain lake"
+                  width={1200}
+                  height={1400}
+                  sizes="(max-width: 860px) 100vw, 40vw"
+                />
+              </div>
+            </div>
           </Reveal>
-          <div className="sm-teachers">
-            {TEACHERS.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.08}>
-                <article className="sm-teacher">
-                  <div className="sm-avatar" style={{ background: t.bg }}>
-                    {t.initials}
-                  </div>
-                  <h3>{t.name}</h3>
-                  <div className="sm-role">{t.role}</div>
-                  <p>{t.text}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
       {/* ---- first time ---- */}
-      <section className="sm-section" id="first-time" style={{ paddingTop: 0 }}>
+      <section className="sm-first sm-section" id="first-time">
         <div className="sm-wrap">
-          <div className="sm-first">
+          <div className="sm-first-grid">
             <Reveal>
-              <span className="sm-kicker">First time with us?</span>
-              <h2 className="sm-h2">
-                Start your journey <em>gently.</em>
-              </h2>
-              <p className="sm-lede">
-                Everything you need to know — how to prepare, what to bring,
-                and what to expect from your first visit.
-              </p>
-              <div className="sm-first-list">
-                <div className="sm-first-item">
-                  <span className="sm-ico">◐</span>
-                  <div>
+              <div>
+                <span className="sm-lime-pill">First time with us?</span>
+                <h2>
+                  Start your journey <em>gently.</em>
+                </h2>
+                <p>
+                  Everything you need to know — how to prepare, what to
+                  bring, and what to expect from your first visit.
+                </p>
+                <a className="sm-btn white" href="#journal">
+                  Learn how to prepare →
+                </a>
+                <div className="sm-first-cards">
+                  <div className="sm-first-card">
+                    <span className="sm-ico">◐</span>
                     <h3>Supportive teachers</h3>
                     <p>
                       We guide you with care, not pressure. Every class meets
                       you where you are.
                     </p>
                   </div>
-                </div>
-                <div className="sm-first-item">
-                  <span className="sm-ico">◔</span>
-                  <div>
+                  <div className="sm-first-card">
+                    <span className="sm-ico">◔</span>
                     <h3>Slow pace</h3>
                     <p>
                       No rush. No noise. Just time to land in your body.
-                    </p>
-                  </div>
-                </div>
-                <div className="sm-first-item">
-                  <span className="sm-ico">✦</span>
-                  <div>
-                    <h3>Bring almost nothing</h3>
-                    <p>
-                      Mats, props, blankets and tea are all here. Bring water,
-                      comfortable clothes, and an open morning.
                     </p>
                   </div>
                 </div>
@@ -467,10 +332,10 @@ export default function SomaRetreat() {
             <Reveal delay={0.12}>
               <div className="sm-first-img">
                 <Image
-                  src={SPA}
-                  alt="Hot stone massage with orchids"
+                  src={MEDITATION_IMG}
+                  alt="A woman meditating with eyes closed in a bright, minimal studio"
                   width={1200}
-                  height={1020}
+                  height={1320}
                   sizes="(max-width: 900px) 100vw, 45vw"
                 />
               </div>
@@ -479,134 +344,164 @@ export default function SomaRetreat() {
         </div>
       </section>
 
-      {/* ---- packages ---- */}
-      <section className="sm-section" style={{ paddingTop: 0 }}>
+      {/* ---- journal / blog ---- */}
+      <section className="sm-section" id="journal">
         <div className="sm-wrap">
-          <Reveal>
-            <span className="sm-kicker">Retreats</span>
-            <h2 className="sm-h2">
-              Choose how long <em>to stay.</em>
-            </h2>
-            <p className="sm-lede">
-              A 20% deposit holds your place. The rest is due thirty days
-              before arrival, and life happens — you can move your dates once,
-              free.
-            </p>
-          </Reveal>
-          <div className="sm-plans">
-            {PLANS.map((p, i) => (
-              <Reveal key={p.name} delay={i * 0.08}>
-                <article className={`sm-plan${p.featured ? " featured" : ""}`}>
-                  {p.featured && <span className="sm-plan-badge">Most booked</span>}
-                  <h3>{p.name}</h3>
-                  <span className="sm-plan-nights">{p.nights}</span>
-                  <div className="sm-plan-price">
-                    {p.price} <span>{p.per}</span>
-                  </div>
-                  <ul>
-                    {p.feats.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                  <a className="sm-btn" href="#reserve">
-                    Reserve {p.name}
-                  </a>
-                </article>
-              </Reveal>
-            ))}
+          <div className="sm-sec-head">
+            <Reveal>
+              <span className="sm-label">Blog &amp; News</span>
+              <h2 className="sm-h2">
+                Reflections from <em>our practice</em> — simple, slow, and
+                embodied.
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div>
+                <p>
+                  Notes on listening, breathing and moving — written the way
+                  we teach: gently, and without hurry.
+                </p>
+                <a className="sm-btn" href="#journal" style={{ marginTop: 18 }}>
+                  All articles →
+                </a>
+              </div>
+            </Reveal>
+          </div>
+          <div className="sm-journal-grid">
+            <Reveal>
+              <article className="sm-post">
+                <div className="sm-post-media">
+                  <span className="sm-lime-pill">Body</span>
+                  <Image
+                    src={SPA_IMG}
+                    alt="A hot stone massage with white orchids"
+                    width={1400}
+                    height={920}
+                    sizes="(max-width: 760px) 100vw, 45vw"
+                  />
+                </div>
+                <div className="sm-post-body">
+                  <h3>
+                    Listening to Your Body: A Gentle Guide to Practicing with
+                    Awareness
+                  </h3>
+                  <span className="sm-date">May 23, 2025</span>
+                </div>
+              </article>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <article className="sm-post">
+                <div className="sm-post-media">
+                  <span className="sm-lime-pill">Body</span>
+                  <Image
+                    src={BEACH_YOGA_IMG}
+                    alt="A group practising yoga together on a beach"
+                    width={1400}
+                    height={920}
+                    sizes="(max-width: 760px) 100vw, 45vw"
+                  />
+                </div>
+                <div className="sm-post-body">
+                  <h3>
+                    Finding Your Balance: Navigating Daily Transitions
+                  </h3>
+                  <span className="sm-date">Jun 20, 2026</span>
+                </div>
+              </article>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ---- reserve / booking ---- */}
-      <section className="sm-section" id="reserve" style={{ paddingTop: 0 }}>
-        <div className="sm-wrap">
-          <div className="sm-book">
-            <Reveal>
-              <span className="sm-kicker" style={{ color: "#c9a25c" }}>
-                Reserve
-              </span>
-              <h2>Your mat is waiting.</h2>
-              <p>
-                Tell us which retreat calls to you and when you would like to
-                come. We reply personally within a day, and hold your place
-                for 48 hours while you decide.
-              </p>
-              <p style={{ marginTop: 18 }}>
-                Prefer to talk first?{" "}
-                <a href="mailto:hello@soma-retreat.com" style={{ color: "#c9a25c" }}>
-                  hello@soma-retreat.com
-                </a>
-              </p>
-            </Reveal>
-            <Reveal delay={0.1}>
-              {booked ? (
-                <div className="sm-form-ok">
-                  <strong>Thank you — your request is in.</strong>
-                  <br />
-                  We have your details and will write back personally within
-                  a day to confirm your place and hold it for 48 hours.
-                </div>
-              ) : (
-                <form className="sm-form" onSubmit={onBook}>
-                  <label>
-                    Full name
-                    <input name="name" type="text" placeholder="Your name" required />
-                  </label>
-                  <label>
-                    Email
-                    <input name="email" type="email" placeholder="you@example.com" required />
-                  </label>
-                  <label>
-                    Retreat
-                    <select name="retreat" defaultValue="The Retreat — 4 days">
-                      <option>The Retreat — 4 days</option>
-                      <option>A Weekend — 3 days</option>
-                      <option>A Full Week — 7 days</option>
-                    </select>
-                  </label>
-                  <label>
-                    Guests
-                    <select name="guests" defaultValue="1 guest">
-                      <option>1 guest</option>
-                      <option>2 guests</option>
-                    </select>
-                  </label>
-                  <label>
-                    Arrival date
-                    <input name="arrival" type="date" required />
-                  </label>
-                  <label>
-                    Anything we should know?
-                    <input name="notes" type="text" placeholder="Experience, injuries, wishes" />
-                  </label>
-                  <button className="sm-btn light" type="submit">
-                    Request my place →
-                  </button>
-                </form>
-              )}
-            </Reveal>
+      {/* ---- final CTA ---- */}
+      <section className="sm-cta">
+        <div
+          className="sm-cta-bg"
+          style={{ backgroundImage: `url(${LAKE_IMG})` }}
+          aria-hidden="true"
+        />
+        {FLOATS.map((f) => (
+          <div
+            key={f.img}
+            className="sm-float"
+            style={{
+              left: f.x,
+              top: f.y,
+              width: f.w,
+              height: f.w * 1.25,
+              ["--r" as string]: f.r,
+              animationDelay: f.d,
+            }}
+          >
+            <Image src={f.img} alt="" width={500} height={625} sizes="200px" />
+          </div>
+        ))}
+        <div className="sm-wrap sm-cta-inner">
+          <h2>Find what moves you</h2>
+          <div className="sm-cta-btns">
+            <a className="sm-btn light" href="#classes">
+              Explore classes →
+            </a>
+            <a className="sm-btn outline" href="#top">
+              Visit Instagram →
+            </a>
           </div>
         </div>
       </section>
 
       {/* ---- footer ---- */}
       <footer className="sm-footer">
-        <div className="sm-wrap">
+        <div
+          className="sm-footer-bg"
+          style={{ backgroundImage: `url(${FOREST_IMG})` }}
+          aria-hidden="true"
+        />
+        <div className="sm-wrap sm-footer-inner">
           <div className="sm-footer-top">
+            <div className="sm-footer-news">
+              <h3>Join our healing newsletter</h3>
+              {subscribed ? (
+                <p style={{ color: "#e6f6ba", margin: 0 }}>
+                  Thank you — you&apos;re in. A gentle note, once a month.
+                </p>
+              ) : (
+                <form className="sm-news-form" onSubmit={onSubscribe}>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    aria-label="Email address"
+                    required
+                  />
+                  <button className="sm-btn light" type="submit">
+                    Subscribe →
+                  </button>
+                </form>
+              )}
+            </div>
+            <nav className="sm-footer-links" aria-label="Footer">
+              <ul>
+                <li><a href="#classes">Classes</a></li>
+                <li><a href="#retreat">Events</a></li>
+                <li><a href="#studio">About</a></li>
+                <li><a href="#first-time">Your first time</a></li>
+              </ul>
+              <ul>
+                <li><a href="#journal">Blogs &amp; news</a></li>
+                <li><a href="#retreat">Retreats</a></li>
+                <li><a href="#top">Contact</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div className="sm-footer-mid">
+            <small>© 2026 Soma Retreat — a yoga &amp; retreat template</small>
             <a className="sm-brand" href="#top">
               SOMA
             </a>
-            <nav className="sm-footer-links" aria-label="Footer">
-              <a href="#paths">Paths</a>
-              <a href="#retreats">Retreats</a>
-              <a href="#teachers">Teachers</a>
-              <a href="#first-time">First time</a>
-              <a href="#reserve">Reserve</a>
-            </nav>
+            <small>Legal · Style Guide · Licenses</small>
           </div>
           <div className="sm-footer-bottom">
-            <span>Soma Retreat · hello@soma-retreat.com</span>
+            <em>Peace comes from within. Do not seek it without.</em>
             <span>
               Website template by{" "}
               <a href="https://digitalfalconz.com">DigitalFalconz</a>
