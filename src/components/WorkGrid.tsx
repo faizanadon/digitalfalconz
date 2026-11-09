@@ -10,6 +10,11 @@ import { WORK_FILTERS, WORK_PROJECTS, type WorkProject } from "@/data/work";
     16/10 via aspect-ratio + object-fit:cover, same size on every card. */
 function WorkCard({ project }: { project: WorkProject }) {
   const isPortfolioLink = project.liveUrl?.includes("faizannawaz.vercel.app") ?? false;
+  // WorkGrid is a client component, so a missing logo file is caught here:
+  // the card falls back to the placeholder tile instead of a broken image.
+  const [logoFailed, setLogoFailed] = useState(false);
+  const logo = project.logo;
+  const showLogo = !!logo && !logoFailed;
   return (
     <motion.article
       className="card work-card"
@@ -27,6 +32,32 @@ function WorkCard({ project }: { project: WorkProject }) {
             height={500}
             sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
           />
+        ) : showLogo && logo ? (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "#fff",
+              display: "grid",
+              placeItems: "center",
+              padding: 28,
+            }}
+          >
+            <Image
+              src={logo.src}
+              alt={`${project.title} logo`}
+              width={logo.width}
+              height={logo.height}
+              onError={() => setLogoFailed(true)}
+              style={{
+                width: "auto",
+                height: "auto",
+                maxWidth: "72%",
+                maxHeight: "72%",
+                objectFit: "contain",
+              }}
+            />
+          </div>
         ) : (
           <div className="work-card-placeholder" aria-label={`${project.title} — no screenshot supplied`}>
             <div>

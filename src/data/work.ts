@@ -31,6 +31,8 @@ export interface WorkProject {
   filter: string;
   /** Slug of the /work/[slug] case study page, if this project has one. */
   caseStudy?: string;
+  /** Brand logo (public/work/), shown on the card when present. */
+  logo?: { src: string; width: number; height: number };
 }
 
 export const PORTFOLIO_URL = "https://faizannawaz.vercel.app/work";
@@ -290,6 +292,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: null,
     filter: "Paid Media",
     caseStudy: "skyphonez",
+    logo: { src: "/work/skyphonez-logo.webp", width: 225, height: 225 },
   },
   {
     title: "Technoor.me",
@@ -303,6 +306,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: null,
     filter: "Paid Media",
     caseStudy: "technoor",
+    logo: { src: "/work/technoor-logo.webp", width: 225, height: 225 },
   },
   {
     title: "Vitastrong",
@@ -316,6 +320,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: null,
     filter: "Paid Media",
     caseStudy: "vitastrong",
+    logo: { src: "/work/vitastrong-logo.webp", width: 225, height: 225 },
   },
   {
     title: "Wise Market Australia",
@@ -329,6 +334,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: null,
     filter: "Paid Media",
     caseStudy: "wise-market-australia",
+    logo: { src: "/work/wise-market-australia-logo.webp", width: 225, height: 225 },
   },
   {
     title: "Wise Market Pakistan",
@@ -342,6 +348,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: null,
     filter: "Paid Media",
     caseStudy: "wise-market-pakistan",
+    logo: { src: "/work/wise-market-pakistan-logo.webp", width: 318, height: 159 },
   },
   {
     title: "Mawa Group",
@@ -355,6 +362,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: null,
     filter: "Paid Media",
     caseStudy: "mawa-group",
+    logo: { src: "/work/mawa-group-logo.webp", width: 225, height: 225 },
   },
 ];
 

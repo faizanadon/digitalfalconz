@@ -55,6 +55,25 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             <Link href="/">Home</Link> / <Link href="/work">Work</Link> / {cs.brand}
           </p>
           <span className="mono kicker">Case Study — Paid Media</span>
+          {cs.logo && hasImage(cs.logo.src) && (
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: 14,
+                padding: 14,
+                display: "inline-block",
+                marginBottom: 18,
+              }}
+            >
+              <Image
+                src={cs.logo.src}
+                alt={`${cs.brand} logo`}
+                width={cs.logo.width}
+                height={cs.logo.height}
+                style={{ width: 110, height: "auto", display: "block" }}
+              />
+            </div>
+          )}
           <h1>{cs.brand}</h1>
           <div className="pill-row">
             <span className="pill">{cs.industry}</span>
