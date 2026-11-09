@@ -40,6 +40,27 @@ const cormorant = localFont({
   variable: "--font-retreat-serif",
   display: "swap",
 });
+// Manukit-style condensed serif + grotesque sans, used ONLY by the
+// VentSure LEV template (/templates/ventsure-lev-testing). Same pattern:
+// variables defined here, applied only inside that template.
+const libreCaslonCond = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource/libre-caslon-condensed/files/libre-caslon-condensed-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../../node_modules/@fontsource/libre-caslon-condensed/files/libre-caslon-condensed-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-lev-serif",
+  display: "swap",
+});
+const ibmPlexSans = localFont({
+  src: [
+    { path: "../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-lev-sans",
+  display: "swap",
+});
 
 const home = metaFor("/");
 
@@ -62,7 +83,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="top" className={`${interTight.variable} ${inter.variable} ${spaceMono.variable} ${cormorant.variable}`}>
+      <body id="top" className={`${interTight.variable} ${inter.variable} ${spaceMono.variable} ${cormorant.variable} ${libreCaslonCond.variable} ${ibmPlexSans.variable}`}>
         {/* Set data-theme before paint so there is no light/dark flash.
             Dark mode is default; stored choice wins if user toggled. */}
         <script
