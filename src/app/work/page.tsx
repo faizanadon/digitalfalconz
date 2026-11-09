@@ -23,8 +23,25 @@ export default function WorkPage() {
       </TwoColumnHero>
       <div className="wrap">
         <Reveal>
-          <h2 style={{ marginTop: 8 }}>Selected projects</h2>
-          <p className="plain-p">Twenty-eight projects, each named, with the live site where available and the role we played. Every image is shown at the same size.</p>
+          <header className="work-ed-head">
+            <div>
+              <span className="work-ed-kicker">— Projects</span>
+              <h2 className="work-ed-title">
+                Selected work, <em>end-to-end</em>
+                <br />
+                from brief to results.
+              </h2>
+            </div>
+            <div className="work-ed-count">
+              <span className="work-ed-count-num">
+                <em>28 projects</em>
+              </span>
+              <span className="work-ed-count-note">
+                across web, paid media &amp; products — a sample of recent
+                favorites.
+              </span>
+            </div>
+          </header>
           <WorkGrid />
         </Reveal>
       </div>
