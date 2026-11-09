@@ -71,6 +71,8 @@ export const metadata: Metadata = {
   description: home?.meta_description ?? "DigitalFalconz connects performance marketing, websites, software development, branding and AI automation to help ambitious businesses grow.",
   alternates: { canonical: home?.canonical ?? site.domain },
   icons: { icon: "/logo-mark-hires.png", apple: "/logo-mark-hires.png" },
+  // Google Search Console ownership verification (added 2026-11-09).
+  verification: { google: "yyWadV4yDStyoaOW6063zh-Etx7V-lUPabzUX12Xz8E" },
   openGraph: {
     type: "website",
     url: site.domain,
