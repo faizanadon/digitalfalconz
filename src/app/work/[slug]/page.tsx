@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import { existsSync } from "fs";
+import { join } from "path";
 import { ArrowUpRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import { CASE_STUDIES, caseStudyBySlug } from "@/data/caseStudies";
 import { site } from "@/data/site";
+
+/** Dashboard screenshots live in public/work/case-studies/ and are added to
+    the repo separately (binary files cannot be pushed with the current
+    tooling). Render a screenshot only when its file is actually present, so
+    the page never shows a broken image while the files are still missing. */
+function hasImage(src: string): boolean {
+  return existsSync(join(process.cwd(), "public", src.replace(/^\//, "")));
+}
 
 export function generateStaticParams() {
   return CASE_STUDIES.map((c) => ({ slug: c.slug }));
@@ -82,6 +93,15 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
                 <article className="card">
                   <span className="tag">{c.channel} · {c.period}</span>
                   <h3>{c.headline}</h3>
+                  {hasImage(c.image.src) && (
+                    <Image
+                      src={c.image.src}
+                      alt={`${cs.brand} — ${c.channel} ${c.period} dashboard`}
+                      width={c.image.width}
+                      height={c.image.height}
+                      style={{ width: "100%", height: "auto", borderRadius: 12, marginBottom: 16 }}
+                    />
+                  )}
                   <p><strong>The challenge.</strong> {c.challenge}</p>
                   <p style={{ marginTop: 12 }}><strong>What we achieved.</strong> {c.achievement}</p>
                 </article>
