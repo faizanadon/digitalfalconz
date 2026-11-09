@@ -94,4 +94,15 @@ export const TEMPLATES: TemplateEntry[] = [
       "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/lumiere-salon",
   },
+  {
+    slug: "ventsure-lev-testing",
+    name: "VentSure — LEV Testing & COSHH Compliance",
+    category: "Industrial & Compliance",
+    tagline: "LEV Testing & COSHH Compliance, Handled.",
+    description:
+      "A clean, serious industrial template for a LEV testing company: statutory 14-month testing, services, sectors, a 4-step process, testimonials, FAQ and a quote form — built for trust and compliance, with LocalBusiness and FAQ schema.",
+    image:
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/ventsure-lev-testing",
+  },
 ];

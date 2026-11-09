@@ -593,6 +593,19 @@ export const pageMeta = {
     "words": 600,
     "source_file": "templates/lumiere-salon",
     "publication_priority": "Core"
+  },
+  "/templates/ventsure-lev-testing": {
+    "page_type": "main",
+    "url_path": "/templates/ventsure-lev-testing",
+    "canonical": "https://digitalfalconz.com/templates/ventsure-lev-testing",
+    "seo_title": "VentSure LEV Testing & COSHH Compliance — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A clean, serious industrial website template for LEV testing: 14-month COSHH compliance, services, sectors, process, FAQ and a quote form, with LocalBusiness and FAQ schema.",
+    "description_chars": 158,
+    "h1": "VentSure — LEV Testing & COSHH Compliance, Handled.",
+    "words": 900,
+    "source_file": "templates/ventsure-lev-testing",
+    "publication_priority": "Core"
   }
 };
 export const orgJsonLd = {

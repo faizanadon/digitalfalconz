@@ -2421,3 +2421,181 @@ html{overflow-x:clip}
 @media (prefers-reduced-motion:reduce){
   .lum-hero-media img{animation:none}
 }
+
+/* ==========================================================================
+   VENTSURE — LEV TESTING & COSHH COMPLIANCE TEMPLATE
+   (standalone, /templates/ventsure-lev-testing)
+   Clean, serious industrial: deep navy, white, one safety-orange accent.
+   No photography by design — trust and compliance carry the page.
+   Scoped under .lv.
+   ========================================================================== */
+.lv{
+  --lv-navy:#0f2440;
+  --lv-navy-2:#16304f;
+  --lv-navy-3:#1d3a5c;
+  --lv-orange:#ff6a00;
+  --lv-orange-2:#e55e00;
+  --lv-cream:#f2f4f7;
+  --lv-line:#dbe2ea;
+  --lv-ink:#1a2332;
+  --lv-muted:#5a6b7f;
+  --lv-white:#ffffff;
+  background:var(--lv-white);
+  color:var(--lv-ink);
+  font-family:var(--font-body),system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.lv *{box-sizing:border-box}
+.lv h1,.lv h2,.lv h3{font-family:var(--font-body),system-ui,sans-serif;font-weight:800;line-height:1.12;letter-spacing:-.01em;color:var(--lv-ink)}
+.lv h1 em,.lv h2 em{font-style:normal;color:var(--lv-orange)}
+.lv p{line-height:1.7;color:var(--lv-muted)}
+.lv a{color:inherit}
+.lv-wrap{max-width:1200px;margin:0 auto;padding:0 clamp(20px,4vw,40px)}
+.lv-kicker{display:inline-block;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:var(--lv-orange);margin-bottom:14px}
+.lv-kicker-light{color:#ffb27a}
+.lv-section{padding:clamp(64px,8vw,104px) 0}
+.lv-section h2{font-size:clamp(1.9rem,3.6vw,2.6rem);margin:0 0 14px;max-width:22em}
+.lv-lede{font-size:1.08rem;max-width:38em;margin:0 0 40px}
+.lv-band{background:var(--lv-cream)}
+.lv-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:8px;padding:13px 24px;font-weight:700;font-size:.95rem;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .2s ease,transform .2s ease}
+.lv-btn:hover{transform:translateY(-1px)}
+.lv-btn-lg{padding:15px 30px;font-size:1rem}
+.lv-btn-orange{background:var(--lv-orange);color:#fff}
+.lv-btn-orange:hover{background:var(--lv-orange-2)}
+.lv-btn-outline-light{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.lv-btn-outline-light:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.lv-full{grid-column:1/-1}
+
+/* ---- header ---- */
+.lv-header{position:sticky;top:0;z-index:70;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--lv-line)}
+.lv-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:14px;padding-bottom:14px}
+.lv-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.lv-brand-mark{flex:none;width:42px;height:42px;border-radius:9px;background:var(--lv-navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.3rem}
+.lv-brand-text{font-weight:800;font-size:1.2rem;line-height:1.1;color:var(--lv-navy);display:flex;flex-direction:column}
+.lv-brand-text small{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--lv-muted);font-weight:700}
+.lv-nav{display:flex;gap:26px}
+.lv-nav a{color:var(--lv-ink);text-decoration:none;font-size:.9rem;font-weight:600}
+.lv-nav a:hover{color:var(--lv-orange)}
+.lv-header-cta{display:flex;align-items:center;gap:16px}
+.lv-phone{font-weight:800;font-size:.95rem;color:var(--lv-navy);text-decoration:none;white-space:nowrap}
+.lv-phone:hover{color:var(--lv-orange)}
+.lv-header .lv-btn{padding:11px 20px;font-size:.88rem}
+@media (max-width:1020px){.lv-nav{display:none}}
+@media (max-width:640px){.lv-phone{display:none}}
+
+/* ---- hero ---- */
+.lv-hero{background:var(--lv-navy);color:#fff;padding:clamp(64px,8vw,110px) 0 clamp(56px,7vw,88px);position:relative;overflow:hidden}
+.lv-hero::after{content:"";position:absolute;right:-140px;top:-140px;width:420px;height:420px;border-radius:50%;border:56px solid rgba(255,106,0,.14);pointer-events:none}
+.lv-hero .lv-eyebrow{display:inline-block;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:#ffb27a;margin-bottom:20px}
+.lv-hero h1{color:#fff;font-size:clamp(2.3rem,5.2vw,3.6rem);max-width:16em;margin:0 0 20px}
+.lv-hero-sub{color:rgba(255,255,255,.82);font-size:clamp(1.05rem,1.6vw,1.22rem);max-width:36em;margin:0 0 32px}
+.lv-hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.lv-trust{display:flex;gap:10px 28px;flex-wrap:wrap;margin-top:40px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.9);font-weight:600;font-size:.92rem}
+.lv-trust span{white-space:nowrap}
+
+/* ---- services ---- */
+.lv-services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.lv-service{background:var(--lv-white);border:1px solid var(--lv-line);border-radius:14px;padding:28px 26px;transition:border-color .2s ease,transform .2s ease}
+.lv-service:hover{border-color:var(--lv-orange);transform:translateY(-3px)}
+.lv-service-ico{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:12px;background:var(--lv-navy);color:#fff;font-size:1.5rem;margin-bottom:18px}
+.lv-service h3{font-size:1.12rem;margin:0 0 10px}
+.lv-service p{margin:0;font-size:.95rem}
+@media (max-width:900px){.lv-services{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.lv-services{grid-template-columns:1fr}}
+
+/* ---- 14-month rule ---- */
+.lv-rule{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(32px,5vw,72px);align-items:start}
+.lv-rule h2{font-size:clamp(1.9rem,3.6vw,2.6rem);margin:0 0 18px}
+.lv-rule p{font-size:1.05rem}
+.lv-reminder{background:var(--lv-navy);color:#fff;border-radius:16px;padding:clamp(26px,3.5vw,36px)}
+.lv-reminder h3{color:#fff;font-size:1.35rem;margin:14px 0 10px}
+.lv-reminder p{color:rgba(255,255,255,.82)}
+.lv-reminder-tag{display:inline-block;background:var(--lv-orange);color:#fff;border-radius:999px;padding:7px 14px;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+.lv-reminder ul{list-style:none;margin:18px 0 24px;padding:0;display:grid;gap:9px;color:rgba(255,255,255,.9);font-weight:600;font-size:.95rem}
+@media (max-width:860px){.lv-rule{grid-template-columns:1fr}}
+
+/* ---- sectors ---- */
+.lv-sectors{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.lv-sector{border:1px solid var(--lv-line);border-radius:12px;padding:22px 20px;background:var(--lv-white)}
+.lv-sector h3{font-size:1.05rem;margin:0 0 8px}
+.lv-sector h3::before{content:"";display:block;width:26px;height:4px;background:var(--lv-orange);border-radius:2px;margin-bottom:14px}
+.lv-sector p{margin:0;font-size:.92rem}
+@media (max-width:900px){.lv-sectors{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.lv-sectors{grid-template-columns:1fr}}
+
+/* ---- how it works ---- */
+.lv-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
+.lv-step{background:var(--lv-white);border:1px solid var(--lv-line);border-radius:14px;padding:28px 24px;position:relative}
+.lv-step-n{display:block;font-size:2.4rem;font-weight:800;color:var(--lv-orange);line-height:1;margin-bottom:16px}
+.lv-step h3{font-size:1.15rem;margin:0 0 10px}
+.lv-step p{margin:0;font-size:.94rem}
+.lv-steps-cta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:36px}
+.lv-steps-cta span{color:var(--lv-muted);font-weight:600}
+.lv-steps-cta a{color:var(--lv-navy);font-weight:800;text-decoration:none}
+@media (max-width:900px){.lv-steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.lv-steps{grid-template-columns:1fr}}
+
+/* ---- why choose us ---- */
+.lv-why{display:grid;grid-template-columns:1fr 1fr;gap:14px 32px}
+.lv-why-item{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--lv-line)}
+.lv-why-tick{flex:none;width:34px;height:34px;border-radius:50%;background:var(--lv-orange);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1rem}
+.lv-why-item h3{font-size:1.08rem;margin:2px 0 6px}
+.lv-why-item p{margin:0;font-size:.95rem}
+@media (max-width:760px){.lv-why{grid-template-columns:1fr}}
+
+/* ---- testimonials + logos ---- */
+.lv-testis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.lv-testi{background:var(--lv-white);border:1px solid var(--lv-line);border-radius:14px;padding:28px 26px;margin:0}
+.lv-testi blockquote{margin:0 0 18px;font-size:1.02rem;line-height:1.65;color:var(--lv-ink);font-weight:600}
+.lv-testi figcaption{display:flex;flex-direction:column;gap:2px}
+.lv-testi figcaption strong{color:var(--lv-navy)}
+.lv-testi figcaption span{font-size:.88rem;color:var(--lv-muted)}
+.lv-logos{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:44px}
+.lv-logo{border:1px dashed #b9c4d0;border-radius:10px;padding:16px 22px;font-weight:800;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:#8a99ab;background:rgba(255,255,255,.6)}
+.lv-logos-note{text-align:center;font-size:.85rem;margin:14px 0 0}
+@media (max-width:900px){.lv-testis{grid-template-columns:1fr}}
+
+/* ---- FAQ ---- */
+.lv-faq-wrap{max-width:860px}
+.lv-faq{display:grid;gap:12px;margin-top:8px}
+.lv-faq-item{border:1px solid var(--lv-line);border-radius:12px;background:var(--lv-white);overflow:hidden}
+.lv-faq-item.open{border-color:var(--lv-navy)}
+.lv-faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;background:none;border:0;padding:20px 22px;font:inherit;font-weight:700;font-size:1.02rem;color:var(--lv-ink);text-align:left;cursor:pointer}
+.lv-faq-plus{flex:none;width:30px;height:30px;border-radius:50%;background:var(--lv-cream);color:var(--lv-navy);display:grid;place-items:center;font-size:1.2rem;font-weight:800}
+.lv-faq-item.open .lv-faq-plus{background:var(--lv-orange);color:#fff}
+.lv-faq-a{margin:0;padding:0 22px 22px;font-size:.98rem}
+
+/* ---- quote form ---- */
+.lv-quote-section{background:var(--lv-navy);color:#fff}
+.lv-quote{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.lv-quote h2{color:#fff;font-size:clamp(1.9rem,3.6vw,2.6rem);margin:0 0 16px}
+.lv-quote p{color:rgba(255,255,255,.82)}
+.lv-quote-contact{margin-top:20px;font-weight:600}
+.lv-quote-contact a{color:#ffb27a;text-decoration:none;font-weight:800}
+.lv-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;background:var(--lv-white);border-radius:16px;padding:clamp(24px,3vw,34px)}
+.lv-form label{display:grid;gap:6px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lv-muted);font-weight:700}
+.lv-form input,.lv-form select,.lv-form textarea{background:#f7f8fa;border:1px solid var(--lv-line);border-radius:8px;padding:12px 14px;color:var(--lv-ink);font:inherit;font-size:.95rem;letter-spacing:0;text-transform:none;width:100%}
+.lv-form input:focus,.lv-form select:focus,.lv-form textarea:focus{outline:2px solid var(--lv-orange);outline-offset:1px;border-color:var(--lv-orange)}
+.lv-form-ok{background:var(--lv-white);border-radius:16px;padding:clamp(28px,4vw,40px);color:var(--lv-ink)}
+.lv-form-ok strong{font-size:1.2rem;color:var(--lv-navy)}
+.lv-form-ok p{margin:12px 0 0}
+@media (max-width:860px){.lv-quote{grid-template-columns:1fr}.lv-form{grid-template-columns:1fr}}
+
+/* ---- footer ---- */
+.lv-footer{background:#0a1a2e;color:rgba(255,255,255,.78);padding:clamp(48px,6vw,72px) 0 32px}
+.lv-footer .lv-brand-text{color:#fff}
+.lv-footer .lv-brand-text small{color:rgba(255,255,255,.55)}
+.lv-footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:clamp(28px,4vw,56px)}
+.lv-footer h3{color:#fff;font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 16px}
+.lv-footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:.92rem}
+.lv-footer a{color:rgba(255,255,255,.78);text-decoration:none}
+.lv-footer a:hover{color:#ffb27a}
+.lv-footer-about{margin:18px 0;font-size:.94rem}
+.lv-accred li{color:rgba(255,255,255,.85)}
+.lv-reg{margin-top:20px;font-size:.85rem;color:rgba(255,255,255,.55);line-height:1.7}
+.lv-footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.14);font-size:.85rem;color:rgba(255,255,255,.55)}
+@media (max-width:900px){.lv-footer-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.lv-footer-grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){
+  .lv-btn{transition:none}
+}
