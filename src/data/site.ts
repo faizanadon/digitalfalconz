@@ -528,6 +528,71 @@ export const pageMeta = {
     "words": 600,
     "source_file": "templates/soma-retreat",
     "publication_priority": "Core"
+  },
+  "/templates/ember-restaurant": {
+    "page_type": "main",
+    "url_path": "/templates/ember-restaurant",
+    "canonical": "https://digitalfalconz.com/templates/ember-restaurant",
+    "seo_title": "Ember Fine Dining — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A dark, moody fine-dining website template: signature dishes, the chef, a gallery and table reservations, built around cinematic food photography.",
+    "description_chars": 150,
+    "h1": "Ember — fire, smoke & season",
+    "words": 600,
+    "source_file": "templates/ember-restaurant",
+    "publication_priority": "Core"
+  },
+  "/templates/keystone-real-estate": {
+    "page_type": "main",
+    "url_path": "/templates/keystone-real-estate",
+    "canonical": "https://digitalfalconz.com/templates/keystone-real-estate",
+    "seo_title": "Keystone Real Estate — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A clean, modern real-estate website template: featured listings, neighbourhoods, agents and viewing requests, built around bright home photography.",
+    "description_chars": 150,
+    "h1": "Keystone — find where you belong",
+    "words": 600,
+    "source_file": "templates/keystone-real-estate",
+    "publication_priority": "Core"
+  },
+  "/templates/forge-fitness": {
+    "page_type": "main",
+    "url_path": "/templates/forge-fitness",
+    "canonical": "https://digitalfalconz.com/templates/forge-fitness",
+    "seo_title": "Forge Fitness & Gym — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A bold, high-energy gym website template: programmes, coaches, memberships, a class schedule and joining, built around powerful training photography.",
+    "description_chars": 152,
+    "h1": "Forge — stronger every day",
+    "words": 600,
+    "source_file": "templates/forge-fitness",
+    "publication_priority": "Core"
+  },
+  "/templates/atelier-interior": {
+    "page_type": "main",
+    "url_path": "/templates/atelier-interior",
+    "canonical": "https://digitalfalconz.com/templates/atelier-interior",
+    "seo_title": "Atelier Interior Design — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A minimal, editorial interior-design website template: a project portfolio, services, the design process and the studio, built around architectural photography.",
+    "description_chars": 158,
+    "h1": "Atelier — spaces that speak softly",
+    "words": 600,
+    "source_file": "templates/atelier-interior",
+    "publication_priority": "Core"
+  },
+  "/templates/lumiere-salon": {
+    "page_type": "main",
+    "url_path": "/templates/lumiere-salon",
+    "canonical": "https://digitalfalconz.com/templates/lumiere-salon",
+    "seo_title": "Lumière Beauty Salon & Spa — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A soft, elegant salon and spa website template: services with prices, a gallery, stylists, testimonials and booking, built around graceful beauty photography.",
+    "description_chars": 156,
+    "h1": "Lumière — beauty, unhurried",
+    "words": 600,
+    "source_file": "templates/lumiere-salon",
+    "publication_priority": "Core"
   }
 };
 export const orgJsonLd = {
