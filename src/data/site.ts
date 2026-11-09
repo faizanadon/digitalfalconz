@@ -515,6 +515,19 @@ export const pageMeta = {
     "words": 600,
     "source_file": "templates/bali-retreat",
     "publication_priority": "Core"
+  },
+  "/templates/soma-retreat": {
+    "page_type": "main",
+    "url_path": "/templates/soma-retreat",
+    "canonical": "https://digitalfalconz.com/templates/soma-retreat",
+    "seo_title": "Soma Yoga & Retreat — Website Template | DigitalFalconz",
+    "title_chars": 55,
+    "meta_description": "A soft, minimal yoga and retreat website template: three paths, upcoming retreats, teachers and booking, built around calm, real photography.",
+    "description_chars": 148,
+    "h1": "Soma — come home to your body",
+    "words": 600,
+    "source_file": "templates/soma-retreat",
+    "publication_priority": "Core"
   }
 };
 export const orgJsonLd = {

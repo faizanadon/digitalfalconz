@@ -28,4 +28,15 @@ export const TEMPLATES: TemplateEntry[] = [
       "https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/bali-retreat",
   },
+  {
+    slug: "soma-retreat",
+    name: "Soma — Yoga & Retreat",
+    category: "Wellness & Retreats",
+    tagline: "Come home to your body",
+    description:
+      "A soft, minimal yoga and retreat template in the Hollow style: three paths, upcoming retreats, teachers, first-time guidance and booking — built around calm, real photography.",
+    image:
+      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/soma-retreat",
+  },
 ];
