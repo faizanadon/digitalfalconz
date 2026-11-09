@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScroll from "@/components/SmoothScroll";
 import { metaFor, orgJsonLd, site } from "@/data/site";
@@ -93,6 +94,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <a className="skip-link" href="#main">Skip to content</a>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
+        {/* Microsoft Clarity — session recordings & heatmaps (project zb20d9vc6n). */}
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "zb20d9vc6n");`}
+        </Script>
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
       </body>

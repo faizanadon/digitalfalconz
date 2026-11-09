@@ -15,103 +15,12 @@ function caseStudyImage(slug: string | undefined) {
   return cs?.campaigns?.[0]?.image ?? null;
 }
 
-/** Uniform work cards: every image (photo or placeholder tile) is exactly
-    16/10 via aspect-ratio + object-fit:cover, same size on every card. */
-function WorkCard({ project }: { project: WorkProject }) {
-  const isPortfolioLink = project.liveUrl?.includes("faizannawaz.vercel.app") ?? false;
-  // WorkGrid is a client component, so a missing logo file is caught here:
-  // the card falls back to the placeholder tile instead of a broken image.
-  const [logoFailed, setLogoFailed] = useState(false);
-  const logo = project.logo;
-  const showLogo = !!logo && !logoFailed;
-  return (
-    <motion.article
-      className="card work-card"
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 0.61, 0.21, 1] }}
-    >
-      <div className="work-card-media">
-        {project.image ? (
-          <Image
-            src={project.image}
-            alt={`${project.title} — ${project.description}`}
-            width={800}
-            height={500}
-            sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
-          />
-        ) : showLogo && logo ? (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "#fff",
-              display: "grid",
-              placeItems: "center",
-              padding: 28,
-            }}
-          >
-            <Image
-              src={logo.src}
-              alt={`${project.title} logo`}
-              width={logo.width}
-              height={logo.height}
-              onError={() => setLogoFailed(true)}
-              style={{
-                width: "auto",
-                height: "auto",
-                maxWidth: "72%",
-                maxHeight: "72%",
-                objectFit: "contain",
-              }}
-            />
-          </div>
-        ) : (
-          <div className="work-card-placeholder" aria-label={`${project.title} — no screenshot supplied`}>
-            <div>
-              <Image src="/logo-mark-hires.png" alt="" width={96} height={96} />
-              <span>{project.title}</span>
-              <small>{project.category} — {project.platform}</small>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="work-card-body">
-        <h3>{project.title}</h3>
-        <p>{project.description}</p>
-        <div className="work-tags">
-          <span className="pill">{project.category}</span>
-          <span className="pill">{project.platform}</span>
-        </div>
-        <p className="work-role">
-          <strong>Role:</strong> {project.role}
-        </p>
-        {project.caseStudy && (
-          <p className="work-live">
-            <Link href={`/work/${project.caseStudy}`}>
-              Read the case study
-              <ArrowUpRight size={15} strokeWidth={2.4} aria-hidden="true" />
-            </Link>
-          </p>
-        )}
-        {project.liveUrl && (
-          <p className="work-live">
-            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-              {isPortfolioLink ? "View on Faizan's portfolio" : `Visit live site — ${project.liveLabel}`}
-              <ArrowUpRight size={15} strokeWidth={2.4} aria-hidden="true" />
-            </a>
-          </p>
-        )}
-      </div>
-    </motion.article>
-  );
-}
-
 /** Editorial feature card (the Jonathan Whitfield reference): one large
-    rounded white card per case study — number, serif title, italic
-    platform line, description, case-study link — with a large dashboard
-    image on the other side. Image and text alternate sides. */
+    rounded card per project — number + category label, bold title,
+    description, outlined pills, case-study / live-site links — with a
+    large image on the other side. Image and text alternate sides.
+    Media priority: case-study dashboard screenshot → project screenshot
+    → brand logo on a white tile → placeholder tile. */
 function FeatureCard({ project, index }: { project: WorkProject; index: number }) {
   const img = caseStudyImage(project.caseStudy);
   const cs = CASE_STUDIES.find((c) => c.slug === project.caseStudy);
@@ -170,6 +79,14 @@ function FeatureCard({ project, index }: { project: WorkProject; index: number }
             height={img.height}
             sizes="(max-width: 900px) 100vw, 50vw"
           />
+        ) : project.image ? (
+          <Image
+            src={project.image}
+            alt={`${project.title} — ${project.description}`}
+            width={800}
+            height={500}
+            sizes="(max-width: 900px) 100vw, 50vw"
+          />
         ) : showLogo && logo ? (
           <div className="work-ed-logo">
             <Image
@@ -191,9 +108,9 @@ function FeatureCard({ project, index }: { project: WorkProject; index: number }
           </div>
         )}
         <Link
-          href={project.caseStudy ? `/work/${project.caseStudy}` : "#"}
+          href={project.caseStudy ? `/work/${project.caseStudy}` : project.liveUrl ?? "#"}
           className="work-ed-arrow"
-          aria-label={`Open the ${project.title} case study`}
+          aria-label={`Open ${project.title}`}
         >
           <ArrowUpRight size={20} strokeWidth={2.2} aria-hidden="true" />
         </Link>
@@ -205,10 +122,6 @@ function FeatureCard({ project, index }: { project: WorkProject; index: number }
 export default function WorkGrid() {
   const [filter, setFilter] = useState<string>("All");
   const shown = filter === "All" ? WORK_PROJECTS : WORK_PROJECTS.filter((p) => p.filter === filter);
-  // Case studies lead as large editorial cards; everything else follows
-  // in the compact grid. A filter with no case studies shows the grid only.
-  const featured = shown.filter((p) => p.caseStudy);
-  const rest = shown.filter((p) => !p.caseStudy);
   return (
     <>
       <div className="work-filters" role="group" aria-label="Filter projects by category">
@@ -227,25 +140,11 @@ export default function WorkGrid() {
       <p className="work-count">
         Showing {shown.length} of {WORK_PROJECTS.length} projects
       </p>
-      {featured.length > 0 && (
-        <div className="work-ed-list">
-          {featured.map((p, i) => (
-            <FeatureCard key={p.title} project={p} index={i} />
-          ))}
-        </div>
-      )}
-      {rest.length > 0 && (
-        <>
-          {featured.length > 0 && (
-            <h3 className="work-ed-more">More work</h3>
-          )}
-          <div className="work-grid">
-            {rest.map((p) => (
-              <WorkCard key={p.title} project={p} />
-            ))}
-          </div>
-        </>
-      )}
+      <div className="work-ed-list">
+        {shown.map((p, i) => (
+          <FeatureCard key={p.title} project={p} index={i} />
+        ))}
+      </div>
     </>
   );
 }
