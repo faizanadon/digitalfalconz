@@ -949,6 +949,9 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
 .foot-shot-email{color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;word-break:break-word}
 .foot-shot-email:hover{color:var(--gold-light)}
 .foot-shot-email span{color:var(--gold-light)}
+.foot-social{display:flex;gap:10px;margin-top:20px}
+.foot-social a{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid #3a3a34;color:#c9c9c2;text-decoration:none;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.foot-social a:hover{background:var(--gold-light);border-color:var(--gold-light);color:#000}
 .foot-shot-col h4{color:#fff;margin:0 0 18px;font-size:1rem;font-weight:700}
 .foot-shot-col a{display:block;color:#c9c9c2;text-decoration:none;font-size:.95rem;line-height:1.9}
 .foot-shot-col a:hover{color:#fff}
