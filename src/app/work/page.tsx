@@ -24,7 +24,7 @@ export default function WorkPage() {
       <div className="wrap">
         <Reveal>
           <h2 style={{ marginTop: 8 }}>Selected projects</h2>
-          <p className="plain-p">Twenty-two projects, each named, with the live site and the role Faizan played. Every image is shown at the same size.</p>
+          <p className="plain-p">Twenty-eight projects, each named, with the live site where available and the role we played. Every image is shown at the same size.</p>
           <WorkGrid />
         </Reveal>
       </div>

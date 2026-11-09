@@ -8,14 +8,25 @@
 // sovereign-brotherhood.webp (thesovereignbrotherhood.webp returns 404).
 // Nitro Muscle has no live-site URL on the portfolio work page — its card
 // links to the portfolio work page instead; never invent a URL for it.
+//
+// Paid-media portfolio (6 entries at the end): the company's SEM/SMM
+// portfolio, presented as DigitalFalconz work with no personal attribution.
+// Descriptions are drawn from the portfolio deck only — no hard metrics are
+// claimed, because the deck text contains none. A live-site link is included
+// only where the brand's site was verified live (Technoor.me, Wise Market
+// Pakistan, Mawa Group). Skyphonez and Wise Market Australia have no live
+// link because their sites no longer resolve; Vitastrong has none because
+// the deck gives no country and several regional Vitastrong stores exist.
+// These six use the placeholder tile — no dashboard screenshots were added,
+// because binary files cannot be pushed with the current tooling.
 export interface WorkProject {
   title: string;
   description: string;
   category: string;
   platform: string;
   role: string;
-  liveUrl: string;
-  liveLabel: string;
+  liveUrl: string | null;
+  liveLabel: string | null;
   image: string | null;
   filter: string;
 }
@@ -265,6 +276,78 @@ export const WORK_PROJECTS: WorkProject[] = [
     image: "/work/sovereign-brotherhood.webp",
     filter: "Funnels",
   },
+  {
+    title: "Skyphonez",
+    description:
+      "An established Australian retailer of smartphones and tech gadgets. Facebook Ads, Google Ads and GA4 — driving sales growth, website traffic and return on ad spend.",
+    category: "Paid Media",
+    platform: "Google Ads · Meta Ads · GA4",
+    role: "Paid media strategy, campaign management and GA4 analytics.",
+    liveUrl: null,
+    liveLabel: null,
+    image: null,
+    filter: "Paid Media",
+  },
+  {
+    title: "Technoor.me",
+    description:
+      "An online platform for new mobile phones and technology products across the GCC. Facebook and Google Ads built around audience targeting and conversion, growing sales in a competitive market.",
+    category: "Paid Media",
+    platform: "Google Ads · Meta Ads",
+    role: "Paid media strategy and campaign management.",
+    liveUrl: "https://technoor.me",
+    liveLabel: "technoor.me",
+    image: null,
+    filter: "Paid Media",
+  },
+  {
+    title: "Vitastrong",
+    description:
+      "A health and wellness company offering premium supplements. Facebook lead and sales campaigns, Google Ads and GA4 — sustained lead generation and sales growth.",
+    category: "Paid Media",
+    platform: "Google Ads · Meta Ads · GA4",
+    role: "Paid media strategy, lead generation and campaign optimisation.",
+    liveUrl: null,
+    liveLabel: null,
+    image: null,
+    filter: "Paid Media",
+  },
+  {
+    title: "Wise Market Australia",
+    description:
+      "An online marketplace helping Australian consumers compare products and prices. Facebook and Google Ads campaigns focused on conversions and consistent sales growth.",
+    category: "Paid Media",
+    platform: "Google Ads · Meta Ads",
+    role: "Paid media strategy and conversion-focused campaign management.",
+    liveUrl: null,
+    liveLabel: null,
+    image: null,
+    filter: "Paid Media",
+  },
+  {
+    title: "Wise Market Pakistan",
+    description:
+      "An e-commerce marketplace connecting buyers and sellers across Pakistan. Facebook Ads across four ad accounts, GA4 and Google Ads — sales growth with an efficient cost-to-revenue ratio.",
+    category: "Paid Media",
+    platform: "Google Ads · Meta Ads · GA4",
+    role: "Paid media strategy across multiple ad accounts, GA4 and Google Ads.",
+    liveUrl: "https://wisemarket.com.pk",
+    liveLabel: "wisemarket.com.pk",
+    image: null,
+    filter: "Paid Media",
+  },
+  {
+    title: "Mawa Group",
+    description:
+      "A real estate developer building residential and commercial spaces. Facebook Ads lead generation — high-quality leads and strong conversion rates.",
+    category: "Paid Media",
+    platform: "Meta Ads",
+    role: "Facebook Ads lead generation strategy and campaign management.",
+    liveUrl: "https://mawagroups.com",
+    liveLabel: "mawagroups.com",
+    image: null,
+    filter: "Paid Media",
+  },
 ];
 
 export const WORK_FILTERS = [
@@ -275,4 +358,5 @@ export const WORK_FILTERS = [
   "Webflow",
   "Products",
   "Web Development",
+  "Paid Media",
 ] as const;

@@ -8,7 +8,7 @@ import { WORK_FILTERS, WORK_PROJECTS, type WorkProject } from "@/data/work";
 /** Uniform work cards: every image (photo or placeholder tile) is exactly
     16/10 via aspect-ratio + object-fit:cover, same size on every card. */
 function WorkCard({ project }: { project: WorkProject }) {
-  const isPortfolioLink = project.liveUrl.includes("faizannawaz.vercel.app");
+  const isPortfolioLink = project.liveUrl?.includes("faizannawaz.vercel.app") ?? false;
   return (
     <motion.article
       className="card work-card"
@@ -46,12 +46,14 @@ function WorkCard({ project }: { project: WorkProject }) {
         <p className="work-role">
           <strong>Role:</strong> {project.role}
         </p>
-        <p className="work-live">
-          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-            {isPortfolioLink ? "View on Faizan's portfolio" : `Visit live site — ${project.liveLabel}`}
-            <ArrowUpRight size={15} strokeWidth={2.4} aria-hidden="true" />
-          </a>
-        </p>
+        {project.liveUrl && (
+          <p className="work-live">
+            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+              {isPortfolioLink ? "View on Faizan's portfolio" : `Visit live site — ${project.liveLabel}`}
+              <ArrowUpRight size={15} strokeWidth={2.4} aria-hidden="true" />
+            </a>
+          </p>
+        )}
       </div>
     </motion.article>
   );
