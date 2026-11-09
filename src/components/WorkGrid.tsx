@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { WORK_FILTERS, WORK_PROJECTS, type WorkProject } from "@/data/work";
@@ -46,6 +47,14 @@ function WorkCard({ project }: { project: WorkProject }) {
         <p className="work-role">
           <strong>Role:</strong> {project.role}
         </p>
+        {project.caseStudy && (
+          <p className="work-live">
+            <Link href={`/work/${project.caseStudy}`}>
+              Read the case study
+              <ArrowUpRight size={15} strokeWidth={2.4} aria-hidden="true" />
+            </Link>
+          </p>
+        )}
         {project.liveUrl && (
           <p className="work-live">
             <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">

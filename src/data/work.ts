@@ -29,6 +29,8 @@ export interface WorkProject {
   liveLabel: string | null;
   image: string | null;
   filter: string;
+  /** Slug of the /work/[slug] case study page, if this project has one. */
+  caseStudy?: string;
 }
 
 export const PORTFOLIO_URL = "https://faizannawaz.vercel.app/work";
@@ -287,6 +289,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     liveLabel: null,
     image: null,
     filter: "Paid Media",
+    caseStudy: "skyphonez",
   },
   {
     title: "Technoor.me",
@@ -299,6 +302,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     liveLabel: "technoor.me",
     image: null,
     filter: "Paid Media",
+    caseStudy: "technoor",
   },
   {
     title: "Vitastrong",
@@ -311,6 +315,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     liveLabel: null,
     image: null,
     filter: "Paid Media",
+    caseStudy: "vitastrong",
   },
   {
     title: "Wise Market Australia",
@@ -323,6 +328,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     liveLabel: null,
     image: null,
     filter: "Paid Media",
+    caseStudy: "wise-market-australia",
   },
   {
     title: "Wise Market Pakistan",
@@ -335,6 +341,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     liveLabel: "wisemarket.com.pk",
     image: null,
     filter: "Paid Media",
+    caseStudy: "wise-market-pakistan",
   },
   {
     title: "Mawa Group",
@@ -347,6 +354,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     liveLabel: "mawagroups.com",
     image: null,
     filter: "Paid Media",
+    caseStudy: "mawa-group",
   },
 ];
 
