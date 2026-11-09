@@ -54,7 +54,15 @@ const DRAW_SECONDS = 2.4;
 /** Seconds into the draw when the dot reaches each card's node — cards and nodes appear then. */
 const CARD_DELAYS = [0, 0.85, 1.45, 2.0];
 
-export default function DiscoveryBooking() {
+export default function DiscoveryBooking({
+  calendarId = "3uyvXhd8aw8baaZKsCb2",
+  iframeId = "3uyvXhd8aw8baaZKsCb2_1794047366166",
+}: {
+  /** HighLevel booking calendar id (the /meet default, or /discovery's own). */
+  calendarId?: string;
+  /** The iframe id HighLevel's embed script targets. */
+  iframeId?: string;
+}) {
   const reduce = useReducedMotion();
   const diagramRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<SVGAnimateMotionElement>(null);
@@ -113,8 +121,9 @@ export default function DiscoveryBooking() {
               </div>
               <div className="book-cal">
                 <iframe
-                  src="https://api.leadconnectorhq.com/widget/booking/3uyvXhd8aw8baaZKsCb2"
+                  src={`https://api.leadconnectorhq.com/widget/booking/${calendarId}`}
                   title="Book a free discovery call with DigitalFalconz"
+                  allow="payment"
                   style={{
                     width: "100%",
                     border: "none",
@@ -123,7 +132,7 @@ export default function DiscoveryBooking() {
                     display: "block",
                   }}
                   scrolling="no"
-                  id="3uyvXhd8aw8baaZKsCb2_1794047366166"
+                  id={iframeId}
                 />
               </div>
             </div>

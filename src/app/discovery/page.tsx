@@ -9,5 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function DiscoveryPage() {
-  return <DiscoveryBooking />;
+  return (
+    <DiscoveryBooking
+      calendarId="WMiSyo5UFMs9PWY0jgy2"
+      iframeId="WMiSyo5UFMs9PWY0jgy2_1794243236733"
+    />
+  );
 }
