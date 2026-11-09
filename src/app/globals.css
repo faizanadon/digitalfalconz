@@ -466,9 +466,13 @@ footer.site .brand{color:#fff}
   .mega-foot{padding:14px 20px 18px}
 }
 @media (max-width:640px){
-  .flow{grid-template-columns:1fr 1fr}
+  .flow{grid-template-columns:1fr;gap:4px;padding:20px 22px}
   .flow-line{display:none}
-  .flow-arrow{display:none}
+  .flow-step{display:grid;grid-template-columns:60px 1fr;column-gap:16px;row-gap:2px;align-items:center;text-align:left;padding:16px 0}
+  .flow-dot{grid-column:1;grid-row:1 / span 2}
+  .flow-step strong{grid-column:2;grid-row:1;margin:0}
+  .flow-step span{grid-column:2;grid-row:2}
+  .flow-arrow{display:block;position:absolute;left:20px;right:auto;top:auto;bottom:-6px;transform:rotate(90deg)}
   .cap-grid{grid-template-columns:1fr}
   .svc-hero-top{flex-direction:column;gap:14px}
   .foot-services-grid{grid-template-columns:repeat(2,minmax(150px,1fr))}
@@ -973,6 +977,7 @@ button:hover .cta-arrow, button:focus-visible .cta-arrow{transform:translateX(5p
   .footer-shot{padding-top:52px}
   .footer-shot{margin-top:48px}
   .foot-shot-mid{grid-template-columns:1fr;gap:36px}
+  .foot-shot-col{display:flex;flex-direction:column;gap:2px}
   .foot-circle{width:88px;height:88px}
   .foot-circle-arrow{font-size:1.8rem}
   .foot-shot-top{padding-bottom:64px;gap:24px}
