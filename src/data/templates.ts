@@ -1,8 +1,10 @@
 // Website templates DigitalFalconz can show a client — a complete,
 // ready-made design they can preview, then have tailored to their business.
-// Images are real photography hotlinked from Unsplash (verified live); the
-// template pages themselves are standalone and carry their own branding,
-// not DigitalFalconz's.
+// Card covers are screenshots of the actual template page (headline,
+// subtitle, buttons) stored locally in public/templates/covers/; `image`
+// is still the Unsplash hero photo, used by the index/niche page heroes.
+// The template pages themselves are standalone and carry their own
+// branding, not DigitalFalconz's.
 
 export interface TemplateEntry {
   slug: string;
@@ -12,11 +14,11 @@ export interface TemplateEntry {
   niche: "retreats" | "lev";
   tagline: string;
   description: string;
-  /** Hero/preview image (Unsplash). */
+  /** Hero image (Unsplash photo), used by the index/niche page heroes. */
   image: string;
-  /** True when the template's hero is black-and-white, so the card cover
-      renders in B&W to match the hero. */
-  bw?: boolean;
+  /** Card cover: a screenshot of the actual template page, stored locally
+      in public/templates/covers/. Falls back to `image` when absent. */
+  cover?: string;
   /** Where the live template preview lives. */
   href: string;
 }
@@ -32,6 +34,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A full retreat website: sunrise yoga, spa rituals, jungle villas, a gallery, daily rhythm, packages and booking — built around real photography from Bali.",
     image:
       "https://images.unsplash.com/photo-1555400038-63f5ba517a47?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/bali-retreat.jpg",
     href: "/templates/bali-retreat",
   },
   {
@@ -44,6 +47,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A soft, minimal yoga and retreat template in the Hollow style: three paths, upcoming retreats, teachers and first-time guidance — built around calm, real photography.",
     image:
       "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/soma-retreat.jpg",
     href: "/templates/soma-retreat",
   },
   {
@@ -56,6 +60,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A dark, moody fine-dining template: signature dishes, the chef, a gallery and table reservations — built around warm, cinematic food photography.",
     image:
       "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/ember-restaurant.jpg",
     href: "/templates/ember-restaurant",
   },
   {
@@ -68,6 +73,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A clean, modern property template: featured listings with prices and specs, neighbourhoods, agents and a viewing request form — built around bright, real home photography.",
     image:
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/keystone-real-estate.jpg",
     href: "/templates/keystone-real-estate",
   },
   {
@@ -80,6 +86,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, high-energy gym template: training programmes, coaches, membership pricing, a class schedule and a join form — built around powerful, dark training photography.",
     image:
       "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/forge-fitness.jpg",
     href: "/templates/forge-fitness",
   },
   {
@@ -92,6 +99,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A minimal, editorial interior-design template: a project portfolio, services, the design process and the studio — built around calm, architectural photography.",
     image:
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/atelier-interior.jpg",
     href: "/templates/atelier-interior",
   },
   {
@@ -104,6 +112,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A soft, elegant salon and spa template: services with prices, a gallery, stylists, testimonials and booking — built around warm, graceful beauty photography.",
     image:
       "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/lumiere-salon.jpg",
     href: "/templates/lumiere-salon",
   },
   {
@@ -116,7 +125,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial mountain-lodge template in the Framer language: huge grotesque headlines, an orange ticker, rooms you can browse, guided hikes and a booking form — built around real alpine photography.",
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1600&auto=format&fit=crop",
-    bw: true,
+    cover: "/templates/covers/mountain-lodge.png",
     href: "/templates/mountain-lodge",
   },
   {
@@ -129,7 +138,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A stark, editorial desert-retreat template: huge grotesque headlines, an orange ticker, desert camps and stargazing, activities and a booking form — built around real desert photography.",
     image:
       "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1600&auto=format&fit=crop",
-    bw: true,
+    cover: "/templates/covers/desert-retreat.jpg",
     href: "/templates/desert-retreat",
   },
   {
@@ -142,7 +151,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial surf-retreat template: huge grotesque headlines, an orange ticker, surf packages and lessons, coastal activities and a booking form — built around real surf photography.",
     image:
       "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=1600&auto=format&fit=crop",
-    bw: true,
+    cover: "/templates/covers/surf-retreat.jpg",
     href: "/templates/surf-retreat",
   },
   {
@@ -155,7 +164,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial glamping template: huge grotesque headlines, an orange ticker, safari tents and campfire evenings, outdoor activities and a booking form — built around real camp photography.",
     image:
       "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1600&auto=format&fit=crop",
-    bw: true,
+    cover: "/templates/covers/glamping-retreat.jpg",
     href: "/templates/glamping-retreat",
   },
   {
@@ -168,7 +177,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial vineyard-retreat template: huge grotesque headlines, an orange ticker, wine tastings and vineyard stays, seasonal food and a booking form — built around real vineyard photography.",
     image:
       "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1600&auto=format&fit=crop",
-    bw: true,
+    cover: "/templates/covers/vineyard-retreat.jpg",
     href: "/templates/vineyard-retreat",
   },
   {
@@ -181,7 +190,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A clean, serious industrial template for a LEV testing company: statutory 14-month testing, services, sectors, a 4-step process, testimonials, FAQ and a quote form — built for trust and compliance, with LocalBusiness and FAQ schema.",
     image:
       "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1600&auto=format&fit=crop",
-    bw: true,
+    cover: "/templates/covers/ventsure-lev-testing.jpg",
     href: "/templates/ventsure-lev-testing",
   },
 ];

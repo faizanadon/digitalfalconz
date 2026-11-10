@@ -10,12 +10,11 @@ export default function TemplateCard({ t }: { t: TemplateEntry }) {
       <article className="card work-card">
         <div className="work-card-media">
           <Image
-            src={t.image}
+            src={t.cover ?? t.image}
             alt={`${t.name} — ${t.tagline}`}
             width={800}
             height={500}
             sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
-            style={t.bw ? { filter: "grayscale(1)" } : undefined}
           />
         </div>
         <div className="work-card-body">
