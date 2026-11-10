@@ -40,14 +40,15 @@ export default function TemplatesRetreatsPage() {
         }
       >
         <p className="lede">
-          <strong>Seven finished designs for retreats, wellness and hospitality.</strong>
+          <strong>Twelve finished designs for retreats, wellness and hospitality.</strong>
         </p>
         <p className="plain-p">
-          From a Bali retreat to a yoga studio, a restaurant, a gym and a
-          salon — each template is a complete website with real photography,
-          a booking flow and the sections guests actually look for. Pick one,
-          preview it live, and we tailor the words, photos and colours to
-          your business.
+          From a Bali retreat to a yoga studio, a restaurant, a gym, a salon,
+          a mountain lodge, a desert retreat, a surf retreat, a glamping
+          retreat and a vineyard retreat — each template is a complete website
+          with real photography, a booking flow and the sections guests
+          actually look for. Pick one, preview it live, and we tailor the
+          words, photos and colours to your business.
         </p>
         <p>
           <Link className="btn" href="/contact">
@@ -64,11 +65,12 @@ export default function TemplatesRetreatsPage() {
           <Reveal>
             <h2>Retreat templates</h2>
             <p className="plain-p">
-              Seven templates live in this niche today — a Bali retreat, a yoga
-              studio, a fine-dining restaurant, a real-estate agency, a gym,
-              an interior-design studio and a beauty salon &amp; spa. Each one
-              is a complete, working site you can walk through before you
-              commit.
+              Twelve templates live in this niche today — a Bali retreat, a
+              yoga studio, a fine-dining restaurant, a real-estate agency, a
+              gym, an interior-design studio, a beauty salon &amp; spa, a
+              mountain lodge, a desert retreat, a surf retreat, a glamping
+              retreat and a vineyard retreat. Each one is a complete, working
+              site you can walk through before you commit.
             </p>
           </Reveal>
           <Stagger className="card-grid">
@@ -81,7 +83,7 @@ export default function TemplatesRetreatsPage() {
             <h2 style={{ marginTop: 56 }}>What&apos;s inside every retreat template</h2>
             <p className="plain-p">
               The details differ by business, but the standard is the same
-              across all seven.
+              across all twelve.
             </p>
           </Reveal>
           <Stagger className="card-grid">

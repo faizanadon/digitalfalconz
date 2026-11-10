@@ -104,6 +104,66 @@ export const TEMPLATES: TemplateEntry[] = [
     href: "/templates/lumiere-salon",
   },
   {
+    slug: "mountain-lodge",
+    name: "Alder & Pine — Mountain Lodge",
+    category: "Hospitality & Wellness",
+    niche: "retreats",
+    tagline: "Alpine cabins, slow mornings, big mountains",
+    description:
+      "A bold, editorial mountain-lodge template in the Framer language: huge grotesque headlines, an orange ticker, rooms you can browse, guided hikes and a booking form — built around real alpine photography.",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/mountain-lodge",
+  },
+  {
+    slug: "desert-retreat",
+    name: "Dune & Star — Desert Retreat",
+    category: "Hospitality & Wellness",
+    niche: "retreats",
+    tagline: "Silence, stars and sand",
+    description:
+      "A stark, editorial desert-retreat template: huge grotesque headlines, an orange ticker, desert camps and stargazing, activities and a booking form — built around real desert photography.",
+    image:
+      "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/desert-retreat",
+  },
+  {
+    slug: "surf-retreat",
+    name: "Salt & Swell — Surf Retreat",
+    category: "Hospitality & Wellness",
+    niche: "retreats",
+    tagline: "Salt air, long waves, slow days",
+    description:
+      "A bold, editorial surf-retreat template: huge grotesque headlines, an orange ticker, surf packages and lessons, coastal activities and a booking form — built around real surf photography.",
+    image:
+      "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/surf-retreat",
+  },
+  {
+    slug: "glamping-retreat",
+    name: "Ember & Oak — Glamping Retreat",
+    category: "Hospitality & Wellness",
+    niche: "retreats",
+    tagline: "Comfort in the wild",
+    description:
+      "A bold, editorial glamping template: huge grotesque headlines, an orange ticker, safari tents and campfire evenings, outdoor activities and a booking form — built around real camp photography.",
+    image:
+      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/glamping-retreat",
+  },
+  {
+    slug: "vineyard-retreat",
+    name: "Vine & Stone — Vineyard Retreat",
+    category: "Food, Wine & Hospitality",
+    niche: "retreats",
+    tagline: "Slow days among the vines",
+    description:
+      "A bold, editorial vineyard-retreat template: huge grotesque headlines, an orange ticker, wine tastings and vineyard stays, seasonal food and a booking form — built around real vineyard photography.",
+    image:
+      "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/vineyard-retreat",
+  },
+  {
     slug: "ventsure-lev-testing",
     name: "VentSure — LEV Testing & COSHH Compliance",
     category: "Industrial & Compliance",
