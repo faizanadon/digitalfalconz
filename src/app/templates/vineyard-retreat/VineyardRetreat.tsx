@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 import { AnimatedCounter, Reveal } from "@/components/Motion";
 
 const PHONE = "+351 254 000 000";
@@ -12,24 +12,38 @@ const PLACE = "Douro Valley, Portugal";
 const U = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
 
-/* Real vineyard photography (all verified 200). The hero and the
-   vineyard feature image are B&W for the editorial LEV look; the
-   tastings, activities and setting stay in full colour so the valley
-   shows through. */
+/* Real vineyard photography (all verified 200). The hero rows and the
+   terrace feature image are B&W for the editorial look; the cellar,
+   tastings and valley stay in full colour so the place shows through. */
 const HERO_IMG = U("1510812431401-41d2bd2722f3", 1800); // vineyard rows
 const WINE_IMG = U("1506377247377-2a5b3b417ebb", 1000); // wine glasses
 const VINE_IMG = U("1474722883778-792e7990302f", 1000); // vineyard
 const POUR_IMG = U("1504279577054-acfeccf8fc52", 1000); // pouring wine
 const CELLAR_IMG = U("1504274066651-8d31a536b11a", 1000); // wine cellar
-const ROWS_IMG = U("1543418219-44e30b057fea", 1200); // vineyard rows
+const ROWS_IMG = U("1543418219-44e30b057fea", 1800); // vineyard rows
 
-const TICKER = [
-  "WINE TASTINGS",
-  "VINEYARD STAYS",
-  "SEASONAL FOOD",
-  "RIVER WALKS",
-  "HARVEST DAYS",
-  "BOOK DIRECT",
+const PHASES = [
+  {
+    n: "01",
+    title: "The Vines",
+    text: "Twenty-four hectares of terraces above the Douro. The vines are tended by hand, the way they have been for generations — no machines on these slopes.",
+    img: VINE_IMG,
+    alt: "Vineyard terraces",
+  },
+  {
+    n: "02",
+    title: "The Cellar",
+    text: "Stone walls, oak barrels and a winemaker who explains as you sip. Tastings run daily in the cellar, and there are no wrong answers.",
+    img: CELLAR_IMG,
+    alt: "A wine cellar",
+  },
+  {
+    n: "03",
+    title: "The Table",
+    text: "Fire, olive oil and whatever the garden gives. Dinner is at 7, the terrace faces the vines, and the port comes out as the sun drops.",
+    img: POUR_IMG,
+    alt: "Pouring wine at the table",
+  },
 ];
 
 const STAYS = [
@@ -39,6 +53,8 @@ const STAYS = [
     text: "Two guests, a terrace over the vines and breakfast in the courtyard. The classic stay — small, warm and quiet.",
     tag: "2 GUESTS",
     price: "From €170 / night",
+    img: VINE_IMG,
+    alt: "Vineyard terraces",
   },
   {
     n: "02",
@@ -46,6 +62,8 @@ const STAYS = [
     text: "Four guests, a stone-walled suite and a private terrace. The most space in the quinta, with room to spread out.",
     tag: "4 GUESTS",
     price: "From €260 / night",
+    img: CELLAR_IMG,
+    alt: "A wine cellar",
   },
   {
     n: "03",
@@ -53,6 +71,8 @@ const STAYS = [
     text: "Two guests on the river side, with dawn light over the Douro. The best wake-up in the valley.",
     tag: "2 GUESTS",
     price: "From €200 / night",
+    img: POUR_IMG,
+    alt: "Pouring wine at the table",
   },
   {
     n: "04",
@@ -60,30 +80,56 @@ const STAYS = [
     text: "Six guests, two bedrooms and a full kitchen. Built for families who want the valley and a place to cook together.",
     tag: "6 GUESTS",
     price: "From €340 / night",
+    img: WINE_IMG,
+    alt: "Wine glasses on a table",
+  },
+];
+
+const TASTINGS = [
+  {
+    n: "01",
+    name: "The Daily Tasting",
+    text: "Five wines in the cellar with the winemaker — whites, reds and a port to finish. Included in every stay.",
+    tag: "DAILY · INCLUDED",
+    price: "Included",
   },
   {
-    n: "05",
-    title: "The Solo Cellar",
-    text: "One guest, a reading chair and a door straight into the vines. For the ones who came to be alone with the valley.",
-    tag: "1 GUEST",
-    price: "From €120 / night",
+    n: "02",
+    name: "The Vintage Tasting",
+    text: "Old vintages from the cellar, poured by the winemaker. For the ones who want to taste what time does.",
+    tag: "FRIDAYS · 6 WINES",
+    price: "€45 / person",
+  },
+  {
+    n: "03",
+    name: "The Harvest Lunch",
+    text: "A long lunch in the vines in September — fire, bread, olive oil and the new wine, straight from the press.",
+    tag: "SEPTEMBER · LONG LUNCH",
+    price: "€60 / person",
+  },
+  {
+    n: "04",
+    name: "Port at Sunset",
+    text: "A glass of tawny port on the terrace as the sun drops behind the hills. The quietest hour of the day.",
+    tag: "EVENINGS · TERRACE",
+    price: "€18 / glass",
   },
 ];
 
 const STATS = [
-  { n: 9, suffix: "", label: "KEY STAT · 001", caption: "Rooms in the quinta" },
-  { n: 24, suffix: "", label: "KEY STAT · 002", caption: "Hectares of vines" },
-  { n: 48, suffix: "h", label: "KEY STAT · 003", caption: "Booking reply, at most" },
-  { n: 98, suffix: "%", label: "KEY STAT · 004", caption: "Guests who would return" },
+  { n: 9, suffix: "", label: "ROOMS IN THE QUINTA", caption: "Nine rooms, no crowds." },
+  { n: 24, suffix: "", label: "HECTARES OF VINES", caption: "Terraces above the river." },
+  { n: 48, suffix: "h", label: "BOOKING REPLY", caption: "At most — usually sooner." },
+  { n: 98, suffix: "%", label: "WOULD RETURN", caption: "Guests who would come back." },
 ];
 
 const ACTIVITIES = [
-  { n: "01", name: "Wine tastings", text: "Daily tastings in the cellar, with the winemaker.", tags: ["DAILY", "CELLAR"] },
-  { n: "02", name: "Vineyard walks", text: "The terraces at golden hour, with a guide who knows them.", tags: ["EVENINGS", "GUIDED"] },
-  { n: "03", name: "River walks", text: "The Douro path to the village, at an easy pace.", tags: ["DAILY", "RIVER"] },
-  { n: "04", name: "Harvest days", text: "Pick grapes in September, stomp them in the evening.", tags: ["SEPTEMBER", "HANDS-ON"] },
-  { n: "05", name: "Seasonal cooking", text: "Fire, olive oil and whatever the garden gives.", tags: ["EVENINGS", "FOOD"] },
-  { n: "06", name: "Sunset terrace", text: "A glass of port as the sun drops behind the hills.", tags: ["EVENINGS", "PORT"] },
+  { n: "01", name: "Wine tastings", text: "Daily tastings in the cellar, with the winemaker.", tags: "DAILY · CELLAR" },
+  { n: "02", name: "Vineyard walks", text: "The terraces at golden hour, with a guide who knows them.", tags: "EVENINGS · GUIDED" },
+  { n: "03", name: "River walks", text: "The Douro path to the village, at an easy pace.", tags: "DAILY · RIVER" },
+  { n: "04", name: "Harvest days", text: "Pick grapes in September, stomp them in the evening.", tags: "SEPTEMBER · HANDS-ON" },
+  { n: "05", name: "Seasonal cooking", text: "Fire, olive oil and whatever the garden gives.", tags: "EVENINGS · FOOD" },
+  { n: "06", name: "Sunset terrace", text: "A glass of port as the sun drops behind the hills.", tags: "EVENINGS · PORT" },
 ];
 
 const STEPS = [
@@ -119,22 +165,19 @@ const WHY = [
 const TESTIMONIALS = [
   {
     name: "Marco Rossi",
-    role: "Guest, Milan",
-    org: "Stayed in The Stone Suite",
+    role: "Guest, Milan — The Stone Suite",
     quote:
       "We arrived tired and left rested in a way I did not think was possible in four days. The tastings were generous, the food was honest and nobody hurried us.",
   },
   {
     name: "Ingrid Johansson",
-    role: "Guest, Copenhagen",
-    org: "Stayed in The River Room",
+    role: "Guest, Copenhagen — The River Room",
     quote:
       "The dawn over the Douro from our terrace is the best wake-up I have ever had. We have already booked to come back for the harvest.",
   },
   {
     name: "James O'Neill",
-    role: "Guest, Edinburgh",
-    org: "Stayed in The Solo Cellar",
+    role: "Guest, Edinburgh — The Solo Cellar",
     quote:
       "I came alone, walked the terraces every day and drank port on the terrace every night. The Solo Cellar is exactly as described — small, quiet and perfect.",
   },
@@ -178,394 +221,340 @@ function BlurReveal({ children, delay = 0 }: { children: ReactNode; delay?: numb
   );
 }
 
-/** A counter that ticks continuously, like the live numbers on the
-    Framer reference sites. */
-function LiveTick({ start, step = 1, intervalMs = 2600 }: { start: number; step?: number; intervalMs?: number }) {
-  const [v, setV] = useState(start);
+/** Count-up intro loader (Vantrel signature) — 0 to 100, then fades out. */
+function IntroLoader() {
+  const [pct, setPct] = useState(0);
+  const [done, setDone] = useState(false);
   useEffect(() => {
-    const id = setInterval(() => setV((x) => x + step), intervalMs);
+    const id = setInterval(() => {
+      setPct((p) => {
+        const next = Math.min(100, p + Math.ceil(Math.random() * 9) + 3);
+        if (next >= 100) clearInterval(id);
+        return next;
+      });
+    }, 90);
     return () => clearInterval(id);
-  }, [step, intervalMs]);
-  return <>{v.toLocaleString()}</>;
+  }, []);
+  useEffect(() => {
+    if (pct >= 100) {
+      const t = setTimeout(() => setDone(true), 350);
+      return () => clearTimeout(t);
+    }
+  }, [pct]);
+  return (
+    <AnimatePresence>
+      {!done && (
+        <motion.div
+          className="vny-loader"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          aria-hidden="true"
+        >
+          <span className="vny-loader-word">VINE &amp; STONE</span>
+          <span className="vny-loader-pct">{pct}%</span>
+          <span className="vny-loader-bar"><i style={{ width: `${pct}%` }} /></span>
+          <span className="vny-loader-note">POURING THE VALLEY…</span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/** HUD timer — seconds on site, ticking up. */
+function HudTimer() {
+  const [s, setS] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setS((x) => x + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const mm = String(Math.floor(s / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return <>{mm}:{ss}</>;
 }
 
 export default function VineyardRetreat() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sent, setSent] = useState(false);
-  const [tab, setTab] = useState(0);
-  const [stay, setStay] = useState(0);
-  const [navHidden, setNavHidden] = useState(false);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setNavHidden(y > 140 && y > lastY.current);
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const [quote, setQuote] = useState(0);
+  const [activePhase, setActivePhase] = useState(0);
+  const phasesRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: phasesRef,
+    offset: ["start start", "end end"],
+  });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setActivePhase(Math.min(PHASES.length - 1, Math.max(0, Math.floor(v * PHASES.length))));
+  });
 
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSent(true);
   };
 
-  const t = TESTIMONIALS[tab];
-  const s = STAYS[stay];
+  const t = TESTIMONIALS[quote];
+  const phase = PHASES[activePhase];
 
   return (
     <div className="vny">
-      {/* ---- header: floating pill nav ---- */}
-      <header className={`vny-header${navHidden ? " vny-hidden" : ""}`}>
+      <IntroLoader />
+
+      {/* ---- header: refined bar ---- */}
+      <header className="vny-header">
         <div className="vny-wrap vny-header-inner">
           <a className="vny-brand" href="#top" aria-label="Vine and Stone home">
-            <span className="vny-logo-mark" aria-hidden="true">
-              <span />
-              <span />
-            </span>
+            <span className="vny-mark" aria-hidden="true">◆</span>
             <span className="vny-brand-text">VINE &amp; STONE</span>
           </a>
-          <nav className="vny-pillnav" aria-label="Main">
-            <a href="#stays" className="on">Stays</a>
-            <a href="#setting">The valley</a>
-            <a href="#activities">Activities</a>
+          <nav className="vny-nav" aria-label="Main">
+            <a href="#story">The story</a>
+            <a href="#stays">Stays</a>
+            <a href="#tastings">Tastings</a>
             <a href="#stay">Your stay</a>
             <a href="#faq">FAQ</a>
           </nav>
-          <div className="vny-header-cta">
-            <a className="vny-phone" href={`tel:${PHONE_HREF}`}>
-              {PHONE}
-            </a>
-            <a className="vny-btn vny-btn-accent" href="#book">
-              Check availability
-            </a>
-          </div>
+          <span className="vny-hud">TIME ON SITE <HudTimer /></span>
         </div>
       </header>
 
-      {/* ---- hero: huge grotesque headline, mono spec strip, B&W photo ---- */}
+      {/* ---- hero: cinematic, full-screen B&W image, headline overlaid ---- */}
       <section className="vny-hero" id="top">
-        <div className="vny-wrap vny-hero-inner">
+        <div className="vny-hero-media">
+          <Image src={HERO_IMG} alt="Rows of vines on a hillside" fill priority sizes="100vw" />
+          <div className="vny-hero-shade" aria-hidden="true" />
+        </div>
+        <div className="vny-wrap vny-hero-over">
           <BlurReveal>
-            <span className="vny-mono">(00) VINE &amp; STONE — VINEYARD RETREAT, DOURO VALLEY</span>
+            <span className="vny-mono vny-mono-light">(00) VINE &amp; STONE — VINEYARD RETREAT, DOURO VALLEY</span>
             <h1>
-              Slow days, <em>among the vines.</em>
+              Drink the <em>valley.</em>
             </h1>
             <p className="vny-hero-sub">
-              A vineyard stay in the Douro Valley — tastings in the cellar,
-              terrace dinners, river walks and slow evenings. Book direct for
-              the best rate.
+              A vineyard retreat in the Douro Valley — tastings in the cellar,
+              terraces at golden hour and slow evenings on the river. Book
+              direct for the best rate.
             </p>
             <div className="vny-hero-cta">
-              <a className="vny-btn vny-btn-accent vny-btn-lg" href="#book">
-                Check availability →
-              </a>
-              <a className="vny-btn vny-btn-ghost vny-btn-lg" href="#stays">
-                Explore the stays
-              </a>
+              <a className="vny-btn vny-btn-accent vny-btn-lg" href="#story">The story ↓</a>
+              <a className="vny-btn vny-btn-ghost vny-btn-lg" href="#book">Check availability</a>
             </div>
           </BlurReveal>
-          <div className="vny-specstrip" aria-label="Key facts">
-            <span><b>24 HA</b> Of vines</span>
-            <span><b>9</b> Rooms</span>
-            <span><b>APR–OCT</b> Season</span>
-            <span><b>DAILY</b> Tastings</span>
-            <span><b>48H</b> Booking reply</span>
-          </div>
         </div>
-        <div className="vny-hero-media">
-          <Image
-            src={HERO_IMG}
-            alt="Terraced vineyard rows"
-            fill
-            priority
-            sizes="100vw"
-          />
-          <div className="vny-hero-chip" aria-hidden="true">
-            <span>● LIVE — DOURO 24°C, CLEAR SKY</span>
-            <span>GUESTS IN THE VALLEY NOW <LiveTick start={57} /></span>
+        <div className="vny-hero-facts" aria-label="Key facts">
+          <span><b>24 HA</b> VINES</span>
+          <span><b>9</b> ROOMS</span>
+          <span><b>APR–OCT</b> SEASON</span>
+          <span><b>DAILY</b> TASTINGS</span>
+        </div>
+      </section>
+
+      {/* ---- the story: cinematic pinned scroll section (Vantrel signature) ---- */}
+      <section className="vny-story" id="story" ref={phasesRef}>
+        <div className="vny-story-sticky">
+          <div className="vny-phase-imgs" aria-hidden="true">
+            {PHASES.map((ph, i) => (
+              <motion.div
+                key={ph.n}
+                className="vny-phase-img"
+                animate={{ opacity: i === activePhase ? 1 : 0 }}
+                transition={{ duration: 0.7 }}
+              >
+                <Image src={ph.img} alt="" fill sizes="100vw" />
+              </motion.div>
+            ))}
+            <div className="vny-phase-shade" aria-hidden="true" />
+          </div>
+          <div className="vny-wrap vny-phase-over">
+            <span className="vny-mono vny-mono-light">(01) THE STORY — SCROLL</span>
+            <span className="vny-phase-num" aria-hidden="true">{phase.n} / 03</span>
+            <h2>{phase.title}</h2>
+            <p>{phase.text}</p>
+            <div className="vny-phase-dots" aria-hidden="true">
+              {PHASES.map((ph, i) => (
+                <span key={ph.n} className={i === activePhase ? "on" : ""} />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---- marquee ticker ---- */}
-      <div className="vny-ticker" aria-hidden="true">
-        <div className="vny-ticker-track">
-          {[...TICKER, ...TICKER, ...TICKER].map((item, i) => (
-            <span key={i}>{item} <i>◆</i></span>
-          ))}
-        </div>
-      </div>
-
-      {/* ---- trust strip ---- */}
-      <div className="vny-trustbar">
-        <div className="vny-wrap vny-trustbar-inner">
-          <span>✓ Book direct, best rate</span>
-          <span>✓ Free cancellation to 14 days</span>
-          <span>✓ Tastings included</span>
-          <span>✓ Family-run since 1998</span>
-        </div>
-      </div>
-
-      {/* ---- count-up stats ---- */}
-      <section className="vny-section vny-stats">
+      {/* ---- stays: refined 2-col card grid ---- */}
+      <section className="vny-section" id="stays">
         <div className="vny-wrap">
           <BlurReveal>
-            <span className="vny-mono">(01) THE QUINTA IN NUMBERS</span>
-            <h2>Small on purpose.</h2>
+            <span className="vny-mono">(02) STAYS</span>
+            <h2>Four rooms, one valley.</h2>
             <p className="vny-lede">
-              Key figures for this template — placeholder figures, replace
-              with your own.
+              From a vine-facing room to a family quinta — every stay includes
+              breakfast, a daily tasting and the terrace at sunset.
             </p>
           </BlurReveal>
-          <div className="vny-stat-grid">
-            {STATS.map((st) => (
-              <div key={st.label} className="vny-stat">
-                <span className="vny-stat-label">{st.label}</span>
-                <span className="vny-stat-num">
-                  <AnimatedCounter value={st.n} suffix={st.suffix} />
-                </span>
-                <span className="vny-stat-cap">{st.caption}</span>
-              </div>
+          <div className="vny-stay-grid">
+            {STAYS.map((sv, i) => (
+              <Reveal key={sv.n} delay={i * 0.05}>
+                <article className="vny-stay-card">
+                  <div className="vny-stay-img">
+                    <Image src={sv.img} alt={sv.alt} width={900} height={650} sizes="(max-width: 900px) 100vw, 45vw" />
+                    <span className="vny-stay-tag">{sv.tag}</span>
+                  </div>
+                  <div className="vny-stay-body">
+                    <span className="vny-mono">{sv.n}</span>
+                    <h3>{sv.title}</h3>
+                    <p>{sv.text}</p>
+                    <p className="vny-stay-price">{sv.price}</p>
+                    <a className="vny-link" href="#book">Check dates →</a>
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---- stays: interactive rows, orange fill on select ---- */}
-      <section className="vny-section" id="stays">
+      {/* ---- tastings: the wine list ---- */}
+      <section className="vny-section vny-taste-sec" id="tastings">
         <div className="vny-wrap">
           <BlurReveal>
-            <span className="vny-mono">(02) STAYS</span>
-            <h2>Five rooms, one valley.</h2>
-            <p className="vny-lede">
-              From a solo cellar to a family quinta — every stay includes
-              breakfast, a daily tasting and a terrace dinner. Select a stay
-              to see the detail.
-            </p>
+            <span className="vny-mono">(03) TASTINGS — THE WINE LIST</span>
+            <h2>What to taste.</h2>
           </BlurReveal>
-          <div className="vny-stays">
-            <div className="vny-stay-list" role="tablist" aria-label="Stays">
-              {STAYS.map((sv, i) => (
-                <button
-                  key={sv.n}
-                  role="tab"
-                  aria-selected={stay === i}
-                  className={`vny-stay-row${stay === i ? " on" : ""}`}
-                  onClick={() => setStay(i)}
-                  onMouseEnter={() => setStay(i)}
-                >
-                  <span className="vny-stay-n">{sv.n}</span>
-                  <span className="vny-stay-name">{sv.title}</span>
-                  <span className="vny-stay-arrow" aria-hidden="true">→</span>
-                </button>
-              ))}
-            </div>
-            <div className="vny-stay-detail">
-              <span className="vny-mono">{s.tag}</span>
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
-              <p className="vny-stay-price">{s.price}</p>
-              <a className="vny-btn vny-btn-dark" href="#book">
-                Check dates for this stay →
-              </a>
-            </div>
-          </div>
-          <div className="vny-stay-photos">
-            <Image src={WINE_IMG} alt="Glasses of wine on a terrace" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-            <Image src={VINE_IMG} alt="Vines in the late light" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-          </div>
+          <ol className="vny-taste-list">
+            {TASTINGS.map((ts) => (
+              <li key={ts.n} className="vny-taste-row">
+                <span className="vny-taste-n">{ts.n}</span>
+                <div>
+                  <h3>{ts.name}</h3>
+                  <p>{ts.text}</p>
+                </div>
+                <span className="vny-taste-tag">{ts.tag}</span>
+                <span className="vny-taste-price">{ts.price}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* ---- the valley (dark) ---- */}
-      <section className="vny-section vny-dark vny-speckle" id="setting">
+      {/* ---- count-up stats ---- */}
+      <section className="vny-stats">
         <div className="vny-wrap">
-          <div className="vny-setting">
-            <BlurReveal>
-              <div>
-                <span className="vny-mono vny-mono-light">(03) THE VALLEY</span>
-                <h2>
-                  Terraces, river <em>and old vines.</em>
-                </h2>
-                <p>
-                  Vine &amp; Stone sits in the Douro Valley, where the river
-                  bends between terraced hills and the vines are older than
-                  the house. The quinta has made wine here since 1998, and
-                  the cellar door is always open to guests.
-                </p>
-                <p>
-                  The quinta is not a hotel. There is no reception desk and
-                  no minibar. There is a cellar, a terrace, a kitchen that
-                  cooks what the garden gives and a river that never hurries.
-                </p>
-                <a className="vny-btn vny-btn-accent" href="#book">
-                  See the season
-                </a>
+          <BlurReveal>
+            <span className="vny-mono">(04) THE QUINTA IN NUMBERS</span>
+          </BlurReveal>
+          <div className="vny-stat-row">
+            {STATS.map((st) => (
+              <div key={st.label} className="vny-stat">
+                <span className="vny-stat-num">
+                  <AnimatedCounter value={st.n} suffix={st.suffix} />
+                </span>
+                <span className="vny-stat-label">{st.label}</span>
+                <span className="vny-stat-cap">{st.caption}</span>
               </div>
-            </BlurReveal>
-            <Reveal delay={0.1}>
-              <aside className="vny-highlight">
-                <span className="vny-highlight-tag">THE SUNSET TERRACE</span>
-                <h3>A glass of port, at dusk</h3>
-                <p>
-                  Every evening, the terrace fills with a glass of port as
-                  the sun drops behind the hills. No agenda, no talks — just
-                  the valley, the light and whoever is there.
-                </p>
-                <ul>
-                  <li>✓ Every evening, at sunset</li>
-                  <li>✓ Port from our own cellar</li>
-                  <li>✓ Terrace, always open</li>
-                  <li>✓ Dinner after, in the courtyard</li>
-                </ul>
-                <a className="vny-btn vny-btn-dark" href="#book">
-                  Book a sunset on the terrace →
-                </a>
-              </aside>
-            </Reveal>
+            ))}
           </div>
+          <p className="vny-note">Key figures for this template — placeholder figures, replace with your own.</p>
         </div>
       </section>
 
-      {/* ---- activities ---- */}
+      {/* ---- activities: elegant list ---- */}
       <section className="vny-section" id="activities">
         <div className="vny-wrap">
           <BlurReveal>
-            <span className="vny-mono">(04) ACTIVITIES</span>
+            <span className="vny-mono">(05) THE VALLEY</span>
             <h2>What a day looks like.</h2>
-            <p className="vny-lede">
-              Wine, food, river and sky — the quinta runs on a short list of
-              good things, done well.
-            </p>
           </BlurReveal>
           <div className="vny-activities">
             {ACTIVITIES.map((ac, i) => (
               <Reveal key={ac.n} delay={i * 0.04}>
                 <article className="vny-activity">
                   <span className="vny-activity-n">{ac.n}</span>
-                  <div className="vny-activity-tags">
-                    {ac.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
                   <h3>{ac.name}</h3>
                   <p>{ac.text}</p>
+                  <span className="vny-activity-tags">{ac.tags}</span>
                 </article>
               </Reveal>
             ))}
           </div>
-          <div className="vny-activity-photos">
-            <Image src={POUR_IMG} alt="Pouring wine in the cellar" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-            <Image src={CELLAR_IMG} alt="Barrels in the wine cellar" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
+          <div className="vny-feature vny-bw">
+            <Image src={ROWS_IMG} alt="Vineyard rows at golden hour" width={2000} height={700} sizes="100vw" />
           </div>
         </div>
       </section>
 
-      {/* ---- your stay (sticky intro + steps) ---- */}
-      <section className="vny-section vny-how-sec" id="stay">
-        <div className="vny-wrap">
-          <div className="vny-how">
-            <div className="vny-how-sticky">
-              <BlurReveal>
-                <span className="vny-mono">(05) YOUR STAY</span>
-                <h2>From arrival to departure in four steps.</h2>
-                <p>
-                  A short, honest process — so you know exactly what a stay
-                  here feels like before you book.
-                </p>
-                <a className="vny-btn vny-btn-accent" href="#book">
-                  Check availability
-                </a>
-              </BlurReveal>
-            </div>
-            <div className="vny-steps">
-              {STEPS.map((st, i) => (
-                <Reveal key={st.n} delay={i * 0.06}>
-                  <article className="vny-step">
-                    <span className="vny-step-n">{st.n}</span>
-                    <div>
-                      <h3>{st.title}</h3>
-                      <p>{st.text}</p>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-          <Reveal>
-            <div className="vny-why">
-              <h3>Why guests return</h3>
-              <div className="vny-why-grid">
-                {WHY.map((w) => (
-                  <article key={w.title} className="vny-why-item">
-                    <h4>{w.title}</h4>
-                    <p>{w.text}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
-        <div className="vny-fullbleed vny-bw">
-          <Image
-            src={ROWS_IMG}
-            alt="Terraced vineyard rows in the valley"
-            width={2000}
-            height={700}
-            sizes="100vw"
-          />
-        </div>
-      </section>
-
-      {/* ---- guest voices (dark, tabbed) ---- */}
-      <section className="vny-section vny-dark vny-speckle" id="voices">
+      {/* ---- your stay: steps as a numbered strip ---- */}
+      <section className="vny-section vny-stay-sec" id="stay">
         <div className="vny-wrap">
           <BlurReveal>
-            <div className="vny-testi-head">
-              <span className="vny-mono vny-mono-light">(06) GUEST VOICES</span>
-              <h2>What a stay feels like.</h2>
-            </div>
+            <span className="vny-mono">(06) YOUR STAY</span>
+            <h2>From arrival to departure in four steps.</h2>
           </BlurReveal>
-          <div className="vny-testi">
-            <div className="vny-testi-tabs" role="tablist" aria-label="Guests">
-              {TESTIMONIALS.map((c, i) => (
-                <button
-                  key={c.name}
-                  role="tab"
-                  aria-selected={tab === i}
-                  className={tab === i ? "on" : ""}
-                  onClick={() => setTab(i)}
-                >
-                  <strong>{c.name}</strong>
-                  <span>{c.role}</span>
-                </button>
-              ))}
-            </div>
-            <div className="vny-testi-quote">
-              <blockquote>“{t.quote}”</blockquote>
-              <span className="vny-testi-org">{t.org}</span>
-            </div>
-            <div className="vny-testi-img">
-              <Image
-                src={WINE_IMG}
-                alt="Glasses of wine on a terrace"
-                width={800}
-                height={1000}
-                sizes="(max-width: 900px) 100vw, 30vw"
-              />
+          <div className="vny-steps">
+            {STEPS.map((st, i) => (
+              <Reveal key={st.n} delay={i * 0.06}>
+                <article className="vny-step">
+                  <span className="vny-step-n">{st.n}</span>
+                  <h3>{st.title}</h3>
+                  <p>{st.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <div className="vny-why">
+            {WHY.map((w) => (
+              <article key={w.title} className="vny-why-item">
+                <h4>{w.title}</h4>
+                <p>{w.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---- guest voices: quote carousel with prev/next ---- */}
+      <section className="vny-section vny-voices-sec" id="voices">
+        <div className="vny-wrap vny-voices-wrap">
+          <BlurReveal>
+            <span className="vny-mono">(07) GUEST VOICES</span>
+          </BlurReveal>
+          <div className="vny-carousel">
+            <AnimatePresence mode="wait">
+              <motion.blockquote
+                key={quote}
+                className="vny-quote"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.45 }}
+              >
+                “{t.quote}”
+                <footer>
+                  <strong>{t.name}</strong>
+                  <span>{t.role}</span>
+                </footer>
+              </motion.blockquote>
+            </AnimatePresence>
+            <div className="vny-carousel-nav">
+              <button
+                onClick={() => setQuote((quote - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
+                aria-label="Previous guest"
+              >
+                ←
+              </button>
+              <span className="vny-mono">{quote + 1} / {TESTIMONIALS.length}</span>
+              <button
+                onClick={() => setQuote((quote + 1) % TESTIMONIALS.length)}
+                aria-label="Next guest"
+              >
+                →
+              </button>
             </div>
           </div>
         </div>
       </section>
 
       {/* ---- FAQ ---- */}
-      <section className="vny-section" id="faq">
-        <div className="vny-wrap vny-faq-wrap">
+      <section className="vny-section vny-faq-sec" id="faq">
+        <div className="vny-wrap">
           <BlurReveal>
-            <span className="vny-mono">(07) FAQ</span>
+            <span className="vny-mono">(08) FAQ</span>
             <h2>Before you book.</h2>
             <p className="vny-lede">
               The questions every guest asks us. Anything else — call {PHONE}.
@@ -573,19 +562,14 @@ export default function VineyardRetreat() {
           </BlurReveal>
           <div className="vny-faq">
             {FAQS.map((f, i) => (
-              <div
-                key={f.q}
-                className={`vny-faq-item${openFaq === i ? " open" : ""}`}
-              >
+              <div key={f.q} className={`vny-faq-item${openFaq === i ? " open" : ""}`}>
                 <button
                   className="vny-faq-q"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
                 >
                   <span>{f.q}</span>
-                  <span className="vny-faq-plus" aria-hidden="true">
-                    {openFaq === i ? "−" : "+"}
-                  </span>
+                  <span className="vny-faq-plus" aria-hidden="true">{openFaq === i ? "−" : "+"}</span>
                 </button>
                 {openFaq === i && <p className="vny-faq-a">{f.a}</p>}
               </div>
@@ -594,20 +578,27 @@ export default function VineyardRetreat() {
         </div>
       </section>
 
-      {/* ---- book (dark CTA + form + photo strip) ---- */}
-      <section className="vny-section vny-dark vny-speckle" id="book">
-        <div className="vny-wrap">
-          <BlurReveal>
-            <div className="vny-cta-head">
-              <span className="vny-mono vny-mono-light">(08) BOOK YOUR STAY</span>
+      {/* ---- book: refined, two-column ---- */}
+      <section className="vny-book" id="book">
+        <div className="vny-wrap vny-book-inner">
+          <div className="vny-book-left">
+            <BlurReveal>
+              <span className="vny-mono vny-mono-light">(09) BOOK YOUR STAY</span>
               <h2>Check availability for your dates.</h2>
               <p>
                 Tell us when you would like to come and we will come back
                 within 48 hours with availability and a price — usually much
                 sooner. No obligation, no card taken.
               </p>
-            </div>
-          </BlurReveal>
+              <p className="vny-book-contact">
+                <a href={`tel:${PHONE_HREF}`}>{PHONE}</a>
+                <br />
+                <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+                <br />
+                {PLACE}
+              </p>
+            </BlurReveal>
+          </div>
           <Reveal>
             {sent ? (
               <div className="vny-form-ok">
@@ -665,16 +656,15 @@ export default function VineyardRetreat() {
                     <option>The Stone Suite</option>
                     <option>The River Room</option>
                     <option>The Family Quinta</option>
-                    <option>The Solo Cellar</option>
                   </select>
                 </label>
                 <label>
                   Tasting
-                  <select name="tasting" defaultValue="Classic tasting">
-                    <option>Classic tasting</option>
-                    <option>Premium tasting</option>
-                    <option>Harvest experience</option>
-                    <option>Not sure yet</option>
+                  <select name="tasting" defaultValue="The Daily Tasting">
+                    <option>The Daily Tasting</option>
+                    <option>The Vintage Tasting</option>
+                    <option>The Harvest Lunch</option>
+                    <option>Port at Sunset</option>
                   </select>
                 </label>
                 <label className="vny-full">
@@ -688,48 +678,27 @@ export default function VineyardRetreat() {
                 <button className="vny-btn vny-btn-accent vny-btn-lg vny-full" type="submit">
                   Check availability
                 </button>
-                <p className="vny-form-note vny-full">
-                  Prefer to talk? Call{" "}
-                  <a href={`tel:${PHONE_HREF}`}>{PHONE}</a> or email{" "}
-                  <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-                </p>
               </form>
             )}
           </Reveal>
-          <div className="vny-strip" aria-hidden="true">
-            {[WINE_IMG, VINE_IMG, POUR_IMG, CELLAR_IMG, ROWS_IMG].map(
-              (src, i) => (
-                <Image
-                  key={i}
-                  src={src}
-                  alt=""
-                  width={500}
-                  height={400}
-                  sizes="300px"
-                  style={{ height: `${300 + (i % 2) * 70}px` }}
-                />
-              )
-            )}
-          </div>
         </div>
       </section>
 
-      {/* ---- footer (giant wordmark) ---- */}
+      {/* ---- footer: giant burgundy wordmark ---- */}
       <footer className="vny-footer">
         <div className="vny-wrap">
-          <BlurReveal>
-            <p className="vny-footer-statement">
-              Wine tastings, terrace dinners and slow evenings — slow days,
-              among the vines.
-            </p>
-          </BlurReveal>
+          <span className="vny-footer-word">VINE &amp; STONE</span>
+          <p className="vny-footer-statement">
+            A vineyard retreat in the Douro Valley — tastings in the cellar,
+            terraces at golden hour and slow evenings on the river.
+          </p>
           <div className="vny-footer-cols">
             <nav aria-label="Explore">
               <h3>EXPLORE</h3>
               <ul>
+                <li><a href="#story">The story</a></li>
                 <li><a href="#stays">Stays</a></li>
-                <li><a href="#setting">The valley</a></li>
-                <li><a href="#activities">Activities</a></li>
+                <li><a href="#tastings">Tastings</a></li>
                 <li><a href="#stay">Your stay</a></li>
                 <li><a href="#faq">FAQ</a></li>
               </ul>
@@ -741,7 +710,6 @@ export default function VineyardRetreat() {
                 <li><a href="#stays">The Stone Suite</a></li>
                 <li><a href="#stays">The River Room</a></li>
                 <li><a href="#stays">The Family Quinta</a></li>
-                <li><a href="#stays">The Solo Cellar</a></li>
               </ul>
             </nav>
             <div className="vny-footer-contact">
@@ -753,20 +721,8 @@ export default function VineyardRetreat() {
                 <br />
                 {PLACE}
               </p>
-              <p className="vny-reg">
-                Vine &amp; Stone Quinta · Douro Valley, Portugal
-              </p>
-            </div>
-            <div className="vny-footer-status">
-              <h3>STATUS</h3>
-              <p>● CELLAR OPEN</p>
-              <p>
-                GUESTS BOOKED THIS SEASON{" "}
-                <LiveTick start={940} step={2} intervalMs={3400} />
-              </p>
             </div>
           </div>
-          <span className="vny-footer-word">VINE &amp; STONE</span>
           <span className="vny-footer-copy">
             © 2026 Vine &amp; Stone Quinta · Website template by{" "}
             <a href="https://digitalfalconz.com">DigitalFalconz</a>

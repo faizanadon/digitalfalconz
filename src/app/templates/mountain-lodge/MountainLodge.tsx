@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 import { AnimatedCounter, Reveal } from "@/components/Motion";
 
 const PHONE = "+41 27 000 00 00";
@@ -13,7 +13,7 @@ const U = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
 
 /* Real alpine photography (all verified 200). The hero and the night
-   feature image are B&W for the editorial LEV look; the rooms, activities
+   feature image are B&W for the editorial look; the rooms, activities
    and setting stay in full colour so the place shows through. */
 const HERO_IMG = U("1506905925346-21bda4d32df4", 1800); // mountain landscape
 const CABIN_IMG = U("1510798831971-661eb04b3739", 1000); // snow cabin
@@ -23,13 +23,39 @@ const TRAIL_IMG = U("1551632811-561732d1e306", 1000); // hiking trail
 const NIGHT_IMG = U("1519681393784-d120267933ba", 1800); // mountain stars at night
 const LAKE_IMG = U("1501785888041-af3ef285b470", 1200); // mountain lake
 
-const TICKER = [
-  "ALPINE CABINS",
-  "GUIDED HIKES",
-  "LAKE SWIMS",
-  "FIRESIDE EVENINGS",
-  "SLOW MORNINGS",
-  "BOOK DIRECT",
+const TICKER_A = ["ALPINE CABINS", "GUIDED HIKES", "LAKE SWIMS", "FIRESIDE EVENINGS"];
+const TICKER_B = ["SLOW MORNINGS", "BOOK DIRECT", "1,620 M", "FAMILY-RUN SINCE 2012"];
+
+const LEVELS = [
+  {
+    n: "00",
+    title: "Arrive",
+    text: "Check in from 3pm. Tea on arrival, boots off, shoulders down. The mountain does the rest.",
+    img: CABIN_IMG,
+    alt: "A wooden cabin in the snow",
+  },
+  {
+    n: "01",
+    title: "Settle",
+    text: "Your cabin is ready, the stove is lit and dinner is at 7. Nothing is asked of you tonight.",
+    img: LAKE_CABIN_IMG,
+    alt: "A cabin beside a mountain lake",
+  },
+  {
+    n: "02",
+    title: "Explore",
+    text: "Pick a hike, a lake or a doing-nothing day. Guides are on hand, and the trails start at the door.",
+    img: HIKE_IMG,
+    alt: "Hikers on a mountain trail",
+  },
+  {
+    n: "03",
+    title: "Unwind",
+    text: "Fireside evenings, stargazing and slow mornings. Leave the mountain a little lighter than you arrived.",
+    img: NIGHT_IMG,
+    alt: "Stars over a mountain ridge at night",
+    bw: true,
+  },
 ];
 
 const STAYS = [
@@ -39,6 +65,8 @@ const STAYS = [
     text: "Two guests, a wood stove and a lake view. The classic cabin — small, warm and quiet, with a deck for slow mornings.",
     tag: "2 GUESTS",
     price: "From CHF 180 / night",
+    img: CABIN_IMG,
+    alt: "A wooden cabin in the snow",
   },
   {
     n: "02",
@@ -46,6 +74,8 @@ const STAYS = [
     text: "Four guests, a wraparound deck and a deep bath. The most space in the lodge, with room to spread out after a long hike.",
     tag: "4 GUESTS",
     price: "From CHF 260 / night",
+    img: LAKE_CABIN_IMG,
+    alt: "A cabin beside a mountain lake",
   },
   {
     n: "03",
@@ -53,6 +83,8 @@ const STAYS = [
     text: "Two guests on the top floor, with dawn light over the valley. The best wake-up in the building.",
     tag: "2 GUESTS",
     price: "From CHF 210 / night",
+    img: TRAIL_IMG,
+    alt: "A trail through alpine meadow",
   },
   {
     n: "04",
@@ -60,21 +92,16 @@ const STAYS = [
     text: "Six guests, two bedrooms and a full kitchen. Built for families who want the mountain and a place to cook together.",
     tag: "6 GUESTS",
     price: "From CHF 340 / night",
-  },
-  {
-    n: "05",
-    title: "The Solo Nook",
-    text: "One guest, a reading chair and a door straight onto the trail. For the ones who came to be alone with the mountain.",
-    tag: "1 GUEST",
-    price: "From CHF 120 / night",
+    img: LAKE_IMG,
+    alt: "A still mountain lake in the morning",
   },
 ];
 
 const STATS = [
-  { n: 12, suffix: "", label: "KEY STAT · 001", caption: "Cabins and rooms" },
-  { n: 26, suffix: "", label: "KEY STAT · 002", caption: "Guided trails from the door" },
-  { n: 48, suffix: "h", label: "KEY STAT · 003", caption: "Booking reply, at most" },
-  { n: 98, suffix: "%", label: "KEY STAT · 004", caption: "Guests who would return" },
+  { n: 12, suffix: "", label: "CABINS AND ROOMS", caption: "Twelve cabins, no crowds." },
+  { n: 26, suffix: "", label: "GUIDED TRAILS", caption: "Marked trails from the door." },
+  { n: 48, suffix: "h", label: "BOOKING REPLY", caption: "At most — usually sooner." },
+  { n: 98, suffix: "%", label: "WOULD RETURN", caption: "Guests who would come back." },
 ];
 
 const ACTIVITIES = [
@@ -84,29 +111,6 @@ const ACTIVITIES = [
   { n: "04", name: "Sunrise summit", text: "An early start for the best light in the valley.", tags: ["DAWN", "GUIDED"] },
   { n: "05", name: "Foraging walk", text: "Mushrooms, herbs and berries with a local guide.", tags: ["SEASONAL", "GUIDED"] },
   { n: "06", name: "Stargazing", text: "No light pollution. The Milky Way, every clear night.", tags: ["NIGHT", "CLEAR SKIES"] },
-];
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Arrive",
-    text: "Check in from 3pm. Tea on arrival, boots off, shoulders down. The mountain does the rest.",
-  },
-  {
-    n: "02",
-    title: "Settle",
-    text: "Your cabin is ready, the stove is lit and dinner is at 7. Nothing is asked of you tonight.",
-  },
-  {
-    n: "03",
-    title: "Explore",
-    text: "Pick a hike, a lake or a doing-nothing day. Guides are on hand, and the trails start at the door.",
-  },
-  {
-    n: "04",
-    title: "Depart",
-    text: "Check out at 11am. Leave the mountain a little lighter than you arrived.",
-  },
 ];
 
 const WHY = [
@@ -119,24 +123,21 @@ const WHY = [
 const TESTIMONIALS = [
   {
     name: "Sara Lindqvist",
-    role: "Guest, Stockholm",
-    org: "Stayed in The Pine Cabin",
+    role: "Guest, Stockholm — The Pine Cabin",
     quote:
       "We arrived tired and left rested in a way I did not think was possible in four days. The cabin was warm, the hikes were honest, and nobody hurried us at any point.",
   },
   {
     name: "Tom Becker",
-    role: "Guest, Munich",
-    org: "Stayed in The Family Lodge",
+    role: "Guest, Munich — The Family Lodge",
     quote:
       "The kids still talk about the lake swim and the fireside evenings. It is the first holiday where the whole family actually slowed down.",
   },
   {
     name: "Amelia Hart",
-    role: "Guest, London",
-    org: "Stayed in The Solo Nook",
+    role: "Guest, London — The Solo Nook",
     quote:
-      "I came alone, walked every day and read by the stove every night. The Solo Nook is exactly as described — small, quiet and perfect.",
+      "I came alone, walked every day and read by the stove every night. Small, quiet and perfect.",
   },
 ];
 
@@ -178,80 +179,61 @@ function BlurReveal({ children, delay = 0 }: { children: ReactNode; delay?: numb
   );
 }
 
-/** A counter that ticks continuously, like the live numbers on the
-    Framer reference sites. */
-function LiveTick({ start, step = 1, intervalMs = 2600 }: { start: number; step?: number; intervalMs?: number }) {
-  const [v, setV] = useState(start);
-  useEffect(() => {
-    const id = setInterval(() => setV((x) => x + step), intervalMs);
-    return () => clearInterval(id);
-  }, [step, intervalMs]);
-  return <>{v.toLocaleString()}</>;
-}
-
 export default function MountainLodge() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sent, setSent] = useState(false);
-  const [tab, setTab] = useState(0);
-  const [stay, setStay] = useState(0);
-  const [navHidden, setNavHidden] = useState(false);
-  const lastY = useRef(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setNavHidden(y > 140 && y > lastY.current);
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const [activeLevel, setActiveLevel] = useState(0);
+  const levelsRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: levelsRef,
+    offset: ["start start", "end end"],
+  });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setActiveLevel(Math.min(LEVELS.length - 1, Math.max(0, Math.floor(v * LEVELS.length))));
+  });
 
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSent(true);
   };
 
-  const t = TESTIMONIALS[tab];
-  const s = STAYS[stay];
+  const level = LEVELS[activeLevel];
 
   return (
     <div className="mtl">
-      {/* ---- header: floating pill nav ---- */}
-      <header className={`mtl-header${navHidden ? " mtl-hidden" : ""}`}>
+      {/* ---- header: full-width bar, bottom border (not a floating pill) ---- */}
+      <header className="mtl-header">
         <div className="mtl-wrap mtl-header-inner">
           <a className="mtl-brand" href="#top" aria-label="Alder and Pine home">
-            <span className="mtl-logo-mark" aria-hidden="true">
-              <span />
-              <span />
-            </span>
+            <span className="mtl-mark" aria-hidden="true">▲</span>
             <span className="mtl-brand-text">ALDER &amp; PINE</span>
           </a>
-          <nav className="mtl-pillnav" aria-label="Main">
-            <a href="#stays" className="on">Stays</a>
-            <a href="#setting">The setting</a>
+          <nav className="mtl-nav" aria-label="Main">
+            <a href="#levels">The journey</a>
+            <a href="#stays">Stays</a>
             <a href="#activities">Activities</a>
-            <a href="#stay">Your stay</a>
+            <a href="#voices">Guests</a>
             <a href="#faq">FAQ</a>
           </nav>
-          <div className="mtl-header-cta">
-            <a className="mtl-phone" href={`tel:${PHONE_HREF}`}>
-              {PHONE}
-            </a>
-            <a className="mtl-btn mtl-btn-accent" href="#book">
-              Check availability
-            </a>
-          </div>
+          <a className="mtl-btn mtl-btn-accent" href="#book">
+            Check availability
+          </a>
         </div>
       </header>
 
-      {/* ---- hero: huge grotesque headline, mono spec strip, B&W photo ---- */}
+      {/* ---- hero: full-bleed B&W photo, headline overlaid on the image ---- */}
       <section className="mtl-hero" id="top">
-        <div className="mtl-wrap mtl-hero-inner">
+        <div className="mtl-hero-media">
+          <Image src={HERO_IMG} alt="A mountain range above the clouds" fill priority sizes="100vw" />
+          <div className="mtl-hero-shade" aria-hidden="true" />
+        </div>
+        <div className="mtl-wrap mtl-hero-over">
           <BlurReveal>
-            <span className="mtl-mono">(00) ALDER &amp; PINE — MOUNTAIN LODGE, ZERMATT</span>
+            <span className="mtl-mono mtl-mono-light">(00) ALDER &amp; PINE — MOUNTAIN LODGE, ZERMATT</span>
             <h1>
-              Stay wild. <em>Stay warm.</em>
+              Stay wild.
+              <br />
+              <em>Stay warm.</em>
             </h1>
             <p className="mtl-hero-sub">
               Alpine cabins above Zermatt — guided hikes, lake swims, fireside
@@ -261,309 +243,209 @@ export default function MountainLodge() {
               <a className="mtl-btn mtl-btn-accent mtl-btn-lg" href="#book">
                 Check availability →
               </a>
-              <a className="mtl-btn mtl-btn-ghost mtl-btn-lg" href="#stays">
-                Explore the stays
+              <a className="mtl-btn mtl-btn-ghost mtl-btn-lg" href="#levels">
+                The journey ↓
               </a>
             </div>
           </BlurReveal>
-          <div className="mtl-specstrip" aria-label="Key facts">
-            <span><b>1,620 M</b> Altitude</span>
-            <span><b>12</b> Cabins &amp; rooms</span>
-            <span><b>JUN–SEP · DEC–MAR</b> Season</span>
-            <span><b>DAILY</b> Guided hikes</span>
-            <span><b>48H</b> Booking reply</span>
-          </div>
         </div>
-        <div className="mtl-hero-media">
-          <Image
-            src={HERO_IMG}
-            alt="A mountain range above the clouds"
-            fill
-            priority
-            sizes="100vw"
-          />
-          <div className="mtl-hero-chip" aria-hidden="true">
-            <span>● LIVE — SUMMIT 3,200 M · 14°C, CLEAR</span>
-            <span>GUESTS ON THE MOUNTAIN NOW <LiveTick start={86} /></span>
-          </div>
+        <div className="mtl-hero-facts" aria-label="Key facts">
+          <span><b>1,620 M</b> ALTITUDE</span>
+          <span><b>12</b> CABINS</span>
+          <span><b>JUN–SEP · DEC–MAR</b> SEASON</span>
+          <span><b>48H</b> BOOKING REPLY</span>
         </div>
       </section>
 
-      {/* ---- marquee ticker ---- */}
-      <div className="mtl-ticker" aria-hidden="true">
-        <div className="mtl-ticker-track">
-          {[...TICKER, ...TICKER, ...TICKER].map((item, i) => (
-            <span key={i}>{item} <i>◆</i></span>
-          ))}
+      {/* ---- crossing diagonal marquee tapes (Raw Structure signature) ---- */}
+      <div className="mtl-tapes" aria-hidden="true">
+        <div className="mtl-tape mtl-tape-a">
+          <div className="mtl-tape-track">
+            {[...TICKER_A, ...TICKER_A, ...TICKER_A, ...TICKER_A].map((item, i) => (
+              <span key={i}>{item} <i>◆</i></span>
+            ))}
+          </div>
+        </div>
+        <div className="mtl-tape mtl-tape-b">
+          <div className="mtl-tape-track mtl-tape-rev">
+            {[...TICKER_B, ...TICKER_B, ...TICKER_B, ...TICKER_B].map((item, i) => (
+              <span key={i}>{item} <i>◆</i></span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ---- trust strip ---- */}
-      <div className="mtl-trustbar">
-        <div className="mtl-wrap mtl-trustbar-inner">
-          <span>✓ Book direct, best rate</span>
-          <span>✓ Free cancellation to 14 days</span>
-          <span>✓ Guided hikes included</span>
-          <span>✓ Family-run since 2012</span>
-        </div>
-      </div>
-
-      {/* ---- count-up stats ---- */}
-      <section className="mtl-section mtl-stats">
-        <div className="mtl-wrap">
-          <BlurReveal>
-            <span className="mtl-mono">(01) THE LODGE IN NUMBERS</span>
-            <h2>Small on purpose.</h2>
-            <p className="mtl-lede">
-              Key figures for this template — placeholder figures, replace
-              with your own.
-            </p>
-          </BlurReveal>
-          <div className="mtl-stat-grid">
-            {STATS.map((st) => (
-              <div key={st.label} className="mtl-stat">
-                <span className="mtl-stat-label">{st.label}</span>
-                <span className="mtl-stat-num">
-                  <AnimatedCounter value={st.n} suffix={st.suffix} />
-                </span>
-                <span className="mtl-stat-cap">{st.caption}</span>
-              </div>
+      {/* ---- the levels journey: sticky scroll-driven centrepiece ---- */}
+      <section className="mtl-levels" id="levels" ref={levelsRef}>
+        <div className="mtl-wrap mtl-levels-inner">
+          <div className="mtl-levels-sticky">
+            <span className="mtl-mono">(01) THE JOURNEY</span>
+            <span className="mtl-level-num" aria-hidden="true">{level.n}</span>
+            <h2>{level.title}</h2>
+            <p>{level.text}</p>
+            <div className="mtl-level-dots" aria-hidden="true">
+              {LEVELS.map((lv, i) => (
+                <span key={lv.n} className={i === activeLevel ? "on" : ""} />
+              ))}
+            </div>
+            <span className="mtl-mono">LEVEL {level.n} / 03 — SCROLL TO CONTINUE</span>
+          </div>
+          <div className="mtl-level-cards">
+            {LEVELS.map((lv) => (
+              <article key={lv.n} className="mtl-level-card">
+                <div className={`mtl-level-img${lv.bw ? " mtl-bw" : ""}`}>
+                  <Image src={lv.img} alt={lv.alt} width={1000} height={1200} sizes="(max-width: 900px) 100vw, 45vw" />
+                </div>
+                <div className="mtl-level-body">
+                  <span className="mtl-mono">LEVEL {lv.n}</span>
+                  <h3>{lv.title}</h3>
+                  <p>{lv.text}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---- stays: interactive rows, orange fill on select ---- */}
-      <section className="mtl-section" id="stays">
+      {/* ---- count-up stats: single bordered row ---- */}
+      <section className="mtl-stats">
         <div className="mtl-wrap">
           <BlurReveal>
-            <span className="mtl-mono">(02) STAYS</span>
-            <h2>Five cabins, one mountain.</h2>
-            <p className="mtl-lede">
-              From a solo nook to a family lodge — every stay includes
-              breakfast, guided hikes and fireside evenings. Select a stay to
-              see the detail.
-            </p>
+            <span className="mtl-mono">(02) THE LODGE IN NUMBERS</span>
           </BlurReveal>
-          <div className="mtl-stays">
-            <div className="mtl-stay-list" role="tablist" aria-label="Stays">
-              {STAYS.map((sv, i) => (
-                <button
-                  key={sv.n}
-                  role="tab"
-                  aria-selected={stay === i}
-                  className={`mtl-stay-row${stay === i ? " on" : ""}`}
-                  onClick={() => setStay(i)}
-                  onMouseEnter={() => setStay(i)}
-                >
-                  <span className="mtl-stay-n">{sv.n}</span>
-                  <span className="mtl-stay-name">{sv.title}</span>
-                  <span className="mtl-stay-arrow" aria-hidden="true">→</span>
-                </button>
-              ))}
-            </div>
-            <div className="mtl-stay-detail">
-              <span className="mtl-mono">{s.tag}</span>
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
-              <p className="mtl-stay-price">{s.price}</p>
-              <a className="mtl-btn mtl-btn-dark" href="#book">
-                Check dates for this stay →
-              </a>
-            </div>
-          </div>
-          <div className="mtl-stay-photos">
-            <Image src={CABIN_IMG} alt="A wooden cabin in the snow" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-            <Image src={LAKE_CABIN_IMG} alt="A cabin beside a mountain lake" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-          </div>
-        </div>
-      </section>
-
-      {/* ---- the setting (dark) ---- */}
-      <section className="mtl-section mtl-dark mtl-speckle" id="setting">
-        <div className="mtl-wrap">
-          <div className="mtl-setting">
-            <BlurReveal>
-              <div>
-                <span className="mtl-mono mtl-mono-light">(03) THE SETTING</span>
-                <h2>
-                  Above the valley, <em>below the noise.</em>
-                </h2>
-                <p>
-                  Alder &amp; Pine sits at 1,620 metres, above the valley and
-                  below the high peaks. There is no road to the door — guests
-                  arrive by shuttle, then walk the last hundred metres through
-                  pine trees. The air is thin, the water is cold and the
-                  evenings are quiet.
-                </p>
-                <p>
-                  The lodge is not a hotel. There is no reception desk, no
-                  minibar, no television. There is a stove, a library, a
-                  drying room for boots and a deck that faces the dawn.
-                </p>
-                <a className="mtl-btn mtl-btn-accent" href="#book">
-                  See the season
-                </a>
+          <div className="mtl-stat-row">
+            {STATS.map((st) => (
+              <div key={st.label} className="mtl-stat">
+                <span className="mtl-stat-num">
+                  <AnimatedCounter value={st.n} suffix={st.suffix} />
+                </span>
+                <span className="mtl-stat-label">{st.label}</span>
+                <span className="mtl-stat-cap">{st.caption}</span>
               </div>
-            </BlurReveal>
-            <Reveal delay={0.1}>
-              <aside className="mtl-highlight">
-                <span className="mtl-highlight-tag">THE SLOW MORNING</span>
-                <h3>Nothing before 10am</h3>
-                <p>
-                  Breakfast is served until 10, coffee is on from 7, and
-                  there is no schedule before the first hike leaves. Mornings
-                  here are for doing nothing properly.
-                </p>
-                <ul>
-                  <li>✓ Breakfast until 10am</li>
-                  <li>✓ Coffee and tea all day</li>
-                  <li>✓ First hike leaves at 10:30</li>
-                  <li>✓ Library and deck, always open</li>
-                </ul>
-                <a className="mtl-btn mtl-btn-dark" href="#book">
-                  Book a slow morning →
-                </a>
-              </aside>
-            </Reveal>
+            ))}
           </div>
+          <p className="mtl-note">Key figures for this template — placeholder figures, replace with your own.</p>
         </div>
       </section>
 
-      {/* ---- activities ---- */}
+      {/* ---- stays: horizontal scroll-snap strip of cards ---- */}
+      <section className="mtl-stays-sec" id="stays">
+        <div className="mtl-wrap">
+          <BlurReveal>
+            <div className="mtl-sec-head">
+              <div>
+                <span className="mtl-mono">(03) STAYS</span>
+                <h2>Four cabins, one mountain.</h2>
+              </div>
+              <span className="mtl-mono">SCROLL →</span>
+            </div>
+          </BlurReveal>
+        </div>
+        <div className="mtl-stay-strip">
+          {STAYS.map((sv) => (
+            <article key={sv.n} className="mtl-stay-card">
+              <div className="mtl-stay-img">
+                <Image src={sv.img} alt={sv.alt} width={800} height={600} sizes="420px" />
+                <span className="mtl-stay-tag">{sv.tag}</span>
+              </div>
+              <div className="mtl-stay-body">
+                <span className="mtl-mono">{sv.n}</span>
+                <h3>{sv.title}</h3>
+                <p>{sv.text}</p>
+                <p className="mtl-stay-price">{sv.price}</p>
+                <a className="mtl-btn mtl-btn-dark" href="#book">Check dates →</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ---- activities: numbered list, two columns ---- */}
       <section className="mtl-section" id="activities">
         <div className="mtl-wrap">
           <BlurReveal>
             <span className="mtl-mono">(04) ACTIVITIES</span>
             <h2>What a day looks like.</h2>
-            <p className="mtl-lede">
-              Hikes, water, fire and sky — the lodge runs on a short list of
-              good things, done well.
-            </p>
           </BlurReveal>
-          <div className="mtl-activities">
-            {ACTIVITIES.map((ac, i) => (
-              <Reveal key={ac.n} delay={i * 0.04}>
-                <article className="mtl-activity">
-                  <span className="mtl-activity-n">{ac.n}</span>
-                  <div className="mtl-activity-tags">
-                    {ac.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
+          <ol className="mtl-act-list">
+            {ACTIVITIES.map((ac) => (
+              <li key={ac.n} className="mtl-act">
+                <span className="mtl-act-n">{ac.n}</span>
+                <div>
                   <h3>{ac.name}</h3>
                   <p>{ac.text}</p>
+                  <span className="mtl-act-tags">{ac.tags.join(" · ")}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ---- the setting: full-bleed B&W night image, text over it ---- */}
+      <section className="mtl-setting">
+        <div className="mtl-setting-media mtl-bw">
+          <Image src={NIGHT_IMG} alt="Stars over a mountain ridge at night" fill sizes="100vw" />
+          <div className="mtl-setting-shade" aria-hidden="true" />
+        </div>
+        <div className="mtl-wrap mtl-setting-over">
+          <BlurReveal>
+            <span className="mtl-mono mtl-mono-light">(05) THE SETTING</span>
+            <h2>
+              Above the valley, <em>below the noise.</em>
+            </h2>
+            <p>
+              Alder &amp; Pine sits at 1,620 metres, above the valley and below
+              the high peaks. There is no road to the door — guests arrive by
+              shuttle, then walk the last hundred metres through pine trees.
+              The air is thin, the water is cold and the evenings are quiet.
+            </p>
+            <p>
+              The lodge is not a hotel. There is no reception desk, no minibar,
+              no television. There is a stove, a library, a drying room for
+              boots and a deck that faces the dawn.
+            </p>
+          </BlurReveal>
+          <div className="mtl-why">
+            {WHY.map((w) => (
+              <article key={w.title} className="mtl-why-item">
+                <h4>{w.title}</h4>
+                <p>{w.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---- guest voices: one large quote + small quote row ---- */}
+      <section className="mtl-section" id="voices">
+        <div className="mtl-wrap">
+          <BlurReveal>
+            <span className="mtl-mono">(06) GUEST VOICES</span>
+            <blockquote className="mtl-big-quote">
+              “{TESTIMONIALS[0].quote}”
+              <footer>
+                <strong>{TESTIMONIALS[0].name}</strong>
+                <span>{TESTIMONIALS[0].role}</span>
+              </footer>
+            </blockquote>
+          </BlurReveal>
+          <div className="mtl-quote-row">
+            {TESTIMONIALS.slice(1).map((tst) => (
+              <Reveal key={tst.name}>
+                <article className="mtl-quote-card">
+                  <p>“{tst.quote}”</p>
+                  <span><strong>{tst.name}</strong> — {tst.role}</span>
                 </article>
               </Reveal>
             ))}
           </div>
-          <div className="mtl-activity-photos">
-            <Image src={HIKE_IMG} alt="Hikers on a mountain trail" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-            <Image src={TRAIL_IMG} alt="A trail through alpine meadow" width={800} height={600} sizes="(max-width: 900px) 100vw, 50vw" />
-          </div>
         </div>
       </section>
 
-      {/* ---- your stay (sticky intro + steps) ---- */}
-      <section className="mtl-section mtl-how-sec" id="stay">
+      {/* ---- FAQ: numbered accordion ---- */}
+      <section className="mtl-section mtl-faq-sec" id="faq">
         <div className="mtl-wrap">
-          <div className="mtl-how">
-            <div className="mtl-how-sticky">
-              <BlurReveal>
-                <span className="mtl-mono">(05) YOUR STAY</span>
-                <h2>From arrival to departure in four steps.</h2>
-                <p>
-                  A short, honest process — so you know exactly what a stay
-                  here feels like before you book.
-                </p>
-                <a className="mtl-btn mtl-btn-accent" href="#book">
-                  Check availability
-                </a>
-              </BlurReveal>
-            </div>
-            <div className="mtl-steps">
-              {STEPS.map((st, i) => (
-                <Reveal key={st.n} delay={i * 0.06}>
-                  <article className="mtl-step">
-                    <span className="mtl-step-n">{st.n}</span>
-                    <div>
-                      <h3>{st.title}</h3>
-                      <p>{st.text}</p>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-          <Reveal>
-            <div className="mtl-why">
-              <h3>Why guests return</h3>
-              <div className="mtl-why-grid">
-                {WHY.map((w) => (
-                  <article key={w.title} className="mtl-why-item">
-                    <h4>{w.title}</h4>
-                    <p>{w.text}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
-        <div className="mtl-fullbleed mtl-bw">
-          <Image
-            src={NIGHT_IMG}
-            alt="Stars over a mountain ridge at night"
-            width={2000}
-            height={700}
-            sizes="100vw"
-          />
-        </div>
-      </section>
-
-      {/* ---- guest voices (dark, tabbed) ---- */}
-      <section className="mtl-section mtl-dark mtl-speckle" id="voices">
-        <div className="mtl-wrap">
-          <BlurReveal>
-            <div className="mtl-testi-head">
-              <span className="mtl-mono mtl-mono-light">(06) GUEST VOICES</span>
-              <h2>What a stay feels like.</h2>
-            </div>
-          </BlurReveal>
-          <div className="mtl-testi">
-            <div className="mtl-testi-tabs" role="tablist" aria-label="Guests">
-              {TESTIMONIALS.map((c, i) => (
-                <button
-                  key={c.name}
-                  role="tab"
-                  aria-selected={tab === i}
-                  className={tab === i ? "on" : ""}
-                  onClick={() => setTab(i)}
-                >
-                  <strong>{c.name}</strong>
-                  <span>{c.role}</span>
-                </button>
-              ))}
-            </div>
-            <div className="mtl-testi-quote">
-              <blockquote>“{t.quote}”</blockquote>
-              <span className="mtl-testi-org">{t.org}</span>
-            </div>
-            <div className="mtl-testi-img">
-              <Image
-                src={LAKE_IMG}
-                alt="A still mountain lake in the morning"
-                width={800}
-                height={1000}
-                sizes="(max-width: 900px) 100vw, 30vw"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ---- FAQ ---- */}
-      <section className="mtl-section" id="faq">
-        <div className="mtl-wrap mtl-faq-wrap">
           <BlurReveal>
             <span className="mtl-mono">(07) FAQ</span>
             <h2>Before you book.</h2>
@@ -573,19 +455,15 @@ export default function MountainLodge() {
           </BlurReveal>
           <div className="mtl-faq">
             {FAQS.map((f, i) => (
-              <div
-                key={f.q}
-                className={`mtl-faq-item${openFaq === i ? " open" : ""}`}
-              >
+              <div key={f.q} className={`mtl-faq-item${openFaq === i ? " open" : ""}`}>
                 <button
                   className="mtl-faq-q"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
                 >
+                  <span className="mtl-faq-n">{String(i + 1).padStart(2, "0")}</span>
                   <span>{f.q}</span>
-                  <span className="mtl-faq-plus" aria-hidden="true">
-                    {openFaq === i ? "−" : "+"}
-                  </span>
+                  <span className="mtl-faq-plus" aria-hidden="true">{openFaq === i ? "−" : "+"}</span>
                 </button>
                 {openFaq === i && <p className="mtl-faq-a">{f.a}</p>}
               </div>
@@ -594,11 +472,11 @@ export default function MountainLodge() {
         </div>
       </section>
 
-      {/* ---- book (dark CTA + form + photo strip) ---- */}
-      <section className="mtl-section mtl-dark mtl-speckle" id="book">
-        <div className="mtl-wrap">
-          <BlurReveal>
-            <div className="mtl-cta-head">
+      {/* ---- book: two-column (contact left, form right) ---- */}
+      <section className="mtl-book" id="book">
+        <div className="mtl-wrap mtl-book-inner">
+          <div className="mtl-book-left">
+            <BlurReveal>
               <span className="mtl-mono mtl-mono-light">(08) BOOK YOUR STAY</span>
               <h2>Check availability for your dates.</h2>
               <p>
@@ -606,8 +484,15 @@ export default function MountainLodge() {
                 within 48 hours with availability and a price — usually much
                 sooner. No obligation, no card taken.
               </p>
-            </div>
-          </BlurReveal>
+              <p className="mtl-book-contact">
+                <a href={`tel:${PHONE_HREF}`}>{PHONE}</a>
+                <br />
+                <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+                <br />
+                {PLACE}
+              </p>
+            </BlurReveal>
+          </div>
           <Reveal>
             {sent ? (
               <div className="mtl-form-ok">
@@ -665,7 +550,6 @@ export default function MountainLodge() {
                     <option>The Alder Suite</option>
                     <option>The Summit Room</option>
                     <option>The Family Lodge</option>
-                    <option>The Solo Nook</option>
                   </select>
                 </label>
                 <label>
@@ -688,49 +572,28 @@ export default function MountainLodge() {
                 <button className="mtl-btn mtl-btn-accent mtl-btn-lg mtl-full" type="submit">
                   Check availability
                 </button>
-                <p className="mtl-form-note mtl-full">
-                  Prefer to talk? Call{" "}
-                  <a href={`tel:${PHONE_HREF}`}>{PHONE}</a> or email{" "}
-                  <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-                </p>
               </form>
             )}
           </Reveal>
-          <div className="mtl-strip" aria-hidden="true">
-            {[LAKE_IMG, CABIN_IMG, HIKE_IMG, LAKE_CABIN_IMG, TRAIL_IMG].map(
-              (src, i) => (
-                <Image
-                  key={i}
-                  src={src}
-                  alt=""
-                  width={500}
-                  height={400}
-                  sizes="300px"
-                  style={{ height: `${300 + (i % 2) * 70}px` }}
-                />
-              )
-            )}
-          </div>
         </div>
       </section>
 
-      {/* ---- footer (giant wordmark) ---- */}
+      {/* ---- footer: wordmark first, then columns ---- */}
       <footer className="mtl-footer">
         <div className="mtl-wrap">
-          <BlurReveal>
-            <p className="mtl-footer-statement">
-              Alpine cabins, guided hikes and slow mornings — above the
-              valley, below the noise.
-            </p>
-          </BlurReveal>
+          <span className="mtl-footer-word">ALDER &amp; PINE</span>
+          <p className="mtl-footer-statement">
+            Alpine cabins, guided hikes and slow mornings — above the valley,
+            below the noise.
+          </p>
           <div className="mtl-footer-cols">
             <nav aria-label="Explore">
               <h3>EXPLORE</h3>
               <ul>
+                <li><a href="#levels">The journey</a></li>
                 <li><a href="#stays">Stays</a></li>
-                <li><a href="#setting">The setting</a></li>
                 <li><a href="#activities">Activities</a></li>
-                <li><a href="#stay">Your stay</a></li>
+                <li><a href="#voices">Guests</a></li>
                 <li><a href="#faq">FAQ</a></li>
               </ul>
             </nav>
@@ -741,7 +604,6 @@ export default function MountainLodge() {
                 <li><a href="#stays">The Alder Suite</a></li>
                 <li><a href="#stays">The Summit Room</a></li>
                 <li><a href="#stays">The Family Lodge</a></li>
-                <li><a href="#stays">The Solo Nook</a></li>
               </ul>
             </nav>
             <div className="mtl-footer-contact">
@@ -753,20 +615,8 @@ export default function MountainLodge() {
                 <br />
                 {PLACE}
               </p>
-              <p className="mtl-reg">
-                Alder &amp; Pine Lodge · Zermatt, Switzerland
-              </p>
-            </div>
-            <div className="mtl-footer-status">
-              <h3>STATUS</h3>
-              <p>● TRAILS OPEN</p>
-              <p>
-                GUESTS BOOKED THIS SEASON{" "}
-                <LiveTick start={1240} step={2} intervalMs={3400} />
-              </p>
             </div>
           </div>
-          <span className="mtl-footer-word">ALDER &amp; PINE</span>
           <span className="mtl-footer-copy">
             © 2026 Alder &amp; Pine Lodge · Website template by{" "}
             <a href="https://digitalfalconz.com">DigitalFalconz</a>
