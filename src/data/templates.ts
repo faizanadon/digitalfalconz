@@ -14,6 +14,9 @@ export interface TemplateEntry {
   description: string;
   /** Hero/preview image (Unsplash). */
   image: string;
+  /** True when the template's hero is black-and-white, so the card cover
+      renders in B&W to match the hero. */
+  bw?: boolean;
   /** Where the live template preview lives. */
   href: string;
 }
@@ -113,6 +116,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial mountain-lodge template in the Framer language: huge grotesque headlines, an orange ticker, rooms you can browse, guided hikes and a booking form — built around real alpine photography.",
     image:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1600&auto=format&fit=crop",
+    bw: true,
     href: "/templates/mountain-lodge",
   },
   {
@@ -125,6 +129,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A stark, editorial desert-retreat template: huge grotesque headlines, an orange ticker, desert camps and stargazing, activities and a booking form — built around real desert photography.",
     image:
       "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=1600&auto=format&fit=crop",
+    bw: true,
     href: "/templates/desert-retreat",
   },
   {
@@ -137,6 +142,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial surf-retreat template: huge grotesque headlines, an orange ticker, surf packages and lessons, coastal activities and a booking form — built around real surf photography.",
     image:
       "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=1600&auto=format&fit=crop",
+    bw: true,
     href: "/templates/surf-retreat",
   },
   {
@@ -149,6 +155,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial glamping template: huge grotesque headlines, an orange ticker, safari tents and campfire evenings, outdoor activities and a booking form — built around real camp photography.",
     image:
       "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1600&auto=format&fit=crop",
+    bw: true,
     href: "/templates/glamping-retreat",
   },
   {
@@ -161,6 +168,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A bold, editorial vineyard-retreat template: huge grotesque headlines, an orange ticker, wine tastings and vineyard stays, seasonal food and a booking form — built around real vineyard photography.",
     image:
       "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1600&auto=format&fit=crop",
+    bw: true,
     href: "/templates/vineyard-retreat",
   },
   {
@@ -173,6 +181,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A clean, serious industrial template for a LEV testing company: statutory 14-month testing, services, sectors, a 4-step process, testimonials, FAQ and a quote form — built for trust and compliance, with LocalBusiness and FAQ schema.",
     image:
       "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1600&auto=format&fit=crop",
+    bw: true,
     href: "/templates/ventsure-lev-testing",
   },
 ];

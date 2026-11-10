@@ -15,6 +15,7 @@ export default function TemplateCard({ t }: { t: TemplateEntry }) {
             width={800}
             height={500}
             sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
+            style={t.bw ? { filter: "grayscale(1)" } : undefined}
           />
         </div>
         <div className="work-card-body">
