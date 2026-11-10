@@ -181,6 +181,18 @@ export const TEMPLATES: TemplateEntry[] = [
     href: "/templates/vineyard-retreat",
   },
   {
+    slug: "yogagrove",
+    name: "Yogagrove — Yoga & Mindful Movement",
+    category: "Wellness & Retreats",
+    niche: "retreats",
+    tagline: "Small-group yoga, breathwork & mindful movement",
+    description:
+      "A calm, cream-and-forest yoga studio template: small-group classes, breathwork, a how-it-works journey, teachers, member stories, pricing and FAQ — built around real studio photography from Melbourne.",
+    image: "/templates/yogagrove/61cc7003-269c-4b78-bcf7-36da5332e27b.jpg",
+    cover: "/templates/yogagrove/61cc7003-269c-4b78-bcf7-36da5332e27b.jpg",
+    href: "/templates/yogagrove",
+  },
+  {
     slug: "ventsure-lev-testing",
     name: "VentSure — LEV Testing & COSHH Compliance",
     category: "Industrial & Compliance",

@@ -685,6 +685,19 @@ export const pageMeta = {
     "source_file": "templates/vineyard-retreat",
     "publication_priority": "Core"
   },
+  "/templates/yogagrove": {
+    "page_type": "main",
+    "url_path": "/templates/yogagrove",
+    "canonical": "https://digitalfalconz.com/templates/yogagrove",
+    "seo_title": "Yogagrove — Yoga & Mindful Movement Studio Template | DigitalFalconz",
+    "title_chars": 68,
+    "meta_description": "A calm yoga-studio website template: small-group yoga, breathwork and mindful movement, classes, teachers, stories, pricing and FAQ — built around real studio photography.",
+    "description_chars": 171,
+    "h1": "Yogagrove — a yoga & mindful movement studio",
+    "words": 600,
+    "source_file": "templates/yogagrove",
+    "publication_priority": "Core"
+  },
   "/templates/ventsure-lev-testing": {
     "page_type": "main",
     "url_path": "/templates/ventsure-lev-testing",
