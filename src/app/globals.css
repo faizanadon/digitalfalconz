@@ -3601,7 +3601,7 @@ html{overflow-x:clip}
    template (Melbourne). Scoped under .yg; palette variables are --yg-*.
    Poppins is self-hosted via @fontsource (var --font-yoga).
    ===================================================================== */
-.yg{--yg-bg-cream:#fefdfb;--yg-bg-light-gray:#f7f6f2;--yg-bg-pill:#f7f7ed;--yg-text-dark:#2a332b;--yg-text-forest:#343e34;--yg-text-green:#3d4a3e;--yg-text-muted:#877868;--yg-text-white:#fefdfb;--yg-text-cream:#f0ebe0;--yg-accent-dot:#d2c7b8;--yg-border-light:rgba(61,74,62,0.12);--yg-border-dark:rgba(240,235,224,0.2);background:var(--yg-bg-cream);color:var(--yg-text-dark);font-family:var(--font-yoga),"Poppins",sans-serif;line-height:1.6;overflow-x:hidden;width:100%;min-height:100vh;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.yg{--yg-bg-cream:#fefdfb;--yg-bg-light-gray:#f7f6f2;--yg-bg-pill:#f7f7ed;--yg-text-dark:#2a332b;--yg-text-forest:#343e34;--yg-text-green:#3d4a3e;--yg-text-muted:#877868;--yg-text-white:#fefdfb;--yg-text-cream:#f0ebe0;--yg-accent-dot:#d2c7b8;--yg-border-light:rgba(61,74,62,0.12);--yg-border-dark:rgba(240,235,224,0.2);background:var(--yg-bg-cream);color:var(--yg-text-dark);font-family:var(--font-yoga),"Poppins",sans-serif;line-height:1.6;overflow-x:clip;width:100%;min-height:100vh;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .yg *{box-sizing:border-box}
 .yg img,.yg svg{display:block;max-width:100%}
 .yg a{text-decoration:none}
