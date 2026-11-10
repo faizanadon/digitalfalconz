@@ -3459,7 +3459,7 @@ html{overflow-x:clip}
 .vny-hero-over{position:relative;z-index:2;padding-top:120px;padding-bottom:32px}
 .vny-hero-over h1{font-size:clamp(3.4rem,9vw,7.5rem);color:#fff;margin:.25em 0 .3em;text-transform:uppercase}
 .vny-hero-over h1 em{color:#e8b7be}
-.vny-hero-sub{color:rgba(255,255,255,.85);font-size:1.15rem;max-width:34em;margin:0 0 28px}
+.vny-hero-sub{color:#fff;font-size:1.15rem;max-width:34em;margin:0 0 28px;text-shadow:0 1px 14px rgba(0,0,0,.55)}
 .vny-hero-cta{display:flex;gap:14px;flex-wrap:wrap}
 .vny-hero-facts{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.35);background:rgba(27,18,20,.55);backdrop-filter:blur(6px)}
 .vny-hero-facts span{padding:16px 20px;font-family:var(--font-mono),"Space Mono",monospace;font-size:.72rem;letter-spacing:.18em;color:rgba(255,255,255,.75)}
