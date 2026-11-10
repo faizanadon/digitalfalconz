@@ -52,7 +52,7 @@ export const TEMPLATES: TemplateEntry[] = [
     description:
       "A dark, moody fine-dining template: signature dishes, the chef, a gallery and table reservations — built around warm, cinematic food photography.",
     image:
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/ember-restaurant",
   },
   {
@@ -76,7 +76,7 @@ export const TEMPLATES: TemplateEntry[] = [
     description:
       "A bold, high-energy gym template: training programmes, coaches, membership pricing, a class schedule and a join form — built around powerful, dark training photography.",
     image:
-      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/forge-fitness",
   },
   {
@@ -100,7 +100,7 @@ export const TEMPLATES: TemplateEntry[] = [
     description:
       "A soft, elegant salon and spa template: services with prices, a gallery, stylists, testimonials and booking — built around warm, graceful beauty photography.",
     image:
-      "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/lumiere-salon",
   },
   {
@@ -172,7 +172,7 @@ export const TEMPLATES: TemplateEntry[] = [
     description:
       "A clean, serious industrial template for a LEV testing company: statutory 14-month testing, services, sectors, a 4-step process, testimonials, FAQ and a quote form — built for trust and compliance, with LocalBusiness and FAQ schema.",
     image:
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1600&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1600&auto=format&fit=crop",
     href: "/templates/ventsure-lev-testing",
   },
 ];
