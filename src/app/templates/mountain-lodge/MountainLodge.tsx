@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { AnimatedCounter, Reveal } from "@/components/Motion";
 
 const PHONE = "+41 27 000 00 00";
@@ -192,6 +192,32 @@ export default function MountainLodge() {
     setActiveLevel(Math.min(LEVELS.length - 1, Math.max(0, Math.floor(v * LEVELS.length))));
   });
 
+  /* Stays: scroll-driven horizontal strip. The section is tall (100vh +
+     the strip's overflow width); while it is pinned, scrolling down
+     slides the cabins across, then the page moves to the next section. */
+  const staysWrapRef = useRef<HTMLElement | null>(null);
+  const staysStripRef = useRef<HTMLDivElement | null>(null);
+  const [staysRange, setStaysRange] = useState(0);
+  useEffect(() => {
+    const measure = () => {
+      const strip = staysStripRef.current;
+      if (!strip || !strip.parentElement) return;
+      setStaysRange(Math.max(0, strip.scrollWidth - strip.parentElement.clientWidth));
+    };
+    measure();
+    const t = setTimeout(measure, 700);
+    window.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      clearTimeout(t);
+    };
+  }, []);
+  const { scrollYProgress: staysProgress } = useScroll({
+    target: staysWrapRef,
+    offset: ["start start", "end end"],
+  });
+  const staysX = useTransform(staysProgress, [0, 1], [0, -staysRange]);
+
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSent(true);
@@ -328,35 +354,42 @@ export default function MountainLodge() {
         </div>
       </section>
 
-      {/* ---- stays: horizontal scroll-snap strip of cards ---- */}
-      <section className="mtl-stays-sec" id="stays">
-        <div className="mtl-wrap">
-          <BlurReveal>
-            <div className="mtl-sec-head">
-              <div>
-                <span className="mtl-mono">(03) STAYS</span>
-                <h2>Four cabins, one mountain.</h2>
+      {/* ---- stays: scroll-driven horizontal strip ---- */}
+      <section
+        className="mtl-stays-sec"
+        id="stays"
+        ref={staysWrapRef}
+        style={{ height: `calc(100vh + ${staysRange}px)` }}
+      >
+        <div className="mtl-stays-sticky">
+          <div className="mtl-wrap">
+            <BlurReveal>
+              <div className="mtl-sec-head">
+                <div>
+                  <span className="mtl-mono">(03) STAYS</span>
+                  <h2>Four cabins, one mountain.</h2>
+                </div>
+                <span className="mtl-mono">SCROLL →</span>
               </div>
-              <span className="mtl-mono">SCROLL →</span>
-            </div>
-          </BlurReveal>
-        </div>
-        <div className="mtl-stay-strip">
-          {STAYS.map((sv) => (
-            <article key={sv.n} className="mtl-stay-card">
-              <div className="mtl-stay-img">
-                <Image src={sv.img} alt={sv.alt} width={800} height={600} sizes="420px" />
-                <span className="mtl-stay-tag">{sv.tag}</span>
-              </div>
-              <div className="mtl-stay-body">
-                <span className="mtl-mono">{sv.n}</span>
-                <h3>{sv.title}</h3>
-                <p>{sv.text}</p>
-                <p className="mtl-stay-price">{sv.price}</p>
-                <a className="mtl-btn mtl-btn-dark" href="#book">Check dates →</a>
-              </div>
-            </article>
-          ))}
+            </BlurReveal>
+          </div>
+          <motion.div ref={staysStripRef} style={{ x: staysX }} className="mtl-stay-strip">
+            {STAYS.map((sv) => (
+              <article key={sv.n} className="mtl-stay-card">
+                <div className="mtl-stay-img">
+                  <Image src={sv.img} alt={sv.alt} width={800} height={600} sizes="420px" />
+                  <span className="mtl-stay-tag">{sv.tag}</span>
+                </div>
+                <div className="mtl-stay-body">
+                  <span className="mtl-mono">{sv.n}</span>
+                  <h3>{sv.title}</h3>
+                  <p>{sv.text}</p>
+                  <p className="mtl-stay-price">{sv.price}</p>
+                  <a className="mtl-btn mtl-btn-dark" href="#book">Check dates →</a>
+                </div>
+              </article>
+            ))}
+          </motion.div>
         </div>
       </section>
 

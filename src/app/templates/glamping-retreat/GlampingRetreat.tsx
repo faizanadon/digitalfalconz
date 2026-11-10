@@ -489,7 +489,13 @@ export default function GlampingRetreat() {
                 </label>
                 <label>
                   Tent
-                  <select name="tent" defaultValue="The Bell Tent">
+                  <select
+                    name="tent"
+                    value={t.title}
+                    onChange={(e) =>
+                      setTent(TENTS.findIndex((tn) => tn.title === e.target.value))
+                    }
+                  >
                     <option>The Bell Tent</option>
                     <option>The Safari Tent</option>
                     <option>The Stargazer</option>

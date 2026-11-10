@@ -197,6 +197,7 @@ function moonPhase(): { name: string; illum: number } {
 export default function DesertRetreat() {
   const [sent, setSent] = useState(false);
   const [temp, setTemp] = useState(31);
+  const [bookTent, setBookTent] = useState("The Star Tent");
   const moon = moonPhase();
 
   useEffect(() => {
@@ -323,7 +324,7 @@ export default function DesertRetreat() {
                     <td>{c.wash}</td>
                     <td>{c.view}</td>
                     <td className="dst-t-price">{c.price}</td>
-                    <td><a className="dst-t-link" href="#book">Book →</a></td>
+                    <td><a className="dst-t-link" href="#book" onClick={() => setBookTent(c.title)}>Book →</a></td>
                   </tr>
                 ))}
               </tbody>
@@ -563,7 +564,11 @@ export default function DesertRetreat() {
                 </label>
                 <label>
                   Tent
-                  <select name="tent" defaultValue="The Star Tent">
+                  <select
+                    name="tent"
+                    value={bookTent}
+                    onChange={(e) => setBookTent(e.target.value)}
+                  >
                     <option>The Standard Tent</option>
                     <option>The Deluxe Tent</option>
                     <option>The Family Tent</option>

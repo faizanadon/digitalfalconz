@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { AnimatedCounter, Reveal } from "@/components/Motion";
 
 const PHONE = "+351 261 000 000";
@@ -245,6 +245,32 @@ export default function SurfRetreat() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* Guest voices: scroll-driven horizontal strip. The section is tall
+     (100vh + the strip's overflow width); while it is pinned, scrolling
+     down slides the quotes across, then the page moves to the next section. */
+  const voicesWrapRef = useRef<HTMLElement | null>(null);
+  const voicesStripRef = useRef<HTMLDivElement | null>(null);
+  const [voicesRange, setVoicesRange] = useState(0);
+  useEffect(() => {
+    const measure = () => {
+      const strip = voicesStripRef.current;
+      if (!strip || !strip.parentElement) return;
+      setVoicesRange(Math.max(0, strip.scrollWidth - strip.parentElement.clientWidth));
+    };
+    measure();
+    const t = setTimeout(measure, 700);
+    window.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      clearTimeout(t);
+    };
+  }, []);
+  const { scrollYProgress: voicesProgress } = useScroll({
+    target: voicesWrapRef,
+    offset: ["start start", "end end"],
+  });
+  const voicesX = useTransform(voicesProgress, [0, 1], [0, -voicesRange]);
+
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSent(true);
@@ -476,26 +502,33 @@ export default function SurfRetreat() {
         </div>
       </section>
 
-      {/* ---- guest voices: horizontal scroll strip of quote cards ---- */}
-      <section className="srf-section srf-voices-sec" id="voices">
-        <div className="srf-wrap">
-          <BlurReveal>
-            <div className="srf-sec-head">
-              <div>
-                <span className="srf-mono">(06) GUEST VOICES</span>
-                <h2>What a week feels like.</h2>
+      {/* ---- guest voices: scroll-driven horizontal strip ---- */}
+      <section
+        className="srf-section srf-voices-sec"
+        id="voices"
+        ref={voicesWrapRef}
+        style={{ height: `calc(100vh + ${voicesRange}px)` }}
+      >
+        <div className="srf-voices-sticky">
+          <div className="srf-wrap">
+            <BlurReveal>
+              <div className="srf-sec-head">
+                <div>
+                  <span className="srf-mono">(06) GUEST VOICES</span>
+                  <h2>What a week feels like.</h2>
+                </div>
+                <span className="srf-mono">SCROLL →</span>
               </div>
-              <span className="srf-mono">SCROLL →</span>
-            </div>
-          </BlurReveal>
-        </div>
-        <div className="srf-quote-strip">
-          {TESTIMONIALS.map((tst) => (
-            <article key={tst.name} className="srf-quote-card">
-              <p>“{tst.quote}”</p>
-              <span><strong>{tst.name}</strong> — {tst.role}</span>
-            </article>
-          ))}
+            </BlurReveal>
+          </div>
+          <motion.div ref={voicesStripRef} style={{ x: voicesX }} className="srf-quote-strip">
+            {TESTIMONIALS.map((tst) => (
+              <article key={tst.name} className="srf-quote-card">
+                <p>“{tst.quote}”</p>
+                <span><strong>{tst.name}</strong> — {tst.role}</span>
+              </article>
+            ))}
+          </motion.div>
         </div>
       </section>
 
