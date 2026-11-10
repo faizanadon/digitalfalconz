@@ -289,6 +289,7 @@ export default function Yogagrove() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activeDot, setActiveDot] = useState(4);
   const heroBgRef = useRef<HTMLImageElement | null>(null);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => {
@@ -495,30 +496,34 @@ export default function Yogagrove() {
         <section className="yg-how-it-works-section" id="how-it-works">
           <div className="yg-container">
             <div className="yg-hiw-layout">
-              <Reveal>
-                <div className="yg-hiw-sticky-left">
-                  <span className="yg-eyebrow-pill">
-                    <span className="yg-eyebrow-dot" />
-                    <span>The Yogagrove Method</span>
+              <motion.div
+                className="yg-hiw-sticky-left"
+                initial={reduce ? false : { opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, ease: [0.22, 0.61, 0.21, 1] }}
+              >
+                <span className="yg-eyebrow-pill">
+                  <span className="yg-eyebrow-dot" />
+                  <span>The Yogagrove Method</span>
+                </span>
+                <h2 className="yg-section-title">
+                  A simple path
+                  <br />
+                  back to yourself.
+                </h2>
+                <p className="yg-section-subtext">
+                  Every class moves through the same gentle arc - no rush, no
+                  performance. Just three simple movements that guide your
+                  body home.
+                </p>
+                <a href="#pricing" className="yg-btn-dark" style={{ marginTop: 8 }}>
+                  <span>Book a class</span>
+                  <span className="yg-btn-arrow">
+                    <ArrowIcon />
                   </span>
-                  <h2 className="yg-section-title">
-                    A simple path
-                    <br />
-                    back to yourself.
-                  </h2>
-                  <p className="yg-section-subtext">
-                    Every class moves through the same gentle arc - no rush, no
-                    performance. Just three simple movements that guide your
-                    body home.
-                  </p>
-                  <a href="#pricing" className="yg-btn-dark" style={{ marginTop: 8 }}>
-                    <span>Book a class</span>
-                    <span className="yg-btn-arrow">
-                      <ArrowIcon />
-                    </span>
-                  </a>
-                </div>
-              </Reveal>
+                </a>
+              </motion.div>
               <div className="yg-hiw-cards-stack">
                 {STEPS.map((s) => (
                   <article
