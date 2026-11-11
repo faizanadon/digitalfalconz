@@ -3619,7 +3619,7 @@ html{overflow-x:clip}
 .yg-eyebrow-pill.pill-light .yg-eyebrow-dot{background: var(--yg-accent-dot);}
 @keyframes pulseDot {0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: 0.65; }}
 /* Headings */
-.yg h1, .yg h2, .yg h3, .yg h4, .yg h5{font-weight: 500; letter-spacing: -0.02em; color: var(--yg-text-dark); line-height: 1.15;}
+.yg h1, .yg h2, .yg h3, .yg h4, .yg h5{font-weight: 500; letter-spacing: -0.02em; line-height: 1.15;}
 .yg-section-title{font-size: 46px; line-height: 1.14; font-weight: 500; letter-spacing: -0.92px; color: var(--yg-text-dark);}
 .yg-section-subtext{font-size: 18px; line-height: 1.6; color: var(--yg-text-forest); max-width: 580px;}
 @media (max-width: 768px) {
@@ -3852,7 +3852,7 @@ html{overflow-x:clip}
 .yg-cta-bg{position: absolute; inset: 0; width: 100%; height: 110%; top: -5%; object-fit: cover; z-index: 1;}
 .yg-cta-overlay{position: absolute; inset: 0; background: linear-gradient(180deg, rgba(38, 51, 39, 0.1) 0%, rgba(38, 51, 39, 0.75) 40%, rgba(35, 48, 40, 0.7) 65%, rgba(28, 40, 44, 0.4) 100%); z-index: 2;}
 .yg-cta-content{position: relative; z-index: 3; max-width: 640px; display: flex; flex-direction: column; align-items: center; gap: 20px;}
-.yg-cta-title{font-size: 58px; font-weight: 500; line-height: 1.08; letter-spacing: -1.2px; color: var(--yg-text-cream);}
+.yg-cta-title{font-size: 58px; font-weight: 500; line-height: 1.08; letter-spacing: -1.2px; color: var(--yg-text-white);}
 .yg-cta-subtext{font-size: 19px; line-height: 1.6; color: rgba(240, 235, 224, 0.88); max-width: 500px;}
 @media (max-width: 768px) {
 .yg-cta-banner{padding: 70px 20px;}

@@ -119,6 +119,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "zb20d9vc6n");`}
         </Script>
+        {/* Google Tag Manager — GTM-M3QRKDSM (loads on every page via the root layout). */}
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`}
+        </Script>
+        <Script id="google-tag-manager" strategy="afterInteractive" src="https://www.googletagmanager.com/gtm.js?id=GTM-M3QRKDSM" />
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
       </body>
