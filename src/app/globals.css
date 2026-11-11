@@ -3875,7 +3875,7 @@ html{overflow-x:clip}
 .yg-social-btn:hover{transform: translateY(-3px); background: #fff;}
 .yg-social-btn img{width: 20px; height: 20px;}
 .yg-footer-col-title{font-size: 17px; font-weight: 500; color: #fefdfb; margin-bottom: 20px; letter-spacing: -0.3px;}
-.yg-footer-links{list-style: none; display: flex; flex-direction: column; gap: 12px;}
+.yg-footer-links{list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px;}
 .yg-footer-link{font-size: 15px; color: rgba(240, 235, 224, 0.75); transition: color 0.25s ease, transform 0.25s ease; display: inline-block;}
 .yg-footer-link:hover{color: #fff; transform: translateX(3px);}
 .yg-footer-contact-item{font-size: 15px; color: rgba(240, 235, 224, 0.75); margin-bottom: 12px; line-height: 1.5;}
