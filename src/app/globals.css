@@ -4228,7 +4228,7 @@ html{overflow-x:clip}
 .sv-ritual-when{font-family:var(--font-mono),"Space Mono",monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sv-accent);display:block;margin-bottom:6px}
 .sv-ritual-block p{margin:0;color:var(--sv-ink-2);line-height:1.6;font-size:.94rem}
 .sv-prog-table{display:flex;flex-direction:column;border-top:1px solid var(--sv-line)}
-.sv-prog-row{display:grid;grid-template-columns:1fr auto;gap:clamp(20px,3vw,40px);align-items:center;padding:clamp(24px,3.5vw,34px) 6px;border-bottom:1px solid var(--sv-line);cursor:pointer;transition:background .25s ease}
+.sv-prog-row{display:grid;grid-template-columns:1fr auto;gap:clamp(20px,3vw,40px);align-items:center;padding:clamp(24px,3.5vw,34px) 20px;border-bottom:1px solid var(--sv-line);cursor:pointer;transition:background .25s ease}
 .sv-prog-row:hover{background:rgba(92,110,88,.06)}
 .sv-prog-row.on{background:var(--sv-accent)}
 .sv-prog-row.on h3,.sv-prog-row.on .sv-prog-price{color:#fff}
