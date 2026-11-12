@@ -202,6 +202,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A calm, breath-led yoga and wellness retreat template: a breathing pacer, a daily rhythm arc, programmes with live pricing, stays, teachers, guest voices and a booking form — built around real yoga and Himalayan photography.",
     image:
       "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/prana.jpg",
     href: "/templates/prana",
   },
   {
