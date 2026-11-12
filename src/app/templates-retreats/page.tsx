@@ -40,7 +40,7 @@ export default function TemplatesRetreatsPage() {
         }
       >
         <p className="lede">
-          <strong>Fourteen finished designs for retreats, wellness and hospitality.</strong>
+          <strong>Fifteen finished designs for retreats, wellness and hospitality.</strong>
         </p>
         <p className="plain-p">
           From a Bali retreat to a yoga studio, a restaurant, a gym, a salon,
@@ -65,11 +65,11 @@ export default function TemplatesRetreatsPage() {
           <Reveal>
             <h2>Retreat templates</h2>
             <p className="plain-p">
-              Fourteen templates live in this niche today — a Bali retreat, a
+              Fifteen templates live in this niche today — a Bali retreat, a
               yoga studio, a Melbourne yoga &amp; breathwork studio, a fine-dining restaurant, a real-estate agency, a
               gym, an interior-design studio, a beauty salon &amp; spa, a
               mountain lodge, a desert retreat, a surf retreat, a glamping
-              retreat, a vineyard retreat and a yoga &amp; wellness retreat in Rishikesh. Each one is a complete, working
+              retreat, a vineyard retreat, a yoga &amp; wellness retreat in Rishikesh and an Ayurveda &amp; detox retreat in Kerala. Each one is a complete, working
               site you can walk through before you commit.
             </p>
           </Reveal>
@@ -83,7 +83,7 @@ export default function TemplatesRetreatsPage() {
             <h2 style={{ marginTop: 56 }}>What&apos;s inside every retreat template</h2>
             <p className="plain-p">
               The details differ by business, but the standard is the same
-              across all fourteen.
+              across all fifteen.
             </p>
           </Reveal>
           <Stagger className="card-grid">

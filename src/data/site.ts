@@ -711,6 +711,19 @@ export const pageMeta = {
     "source_file": "templates/prana",
     "publication_priority": "Core"
   },
+  "/templates/sattva": {
+    "page_type": "main",
+    "url_path": "/templates/sattva",
+    "canonical": "https://digitalfalconz.com/templates/sattva",
+    "seo_title": "Sattva Ayurveda & Detox Retreat — Website Template | DigitalFalconz",
+    "title_chars": 66,
+    "meta_description": "A slow, earthy Ayurveda and detox retreat website template: dosha selector, seven-day ritual timeline, programmes, stays, treatments and booking, built around Kerala photography.",
+    "description_chars": 156,
+    "h1": "Sattva — an Ayurveda & detox retreat",
+    "words": 600,
+    "source_file": "templates/sattva",
+    "publication_priority": "Core"
+  },
   "/templates/ventsure-lev-testing": {
     "page_type": "main",
     "url_path": "/templates/ventsure-lev-testing",
