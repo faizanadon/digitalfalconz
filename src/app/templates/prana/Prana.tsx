@@ -308,10 +308,10 @@ export default function Prana() {
     target: breathRef,
     offset: ["start start", "end end"],
   });
-  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 1.55, 0.7]);
-  const inhaleOpacity = useTransform(breathProgress, [0.05, 0.25, 0.45], [0, 1, 0]);
-  const exhaleOpacity = useTransform(breathProgress, [0.55, 0.75, 0.95], [0, 1, 0]);
-  const breathLineOpacity = useTransform(breathProgress, [0.8, 0.95], [0, 1]);
+  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 2.0, 0.85]);
+  const inhaleOpacity = useTransform(breathProgress, [0.02, 0.12, 0.38, 0.48], [0, 1, 1, 0]);
+  const exhaleOpacity = useTransform(breathProgress, [0.52, 0.62, 0.82, 0.92], [0, 1, 1, 0]);
+  const breathLineOpacity = useTransform(breathProgress, [0.72, 0.86, 1], [0, 1, 1]);
 
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -403,11 +403,12 @@ export default function Prana() {
       <section className="pr-breath" ref={breathRef} aria-label="A breath, slowed down">
         <div className="pr-breath-sticky">
           <span className="pr-breath-wordmark" aria-hidden="true">BREATHE</span>
-          <motion.div
-            className="pr-breath-core"
-            style={reduce ? undefined : { scale: breathScale }}
-            aria-hidden="true"
-          >
+          <div className="pr-breath-stage">
+            <motion.div
+              className="pr-breath-core"
+              style={reduce ? undefined : { scale: breathScale }}
+              aria-hidden="true"
+            />
             <motion.span
               className="pr-breath-label"
               style={reduce ? undefined : { opacity: inhaleOpacity }}
@@ -420,7 +421,7 @@ export default function Prana() {
             >
               Exhale
             </motion.span>
-          </motion.div>
+          </div>
           <motion.p
             className="pr-breath-line"
             style={reduce ? undefined : { opacity: breathLineOpacity }}
@@ -444,21 +445,50 @@ export default function Prana() {
           </BlurReveal>
           <div className="pr-arc" role="tablist" aria-label="Parts of the day">
             <svg className="pr-arc-svg" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M 60 230 Q 500 -60 940 230" fill="none" stroke="var(--pr-line)" strokeWidth="2" />
-              <circle cx="500" cy="85" r="7" fill="var(--pr-accent)" />
+              <motion.path
+                d="M 60 230 Q 500 -60 940 230"
+                fill="none"
+                stroke="var(--pr-line)"
+                strokeWidth="2"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 1.4, ease: "easeInOut" }}
+              />
+              <motion.circle
+                cx="500" cy="85" r="7" fill="var(--pr-accent)"
+                style={{ transformBox: "fill-box", transformOrigin: "center" }}
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
+              />
+              <motion.circle
+                cx="500" cy="85" r="7" fill="none" stroke="var(--pr-accent)" strokeWidth="2"
+                style={{ transformBox: "fill-box", transformOrigin: "center" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.6, 0], scale: [1, 2.4, 1] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+              />
             </svg>
             {RHYTHM.map((rt, i) => (
-              <button
+              <motion.button
                 key={rt.time}
                 role="tab"
                 aria-selected={part === i}
                 className={`pr-arc-dot${part === i ? " on" : ""}`}
                 style={{ left: `${[11.3, 30.6, 50, 69.4, 88.7][i]}%`, top: `${[75.8, 43.5, 32.7, 43.5, 75.8][i]}%` }}
                 onClick={() => setPart(i)}
+                initial={{ opacity: 0, x: "-50%", y: "-30%", scale: 0.85 }}
+                whileInView={{ opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.45, delay: 0.3 + i * 0.16, ease: "easeOut" }}
+                whileHover={{ y: "-56%" }}
+                whileTap={{ scale: 0.95 }}
               >
                 <span className="pr-arc-time">{rt.time}</span>
                 <span className="pr-arc-name">{rt.name}</span>
-              </button>
+              </motion.button>
             ))}
           </div>
           <AnimatePresence mode="wait">
@@ -549,11 +579,11 @@ export default function Prana() {
                   <p>{st.text}</p>
                   <p className="pr-stay-price">{st.priceNote}</p>
                   <a
-                    className="pr-link"
+                    className="pr-btn pr-btn-accent pr-stay-btn"
                     href="#book"
                     onClick={() => setStay(i)}
                   >
-                    {stay === i ? "Selected ✓ — change in booking ↓" : "Reserve this stay →"}
+                    {stay === i ? "Selected ✓" : "Reserve this stay →"}
                   </a>
                 </div>
               </article>
@@ -578,8 +608,32 @@ export default function Prana() {
               </p>
             </BlurReveal>
             <ul className="pr-checks">
-              {INCLUDED.map((it) => (
-                <li key={it}>{it}</li>
+              {INCLUDED.map((it, i) => (
+                <motion.li
+                  key={it}
+                  initial={{ opacity: 0, x: -18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
+                  whileHover={{ x: 4 }}
+                >
+                  <span className="pr-check-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <motion.path
+                        d="M4 12.5 L9.5 18 L20 6"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        initial={{ pathLength: 0 }}
+                        whileInView={{ pathLength: 1 }}
+                        viewport={{ once: true, margin: "-60px" }}
+                        transition={{ duration: 0.45, delay: i * 0.08 + 0.18, ease: "easeOut" }}
+                      />
+                    </svg>
+                  </span>
+                  {it}
+                </motion.li>
               ))}
             </ul>
           </div>
