@@ -420,14 +420,14 @@ function TiltCard({ className, children }: { className: string; children: ReactN
   // Warm peach-white so it reads on the white card, the clay hover
   // colour and the stay photos alike (a plain white radial glow is
   // invisible on the white card).
-  const glare = useMotionTemplate`linear-gradient(115deg, transparent calc(${gx}% - 70px), rgba(246,201,168,.45) calc(${gx}% - 24px), rgba(255,255,255,.85) ${gx}%, rgba(246,201,168,.45) calc(${gx}% + 24px), transparent calc(${gx}% + 70px))`;
+  const glare = useMotionTemplate`linear-gradient(115deg, transparent calc(${gx}% - 90px), rgba(246,201,168,.14) calc(${gx}% - 36px), rgba(255,255,255,.28) ${gx}%, rgba(246,201,168,.14) calc(${gx}% + 36px), transparent calc(${gx}% + 90px))`;
   const onMove = (e: React.MouseEvent) => {
     if (reduce || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width;
     const py = (e.clientY - r.top) / r.height;
-    ry.set((px - 0.5) * 20);
-    rx.set((0.5 - py) * 20);
+    ry.set((px - 0.5) * 6);
+    rx.set((0.5 - py) * 6);
     gx.set(px * 100);
     go.set(1);
   };

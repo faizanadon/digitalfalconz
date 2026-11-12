@@ -4009,15 +4009,16 @@ html{overflow-x:clip}
 .pr-rhythm-body p{margin:0 0 22px}
 .pr-prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
 .pr-prog{position:relative;background:#fff;border:1px solid var(--pr-line);border-radius:20px;padding:34px 30px;display:flex;flex-direction:column;transform-style:preserve-3d;will-change:transform;transition:background .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease}
-.pr-prog:hover,.pr-prog.on{background:var(--pr-accent);border-color:var(--pr-accent);box-shadow:0 18px 40px rgba(176,90,58,.28)}
-.pr-prog:hover h3,.pr-prog.on h3,.pr-prog:hover .pr-prog-price,.pr-prog.on .pr-prog-price{color:#fff}
-.pr-prog:hover .pr-mono,.pr-prog.on .pr-mono{color:rgba(255,255,255,.8)}
-.pr-prog:hover .pr-prog-price span,.pr-prog.on .pr-prog-price span{color:rgba(255,255,255,.75)}
-.pr-prog:hover p,.pr-prog.on p{color:rgba(255,255,255,.88)}
-.pr-prog:hover ul li,.pr-prog.on ul li{color:rgba(255,255,255,.92)}
-.pr-prog:hover ul li::before,.pr-prog.on ul li::before{color:#fff}
-.pr-prog:hover .pr-prog-flag,.pr-prog.on .pr-prog-flag{background:#fff;color:var(--pr-accent)}
-.pr-prog:hover .pr-btn-accent,.pr-prog.on .pr-btn-accent{background:#fff;color:var(--pr-accent)}
+.pr-prog.on{background:var(--pr-accent);border-color:var(--pr-accent);box-shadow:0 18px 40px rgba(176,90,58,.28)}
+.pr-prog:hover{border-color:rgba(176,90,58,.45);box-shadow:0 12px 28px rgba(0,0,0,.10)}
+.pr-prog.on h3,.pr-prog.on .pr-prog-price{color:#fff}
+.pr-prog.on .pr-mono{color:rgba(255,255,255,.8)}
+.pr-prog.on .pr-prog-price span{color:rgba(255,255,255,.75)}
+.pr-prog.on p{color:rgba(255,255,255,.88)}
+.pr-prog.on ul li{color:rgba(255,255,255,.92)}
+.pr-prog.on ul li::before{color:#fff}
+.pr-prog.on .pr-prog-flag{background:#fff;color:var(--pr-accent)}
+.pr-prog.on .pr-btn-accent{background:#fff;color:var(--pr-accent)}
 .pr-prog-pop{border-top:4px solid var(--pr-accent)}
 .pr-prog-flag{position:absolute;top:-13px;left:30px;background:var(--pr-accent);color:#fff;font-family:var(--font-mono),"Space Mono",monospace;font-size:.62rem;letter-spacing:.2em;padding:6px 12px;border-radius:999px}
 .pr-prog h3{font-size:1.6rem;margin:.35em 0 .2em;color:var(--pr-ink)}
@@ -4033,7 +4034,7 @@ html{overflow-x:clip}
 .pr-stay.on{border-color:var(--pr-accent);box-shadow:0 18px 40px rgba(176,90,58,.22)}
 .pr-stay-img{position:relative;aspect-ratio:3/2;overflow:hidden}
 .pr-stay-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-.pr-stay:hover .pr-stay-img img{transform:scale(1.08)}
+.pr-stay:hover .pr-stay-img img{transform:scale(1.04)}
 .pr-stay-tag{position:absolute;left:14px;bottom:14px;background:rgba(43,35,32,.82);color:#fff;font-family:var(--font-mono),"Space Mono",monospace;font-size:.62rem;letter-spacing:.2em;padding:7px 12px;border-radius:999px;z-index:2}
 .pr-stay-chip{position:absolute;right:14px;top:14px;background:var(--pr-accent);color:#fff;font-family:var(--font-mono),"Space Mono",monospace;font-size:.62rem;letter-spacing:.18em;padding:7px 12px;border-radius:999px;z-index:2}
 .pr-stay-body{padding:26px 26px 30px;display:flex;flex-direction:column;flex:1}
