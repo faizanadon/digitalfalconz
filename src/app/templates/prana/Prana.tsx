@@ -381,8 +381,12 @@ function Magnetic({ children, className }: { children: ReactNode; className?: st
   const onMove = (e: React.MouseEvent) => {
     if (reduce || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
-    x.set((e.clientX - (r.left + r.width / 2)) * 0.35);
-    y.set((e.clientY - (r.top + r.height / 2)) * 0.35);
+    // Gentle pull, hard-capped so the button can never reach a neighbour:
+    // the hero CTA gap is 14px, so a 10px max offset always clears it.
+    const cx = (e.clientX - (r.left + r.width / 2)) * 0.12;
+    const cy = (e.clientY - (r.top + r.height / 2)) * 0.12;
+    x.set(Math.max(-10, Math.min(10, cx)));
+    y.set(Math.max(-10, Math.min(10, cy)));
   };
   const reset = () => {
     x.set(0);
@@ -408,21 +412,23 @@ function TiltCard({ className, children }: { className: string; children: ReactN
   const ref = useRef<HTMLElement | null>(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 160, damping: 18 });
-  const sry = useSpring(ry, { stiffness: 160, damping: 18 });
+  const srx = useSpring(rx, { stiffness: 260, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 260, damping: 18 });
   const gx = useMotionValue(50);
-  const gy = useMotionValue(50);
   const go = useMotionValue(0);
-  const glare = useMotionTemplate`radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,.38), transparent 62%)`;
+  // Diagonal shine band that sweeps across the card with the cursor.
+  // Warm peach-white so it reads on the white card, the clay hover
+  // colour and the stay photos alike (a plain white radial glow is
+  // invisible on the white card).
+  const glare = useMotionTemplate`linear-gradient(115deg, transparent calc(${gx}% - 70px), rgba(246,201,168,.45) calc(${gx}% - 24px), rgba(255,255,255,.85) ${gx}%, rgba(246,201,168,.45) calc(${gx}% + 24px), transparent calc(${gx}% + 70px))`;
   const onMove = (e: React.MouseEvent) => {
     if (reduce || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width;
     const py = (e.clientY - r.top) / r.height;
-    ry.set((px - 0.5) * 10);
-    rx.set((0.5 - py) * 10);
+    ry.set((px - 0.5) * 20);
+    rx.set((0.5 - py) * 20);
     gx.set(px * 100);
-    gy.set(py * 100);
     go.set(1);
   };
   const reset = () => {
@@ -501,12 +507,12 @@ export default function Prana() {
     target: breathRef,
     offset: ["start start", "end end"],
   });
-  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 2.3, 0.85]);
+  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 2.3, 1]);
   const breathGlow = useTransform(breathProgress, [0, 0.5, 1], [0.35, 1, 0.5]);
   const breathWordTilt = useTransform(breathProgress, [0, 1], [10, -8]);
   const inhaleOpacity = useTransform(breathProgress, [0.02, 0.12, 0.38, 0.48], [0, 1, 1, 0]);
   const exhaleOpacity = useTransform(breathProgress, [0.52, 0.62, 0.82, 0.92], [0, 1, 1, 0]);
-  const breathLineOpacity = useTransform(breathProgress, [0.68, 0.82, 1], [0, 1, 1]);
+  const breathLineOpacity = useTransform(breathProgress, [0.55, 0.68, 1], [0, 1, 1]);
 
   /* Hero mouse parallax — orbs and the pacer tilt follow the cursor. */
   const mx = useMotionValue(0);
@@ -519,8 +525,8 @@ export default function Prana() {
   const orbBY = useTransform(smy, (v) => v * -34);
   const orbCX = useTransform(smx, (v) => v * 22);
   const orbCY = useTransform(smy, (v) => v * -18);
-  const pacerTiltX = useTransform(smy, (v) => v * -5);
-  const pacerTiltY = useTransform(smx, (v) => v * 7);
+  const pacerTiltX = useTransform(smy, (v) => v * -10);
+  const pacerTiltY = useTransform(smx, (v) => v * 12);
   const onHeroMouse = (e: React.MouseEvent<HTMLElement>) => {
     if (reduce) return;
     const r = e.currentTarget.getBoundingClientRect();
@@ -566,7 +572,6 @@ export default function Prana() {
       {/* ---- hero: full-bleed B&W photo, huge white headline, glowing pacer ---- */}
       <section
         className="pr-hero"
-        id="top"
         ref={heroRef}
         onMouseMove={onHeroMouse}
         onMouseLeave={onHeroMouseLeave}
