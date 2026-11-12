@@ -512,7 +512,6 @@ export default function Prana() {
   const breathWordTilt = useTransform(breathProgress, [0, 1], [10, -8]);
   const inhaleOpacity = useTransform(breathProgress, [0.02, 0.12, 0.38, 0.48], [0, 1, 1, 0]);
   const exhaleOpacity = useTransform(breathProgress, [0.52, 0.62, 0.82, 0.92], [0, 1, 1, 0]);
-  const breathLineOpacity = useTransform(breathProgress, [0.3, 0.45, 1], [0, 1, 1]);
 
   /* Hero mouse parallax — orbs and the pacer tilt follow the cursor. */
   const mx = useMotionValue(0);
@@ -684,12 +683,9 @@ export default function Prana() {
               Exhale
             </motion.span>
           </div>
-          <motion.p
-            className="pr-breath-line"
-            style={reduce ? undefined : { opacity: breathLineOpacity }}
-          >
+          <p className="pr-breath-line">
             One breath. That&rsquo;s all it takes.
-          </motion.p>
+          </p>
         </div>
       </section>
 

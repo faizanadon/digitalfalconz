@@ -3906,7 +3906,7 @@ html{overflow-x:clip}
 .pr-bw img{filter:grayscale(1) contrast(1.05)}
 .pr-wrap{max-width:1200px;margin:0 auto;padding:0 clamp(20px,4.5vw,56px)}
 .pr-mono{display:block;font-family:var(--font-mono),"Space Mono",monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--pr-grey)}
-.pr-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:15px 30px;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .25s ease,color .25s ease,border-color .25s ease}
+.pr-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:15px 30px;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .25s ease,color .25s ease,border-color .25s ease}
 .pr-btn-accent{background:var(--pr-accent);color:#fff}
 .pr-btn-accent:hover{background:var(--pr-accent-dark)}
 .pr-btn-ghost{background:transparent;color:var(--pr-ink);border-color:var(--pr-line)}
@@ -4027,7 +4027,7 @@ html{overflow-x:clip}
 .pr-prog ul{display:flex;flex-direction:column;gap:10px;margin:0 0 28px}
 .pr-prog ul li{font-size:.95rem;color:var(--pr-grey);padding-left:24px;position:relative}
 .pr-prog ul li::before{content:"✓";position:absolute;left:0;color:var(--pr-accent);font-weight:700}
-.pr-prog-btn{margin-top:auto;width:100%}
+.pr-prog-btn{margin-top:auto;width:100%;font-size:.8rem;letter-spacing:.04em;padding:15px 18px}
 .pr-stay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .pr-stay{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--pr-line);border-radius:20px;overflow:hidden;transform-style:preserve-3d;will-change:transform;transition:border-color .3s ease,box-shadow .3s ease}
 .pr-stay.on{border-color:var(--pr-accent);box-shadow:0 18px 40px rgba(176,90,58,.22)}
@@ -4040,7 +4040,7 @@ html{overflow-x:clip}
 .pr-stay-body h3{font-size:1.45rem;margin:0 0 .5em;color:var(--pr-ink)}
 .pr-stay-body p{margin:0 0 16px}
 .pr-stay-price{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;font-weight:800;font-size:1.15rem;color:var(--pr-accent);margin:0 0 18px}
-.pr-stay-btn{margin-top:auto;width:100%}
+.pr-stay-btn{margin-top:auto;width:100%;font-size:.8rem;letter-spacing:.04em;padding:15px 18px}
 .pr-stay.on .pr-stay-btn{background:transparent;color:var(--pr-accent);border-color:var(--pr-accent)}
 .pr-included-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:center}
 .pr-included-img{border-radius:20px;overflow:hidden}
