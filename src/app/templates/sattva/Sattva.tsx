@@ -12,11 +12,12 @@ const U = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
 
 /* Kerala, Ayurveda and ritual photography (all verified 200). The yoga
-   practice and the herbs are B&W for the calm, editorial look; everything
-   else stays in full colour so the place shows through. */
+   practice and the herbs band are B&W for the calm, editorial look;
+   everything else stays in full colour so the place shows through. */
 const HERO_IMG = U("1602216056096-3b40cc0c9944", 1800); // Kerala backwaters
 const RITUAL_IMG = U("1506126613408-eca07ce68773", 1400); // morning practice (B&W)
-const HERBS_IMG = U("1477763858572-cda7deaa9bc5", 1400); // herbs and oils (B&W)
+const HERBS_IMG = U("1596040033229-a9821ebd058d", 1400); // Indian herbs & spices (B&W)
+const OIL_IMG = U("1608571423902-eed4a5ad8108", 1400); // amber bottle of herbal oil
 const PLANTS_IMG = U("1466692476868-aef1dfb1e735", 1400); // green leaves
 
 const DOSHAS = [
@@ -41,8 +42,8 @@ const DOSHAS = [
     text: "Pitta runs hot and sharp. When it is out of balance, skin flares, temper shortens and sleep turns shallow. The ritual for Pitta is cooling and softening: cool oils, gentle touch, shade in the afternoon, and food that calms rather than stokes.",
     treatments: ["Shirodhara", "Abhyanga", "Nasya"],
     colour: "#B0713C",
-    img: HERBS_IMG,
-    alt: "Herbs and oils used in the treatments",
+    img: OIL_IMG,
+    alt: "Amber bottle of herbal oil",
   },
   {
     name: "Kapha",
@@ -192,8 +193,8 @@ const TREATMENTS = [
     name: "Shirodhara",
     time: "45 min",
     dosha: ["Pitta", "Vata"],
-    img: U("1540555700478-4be289fbecef", 1200),
-    alt: "A calm spa treatment",
+    img: U("1616394584738-fc6e612e71b9", 1200),
+    alt: "A relaxing head and face treatment",
     text: "A slow, unbroken stream of warm oil poured onto the forehead. Guests describe it as the mind going quiet — the one treatment people come back for, and the one they talk about for months.",
   },
   {
@@ -446,6 +447,22 @@ export default function Sattva() {
   const [faqOpen, setFaqOpen] = useState(0);
   const [voice, setVoice] = useState(0);
   const [voicePaused, setVoicePaused] = useState(false);
+  const voiceRef = useRef<HTMLDivElement | null>(null);
+  const voiceInView = useInView(voiceRef, { margin: "-10% 0px -10% 0px" });
+  const voiceIdleTimer = useRef<number | null>(null);
+  const clearVoiceIdleTimer = () => {
+    if (voiceIdleTimer.current) {
+      window.clearTimeout(voiceIdleTimer.current);
+      voiceIdleTimer.current = null;
+    }
+  };
+  /* If the pointer parks over the quote and never moves, hover-pause would
+     latch forever and the carousel would look dead — so a parked pointer
+     resumes auto-advance after 10s idle. Moving the pointer re-arms it. */
+  const armVoiceIdleResume = () => {
+    clearVoiceIdleTimer();
+    voiceIdleTimer.current = window.setTimeout(() => setVoicePaused(false), 10000);
+  };
   const [newsEmail, setNewsEmail] = useState("");
   const [newsDone, setNewsDone] = useState(false);
   const [booked, setBooked] = useState(false);
@@ -459,12 +476,17 @@ export default function Sattva() {
   const total = p.price + s.supplement;
   const visibleDays = DAYS.slice(0, p.daysCount);
 
-  /* Rotating guest quote — advances every 6s, pauses on hover/focus. */
+  /* Rotating guest quote — advances every 6s while the section is in
+     view, pauses on hover/focus. The interval only runs when the stage is
+     actually visible, so it never burns cycles (or stalls) off-screen. */
   useEffect(() => {
-    if (reduce || voicePaused) return;
+    if (reduce || voicePaused || !voiceInView) return;
     const t = setInterval(() => setVoice((v) => (v + 1) % VOICES.length), 6000);
     return () => clearInterval(t);
-  }, [reduce, voicePaused]);
+  }, [reduce, voicePaused, voiceInView]);
+
+  /* Clear the idle-resume timer on unmount. */
+  useEffect(() => () => clearVoiceIdleTimer(), []);
 
   const onBook = (e: FormEvent) => {
     e.preventDefault();
@@ -643,7 +665,7 @@ export default function Sattva() {
         <div className="sv-wrap">
           <BlurReveal>
             <span className="sv-mono">(02) THE RITUAL</span>
-            <h2>Seven days, one ritual.</h2>
+            <h2>{p.daysCount} days, one ritual.</h2>
             <p className="sv-lede">
               The days build on each other — settle, cleanse, deepen, release,
               restore, integrate, return. Choose a length below and the journey
@@ -731,13 +753,13 @@ export default function Sattva() {
                   </div>
                   <div className="sv-prog-row-side">
                     <p className="sv-prog-price">{priceLabel(pg.price)}</p>
-                    <a
+                    <button
+                      type="button"
                       className="sv-btn sv-btn-accent sv-prog-btn"
-                      href="#book"
                       onClick={(e) => { e.stopPropagation(); setProgramme(i); }}
                     >
                       {selected ? "Selected ✓" : "Select →"}
-                    </a>
+                    </button>
                   </div>
                 </div>
               );
@@ -795,13 +817,13 @@ export default function Sattva() {
                         {st.supplement === 0 ? "Included" : `+ ${priceLabel(st.supplement)}`}
                       </p>
                     </div>
-                    <a
+                    <button
+                      type="button"
                       className="sv-btn sv-btn-accent sv-stay-btn"
-                      href="#book"
                       onClick={(e) => { e.stopPropagation(); setStay(i); }}
                     >
                       {selected ? "Selected ✓" : "Select →"}
-                    </a>
+                    </button>
                   </div>
                 );
               })}
@@ -990,9 +1012,11 @@ export default function Sattva() {
             <h2>What guests say, in their own words.</h2>
           </BlurReveal>
           <div
+            ref={voiceRef}
             className="sv-voice-stage"
-            onMouseEnter={() => setVoicePaused(true)}
-            onMouseLeave={() => setVoicePaused(false)}
+            onMouseEnter={() => { setVoicePaused(true); armVoiceIdleResume(); }}
+            onMouseMove={() => { if (voicePaused) armVoiceIdleResume(); }}
+            onMouseLeave={() => { clearVoiceIdleTimer(); setVoicePaused(false); }}
           >
             <span className="sv-voice-mark" aria-hidden="true">&ldquo;</span>
             <div className="sv-voice-quote">
@@ -1129,7 +1153,7 @@ export default function Sattva() {
                   <select value={programme} onChange={(e) => setProgramme(Number(e.target.value))}>
                     {PROGRAMMES.map((pg, i) => (
                       <option key={pg.title} value={i}>
-                        {`${pg.title} — ${gbp(pg.price)}`}
+                        {pg.title}
                       </option>
                     ))}
                   </select>
@@ -1139,7 +1163,7 @@ export default function Sattva() {
                   <select value={stay} onChange={(e) => setStay(Number(e.target.value))}>
                     {STAYS.map((st, i) => (
                       <option key={st.title} value={i}>
-                        {`${st.title}${st.supplement === 0 ? " — Included" : ` — + ${gbp(st.supplement)}`}`}
+                        {st.title}
                       </option>
                     ))}
                   </select>

@@ -4131,10 +4131,10 @@ html{overflow-x:clip}
 .sv ul{margin:0;padding:0;list-style:none}
 .sv img{display:block}
 .sv-bw{filter:grayscale(1)}
-.sv section[id]{scroll-margin-top:84px}
+.sv section[id]{scroll-margin-top:64px}
 .sv-wrap{max-width:1200px;margin:0 auto;padding:0 24px}
 .sv-mono{font-family:var(--font-mono),"Space Mono",monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sv-accent);display:block;margin-bottom:14px}
-.sv-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:15px 30px;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .25s ease,color .25s ease,border-color .25s ease,box-shadow .25s ease}
+.sv-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;padding:15px 30px;font:inherit;font-weight:700;font-size:.88rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .25s ease,color .25s ease,border-color .25s ease,box-shadow .25s ease}
 .sv-btn-accent{background:var(--sv-accent);color:#fff}
 .sv-btn-accent:hover{background:var(--sv-accent-dark)}
 .sv-btn-ghost{background:transparent;color:var(--sv-ink);border-color:var(--sv-ink)}
@@ -4182,7 +4182,7 @@ html{overflow-x:clip}
 .sv-ticker-track span{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;padding:0 18px;white-space:nowrap;display:inline-flex;align-items:center;gap:18px}
 .sv-ticker-track i{font-style:normal;color:#DCE5D5;font-size:.8rem}
 @keyframes sv-tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.sv-section{padding:clamp(64px,8vw,110px) 0}
+.sv-section{padding:clamp(44px,5vw,72px) 0}
 .sv-section-soft{background:var(--sv-cream)}
 .sv-section h2{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;font-weight:800;font-size:clamp(2rem,4.4vw,3.2rem);line-height:1.06;letter-spacing:-.02em;color:var(--sv-ink);margin:0 0 16px;max-width:22ch}
 .sv-section h3{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;font-weight:800;font-size:clamp(1.35rem,2.6vw,1.8rem);line-height:1.15;color:var(--sv-ink);margin:0 0 10px}
