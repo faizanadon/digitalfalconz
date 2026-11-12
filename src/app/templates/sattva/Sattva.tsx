@@ -29,6 +29,8 @@ const DOSHAS = [
     text: "Vata moves fast and dries out easily. When it is out of balance, sleep gets light, the mind races and digestion turns irregular. The ritual for Vata is warmth and weight: warm oil, warm food, warm rooms, and nothing rushed.",
     treatments: ["Abhyanga", "Pizhichil", "Shirodhara"],
     colour: "#8A7B5C",
+    img: RITUAL_IMG,
+    alt: "Morning yoga and breathwork on the deck",
   },
   {
     name: "Pitta",
@@ -39,6 +41,8 @@ const DOSHAS = [
     text: "Pitta runs hot and sharp. When it is out of balance, skin flares, temper shortens and sleep turns shallow. The ritual for Pitta is cooling and softening: cool oils, gentle touch, shade in the afternoon, and food that calms rather than stokes.",
     treatments: ["Shirodhara", "Abhyanga", "Nasya"],
     colour: "#B0713C",
+    img: HERBS_IMG,
+    alt: "Herbs and oils used in the treatments",
   },
   {
     name: "Kapha",
@@ -49,6 +53,8 @@ const DOSHAS = [
     text: "Kapha is steady and heavy. When it is out of balance, mornings feel sluggish, weight creeps up and the body holds water. The ritual for Kapha is movement and heat: stimulating massage, dry powders, brisk walks along the water, and food with bite.",
     treatments: ["Udwarthanam", "Nasya", "Kizhi"],
     colour: "#5C6E58",
+    img: PLANTS_IMG,
+    alt: "Green leaves in the retreat garden",
   },
 ];
 
@@ -130,6 +136,7 @@ const PROGRAMMES = [
   {
     title: "5-Day Deep Cleanse",
     days: "5 days · 4 nights",
+    daysCount: 5,
     price: 840,
     text: "The full cleanse arc: consultation, five days of treatments, Pizhichil and Kizhi, and a backwater boat ride at golden hour.",
     points: ["Dosha consultation", "Daily treatments", "Pizhichil & Kizhi", "Backwater boat ride"],
@@ -138,6 +145,7 @@ const PROGRAMMES = [
   {
     title: "7-Day Panchakarma",
     days: "7 days · 6 nights",
+    daysCount: 7,
     price: 1150,
     text: "The classical seven-day Panchakarma, done properly and slowly. The full ritual, a take-home plan, and a routine to keep.",
     points: ["Full Panchakarma", "Daily treatments", "Take-home plan", "One-to-one with the Vaidya"],
@@ -230,6 +238,7 @@ const PRACTITIONERS = [
     img: U("1573496359142-b8d87734a5a2", 900),
     alt: "Portrait of Ananya",
     text: "Trained in Kerala, practising for over a decade. She reads the pulse, asks the right questions, and writes a plan that fits the person in front of her — not the textbook.",
+    quote: "The body tells you what it needs. My job is to listen, then write the ritual around it.",
   },
   {
     name: "Meera",
@@ -238,6 +247,7 @@ const PRACTITIONERS = [
     img: U("1580489944761-15a19d654956", 900),
     alt: "Portrait of Meera",
     text: "Hands that have done this thousands of times. Meera is the one guests ask for by name, and the reason the Shirodhara room is always booked first.",
+    quote: "The oil does the work. My hands just follow where the body asks.",
   },
   {
     name: "Arjun",
@@ -246,6 +256,7 @@ const PRACTITIONERS = [
     img: U("1595152772835-219674b2a8a6", 900),
     alt: "Portrait of Arjun",
     text: "Leads the sunrise practice on the deck — slow, steady and quiet, with no experience needed and no showing off. He teaches the breath you take home with you.",
+    quote: "Breathe first. Everything else in the ritual follows the breath.",
   },
 ];
 
@@ -317,6 +328,12 @@ const TICKER = [
   "Herbal steam",
   "Slow days",
 ];
+
+/* Price formatting — a single string so the space and the thousands comma
+   are always present. JSX drops a literal space between an expression and
+   an element, which rendered "£520per person"; a template literal keeps it. */
+const gbp = (n: number) => `£${n.toLocaleString("en-GB")}`;
+const priceLabel = (n: number) => `${gbp(n)} per person`;
 
 /* ---- local motion helpers: blur-to-sharp reveals, calm easings ---- */
 function BlurReveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
@@ -427,25 +444,36 @@ export default function Sattva() {
   const [stay, setStay] = useState(0);
   const [treatment, setTreatment] = useState(0);
   const [faqOpen, setFaqOpen] = useState(0);
-  const [day, setDay] = useState(0);
+  const [voice, setVoice] = useState(0);
+  const [voicePaused, setVoicePaused] = useState(false);
+  const [newsEmail, setNewsEmail] = useState("");
+  const [newsDone, setNewsDone] = useState(false);
   const [booked, setBooked] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [date, setDate] = useState("");
   const [guests, setGuests] = useState("2 guests");
 
-  const d = DOSHAS[dosha];
   const p = PROGRAMMES[programme];
   const s = STAYS[stay];
-  const t = TREATMENTS[treatment];
   const total = p.price + s.supplement;
   const visibleDays = DAYS.slice(0, p.daysCount);
-  const safeDay = Math.min(day, visibleDays.length - 1);
-  const dayData = visibleDays[safeDay];
+
+  /* Rotating guest quote — advances every 6s, pauses on hover/focus. */
+  useEffect(() => {
+    if (reduce || voicePaused) return;
+    const t = setInterval(() => setVoice((v) => (v + 1) % VOICES.length), 6000);
+    return () => clearInterval(t);
+  }, [reduce, voicePaused]);
 
   const onBook = (e: FormEvent) => {
     e.preventDefault();
     setBooked(true);
+  };
+
+  const onNews = (e: FormEvent) => {
+    e.preventDefault();
+    if (newsEmail.trim()) setNewsDone(true);
   };
 
   return (
@@ -536,7 +564,7 @@ export default function Sattva() {
         </div>
       </div>
 
-      {/* ---- dosha: three natures, one detail panel ---- */}
+            {/* ---- dosha: editorial list — three huge rows, expand inline ---- */}
       <section className="sv-section" id="dosha">
         <div className="sv-wrap">
           <BlurReveal>
@@ -548,65 +576,69 @@ export default function Sattva() {
               your first morning, and your whole ritual is written around it.
             </p>
           </BlurReveal>
-          <div className="sv-dosha-grid" role="tablist" aria-label="Choose a dosha">
-            {DOSHAS.map((dh, i) => (
-              <motion.button
-                key={dh.name}
-                type="button"
-                role="tab"
-                aria-selected={dosha === i}
-                className={`sv-dosha${dosha === i ? " on" : ""}`}
-                onClick={() => setDosha(i)}
-                whileHover={reduce ? undefined : { y: -4 }}
-                whileTap={reduce ? undefined : { scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              >
-                <span className="sv-dosha-sanskrit" aria-hidden="true">{dh.sanskrit}</span>
-                <span className="sv-dosha-name">{dh.name}</span>
-                <span className="sv-dosha-el">{dh.element}</span>
-                <span className="sv-dosha-qualities">
-                  {dh.qualities.map((q) => (
-                    <span key={q} className="sv-chip">{q}</span>
-                  ))}
-                </span>
-              </motion.button>
-            ))}
-          </div>
-          <div className="sv-dosha-panel">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={d.name}
-                className="sv-dosha-detail"
-                initial={reduce ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -10 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <div className="sv-dosha-detail-copy">
-                  <span className="sv-mono">YOUR NATURE — {d.element.toUpperCase()}</span>
-                  <h3>{d.name} — {d.focus}</h3>
-                  <p>{d.text}</p>
-                  <span className="sv-mono">RECOMMENDED TREATMENTS</span>
-                  <span className="sv-dosha-treats">
-                    {d.treatments.map((tr) => (
-                      <span key={tr} className="sv-chip sv-chip-solid">{tr}</span>
-                    ))}
-                  </span>
+          <div className="sv-dosha-list">
+            {DOSHAS.map((dh, i) => {
+              const open = dosha === i;
+              return (
+                <div key={dh.name} className={`sv-dosha-row${open ? " on" : ""}`}>
+                  <button
+                    type="button"
+                    className="sv-dosha-head"
+                    aria-expanded={open}
+                    onClick={() => setDosha(i)}
+                  >
+                    <span className="sv-dosha-index" aria-hidden="true">0{i + 1}</span>
+                    <span className="sv-dosha-head-main">
+                      <span className="sv-dosha-name">{dh.name}</span>
+                      <span className="sv-dosha-el">{dh.element} · {dh.sanskrit}</span>
+                    </span>
+                    <span className="sv-dosha-essence">{dh.focus}</span>
+                    <span className="sv-dosha-toggle" aria-hidden="true">{open ? "−" : "+"}</span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open ? (
+                      <motion.div
+                        className="sv-dosha-body"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <div className="sv-dosha-body-inner">
+                          <div className="sv-dosha-img">
+                            <Image src={dh.img} alt={dh.alt} fill sizes="(max-width: 900px) 100vw, 30vw" />
+                          </div>
+                          <div className="sv-dosha-copy">
+                            <span className="sv-mono">YOUR NATURE — {dh.element.toUpperCase()}</span>
+                            <p>{dh.text}</p>
+                            <span className="sv-mono">RECOMMENDED TREATMENTS</span>
+                            <span className="sv-dosha-treats">
+                              {dh.treatments.map((tr) => (
+                                <span key={tr} className="sv-chip sv-chip-solid">{tr}</span>
+                              ))}
+                            </span>
+                            <span className="sv-dosha-qualities">
+                              {dh.qualities.map((q) => (
+                                <span key={q} className="sv-chip">{q}</span>
+                              ))}
+                            </span>
+                            <p className="sv-dosha-note">
+                              Your dosha is confirmed in person — this is a starting
+                              point, not a diagnosis.
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
-                <div className="sv-dosha-detail-side">
-                  <RitualRing />
-                  <p className="sv-dosha-note">
-                    Your dosha is confirmed in person — this is a starting
-                    point, not a diagnosis.
-                  </p>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ---- ritual timeline: day-by-day, driven by the chosen programme ---- */}
+            {/* ---- ritual timeline: vertical journey, days follow the programme ---- */}
       <section className="sv-section sv-section-soft" id="ritual">
         <div className="sv-wrap">
           <BlurReveal>
@@ -614,78 +646,59 @@ export default function Sattva() {
             <h2>Seven days, one ritual.</h2>
             <p className="sv-lede">
               The days build on each other — settle, cleanse, deepen, release,
-              restore, integrate, return. Pick a programme below and the
-              timeline follows it: a 3-day reset shows its three days, the full
+              restore, integrate, return. Choose a length below and the journey
+              follows it: a 3-day reset shows its three days, the full
               Panchakarma shows all seven.
             </p>
           </BlurReveal>
-          <div className="sv-ritual-grid">
-            <div className="sv-ritual-main">
-              <div className="sv-day-pills" role="tablist" aria-label="Choose a day">
-                {visibleDays.map((dy, i) => (
-                  <motion.button
-                    key={dy.title}
-                    type="button"
-                    role="tab"
-                    aria-selected={safeDay === i}
-                    className={`sv-day-pill${safeDay === i ? " on" : ""}`}
-                    onClick={() => setDay(i)}
-                    whileHover={reduce ? undefined : { y: -2 }}
-                    whileTap={reduce ? undefined : { scale: 0.96 }}
-                  >
-                    <span className="sv-day-num">Day {i + 1}</span>
-                    <span className="sv-day-name">{dy.title}</span>
-                  </motion.button>
-                ))}
-              </div>
-              <div className="sv-day-track" aria-hidden="true">
-                <span className="sv-day-fill" style={{ width: `${((safeDay + 1) / visibleDays.length) * 100}%` }} />
-              </div>
-              <div className="sv-day-panel">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`${p.title}-${safeDay}`}
-                    initial={reduce ? false : { opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={reduce ? undefined : { opacity: 0, y: -10 }}
-                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <span className="sv-mono">DAY {safeDay + 1} OF {visibleDays.length} — {p.title.toUpperCase()}</span>
-                    <h3>{dayData.title}</h3>
-                    <p className="sv-day-focus">{dayData.focus}</p>
-                    <div className="sv-day-blocks">
-                      {dayData.blocks.map((b, bi) => (
-                        <motion.div
-                          key={b.when}
-                          className="sv-day-block"
-                          initial={reduce ? false : { opacity: 0, y: 12 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.1 + bi * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        >
-                          <span className="sv-day-when">{b.when} · {b.time}</span>
-                          <p>{b.text}</p>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-            <BlurReveal delay={0.1}>
-              <div className="sv-ritual-media">
-                <Image src={RITUAL_IMG} alt="Morning yoga and breathwork on the deck" fill sizes="(max-width: 900px) 100vw, 34vw" className="sv-bw" />
-                <div className="sv-ritual-caption">
-                  <span className="sv-mono">EVERY MORNING</span>
-                  <strong>Sunrise yoga &amp; breathwork</strong>
-                  <span>Slow, steady and quiet — no experience needed.</span>
-                </div>
-              </div>
-            </BlurReveal>
+          <div className="sv-ritual-seg" role="tablist" aria-label="Choose a programme length">
+            {PROGRAMMES.map((pg, i) => (
+              <button
+                key={pg.title}
+                type="button"
+                role="tab"
+                aria-selected={programme === i}
+                className={`sv-ritual-seg-btn${programme === i ? " on" : ""}`}
+                onClick={() => setProgramme(i)}
+              >
+                {pg.daysCount} days
+              </button>
+            ))}
           </div>
+          <p className="sv-ritual-count">
+            <span className="sv-mono">DAY 1–{visibleDays.length} — {p.title.toUpperCase()}</span>
+          </p>
+          <ol className="sv-ritual-rail">
+            {visibleDays.map((dy, i) => (
+              <motion.li
+                key={dy.title}
+                className="sv-ritual-step"
+                initial={reduce ? false : { opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ delay: Math.min(i * 0.06, 0.3), duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span className="sv-ritual-dot" aria-hidden="true">{i + 1}</span>
+                <div className="sv-ritual-step-body">
+                  <span className="sv-mono">DAY {i + 1}</span>
+                  <h3>{dy.title}</h3>
+                  <p className="sv-ritual-focus">{dy.focus}</p>
+                  <div className="sv-ritual-blocks">
+                    {dy.blocks.map((b) => (
+                      <div key={b.when} className="sv-ritual-block">
+                        <span className="sv-ritual-when">{b.when} · {b.time}</span>
+                        <p>{b.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* ---- programmes: three cards, selection carries into booking ---- */}
+            {/* ---- programmes: price table, selection carries into booking ---- */}
       <section className="sv-section" id="programmes">
         <div className="sv-wrap">
           <BlurReveal>
@@ -696,33 +709,44 @@ export default function Sattva() {
               cleanse goes — and the timeline above follows whichever you pick.
             </p>
           </BlurReveal>
-          <div className="sv-prog-grid">
-            {PROGRAMMES.map((pg, i) => (
-              <SoftTilt key={pg.title} className={`sv-prog${programme === i ? " on" : ""}${pg.popular ? " sv-prog-pop" : ""}`}>
-                {pg.popular ? <span className="sv-prog-flag">Most chosen</span> : null}
-                <span className="sv-mono">{pg.days.toUpperCase()}</span>
-                <h3>{pg.title}</h3>
-                <p className="sv-prog-price">£{pg.price} <span>per person</span></p>
-                <p>{pg.text}</p>
-                <ul>
-                  {pg.points.map((pt) => (
-                    <li key={pt}>{pt}</li>
-                  ))}
-                </ul>
-                <a
-                  className="sv-btn sv-btn-accent sv-prog-btn"
-                  href="#book"
+          <div className="sv-prog-table">
+            {PROGRAMMES.map((pg, i) => {
+              const selected = programme === i;
+              return (
+                <div
+                  key={pg.title}
+                  className={`sv-prog-row${selected ? " on" : ""}${pg.popular ? " sv-prog-pop" : ""}`}
                   onClick={() => setProgramme(i)}
                 >
-                  {programme === i ? "Selected ✓" : "Reserve this programme →"}
-                </a>
-              </SoftTilt>
-            ))}
+                  <div className="sv-prog-row-main">
+                    <span className="sv-mono">{pg.days.toUpperCase()}</span>
+                    <h3>{pg.title}</h3>
+                    {pg.popular ? <span className="sv-prog-flag">Most chosen</span> : null}
+                    <p>{pg.text}</p>
+                    <ul className="sv-prog-points">
+                      {pg.points.map((pt) => (
+                        <li key={pt}>{pt}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="sv-prog-row-side">
+                    <p className="sv-prog-price">{priceLabel(pg.price)}</p>
+                    <a
+                      className="sv-btn sv-btn-accent sv-prog-btn"
+                      href="#book"
+                      onClick={(e) => { e.stopPropagation(); setProgramme(i); }}
+                    >
+                      {selected ? "Selected ✓" : "Select →"}
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ---- stays: three rooms, selection carries into booking ---- */}
+            {/* ---- stays: split feature + list, selection carries into booking ---- */}
       <section className="sv-section sv-section-soft" id="stays">
         <div className="sv-wrap">
           <BlurReveal>
@@ -733,35 +757,60 @@ export default function Sattva() {
               quiet. The difference is how close you sleep to the backwaters.
             </p>
           </BlurReveal>
-          <div className="sv-stay-grid">
-            {STAYS.map((st, i) => (
-              <SoftTilt key={st.title} className={`sv-stay${stay === i ? " on" : ""}`}>
-                <div className="sv-stay-img">
-                  <Image src={st.img} alt={st.alt} fill sizes="(max-width: 900px) 100vw, 30vw" />
-                  <span className="sv-stay-tag">{st.tag}</span>
-                  {stay === i ? <span className="sv-stay-chip">Selected ✓</span> : null}
-                </div>
-                <div className="sv-stay-body">
-                  <h3>{st.title}</h3>
-                  <p>{st.text}</p>
-                  <p className="sv-stay-price">
-                    {st.supplement === 0 ? "Included" : `+ £${st.supplement} per person`}
-                  </p>
-                  <a
-                    className="sv-btn sv-btn-accent sv-stay-btn"
-                    href="#book"
+          <div className="sv-stay-split">
+            <SoftTilt className="sv-stay-feature">
+              <div className="sv-stay-feature-img">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={s.title}
+                    className="sv-stay-feature-frame"
+                    initial={reduce ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={reduce ? undefined : { opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  >
+                    <Image src={s.img} alt={s.alt} fill sizes="(max-width: 900px) 100vw, 55vw" />
+                  </motion.div>
+                </AnimatePresence>
+                <span className="sv-stay-tag">{s.tag}</span>
+              </div>
+              <div className="sv-stay-feature-cap">
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </div>
+            </SoftTilt>
+            <div className="sv-stay-list" role="tablist" aria-label="Choose a stay">
+              {STAYS.map((st, i) => {
+                const selected = stay === i;
+                return (
+                  <div
+                    key={st.title}
+                    className={`sv-stay-item${selected ? " on" : ""}`}
                     onClick={() => setStay(i)}
                   >
-                    {stay === i ? "Selected ✓" : "Reserve this stay →"}
-                  </a>
-                </div>
-              </SoftTilt>
-            ))}
+                    <div className="sv-stay-item-main">
+                      <h3>{st.title}</h3>
+                      <p>{st.text}</p>
+                      <p className="sv-stay-price">
+                        {st.supplement === 0 ? "Included" : `+ ${priceLabel(st.supplement)}`}
+                      </p>
+                    </div>
+                    <a
+                      className="sv-btn sv-btn-accent sv-stay-btn"
+                      href="#book"
+                      onClick={(e) => { e.stopPropagation(); setStay(i); }}
+                    >
+                      {selected ? "Selected ✓" : "Select →"}
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---- treatments: interactive list driving a detail panel ---- */}
+            {/* ---- treatments: accordion — each row expands inline ---- */}
       <section className="sv-section" id="treatments">
         <div className="sv-wrap">
           <BlurReveal>
@@ -769,114 +818,97 @@ export default function Sattva() {
             <h2>The ritual, treatment by treatment.</h2>
             <p className="sv-lede">
               Six treatments, each with its own oil, its own rhythm and its own
-              dosha. Tap one to see what it does and who it is for.
+              dosha. Tap one to open it.
             </p>
           </BlurReveal>
-          <div className="sv-treat-grid">
-            <div className="sv-treat-list" role="tablist" aria-label="Choose a treatment">
-              {TREATMENTS.map((tr, i) => (
-                <motion.button
-                  key={tr.name}
-                  type="button"
-                  role="tab"
-                  aria-selected={treatment === i}
-                  className={`sv-treat${treatment === i ? " on" : ""}`}
-                  onClick={() => setTreatment(i)}
-                  whileHover={reduce ? undefined : { x: 4 }}
-                  whileTap={reduce ? undefined : { scale: 0.99 }}
-                >
-                  <span className="sv-treat-name">{tr.name}</span>
-                  <span className="sv-treat-time">{tr.time}</span>
-                  <span className="sv-treat-arrow" aria-hidden="true">→</span>
-                </motion.button>
-              ))}
-            </div>
-            <div className="sv-treat-panel">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={t.name}
-                  className="sv-treat-detail"
-                  initial={reduce ? false : { opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? undefined : { opacity: 0, y: -10 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className="sv-treat-img">
-                    <Image src={t.img} alt={t.alt} fill sizes="(max-width: 900px) 100vw, 40vw" />
-                  </div>
-                  <div className="sv-treat-copy">
-                    <span className="sv-mono">{t.time.toUpperCase()} · BEST FOR {t.dosha.join(" & ").toUpperCase()}</span>
-                    <h3>{t.name}</h3>
-                    <p>{t.text}</p>
-                    <span className="sv-treat-dosha">
-                      {t.dosha.map((dh) => (
-                        <span key={dh} className="sv-chip sv-chip-solid">{dh}</span>
-                      ))}
-                    </span>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+          <div className="sv-treat-acc">
+            {TREATMENTS.map((tr, i) => {
+              const open = treatment === i;
+              return (
+                <div key={tr.name} className={`sv-treat-row${open ? " on" : ""}`}>
+                  <button
+                    type="button"
+                    className="sv-treat-head"
+                    aria-expanded={open}
+                    onClick={() => setTreatment(open ? -1 : i)}
+                  >
+                    <span className="sv-treat-name">{tr.name}</span>
+                    <span className="sv-treat-time">{tr.time}</span>
+                    <span className="sv-treat-toggle" aria-hidden="true">{open ? "−" : "+"}</span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open ? (
+                      <motion.div
+                        className="sv-treat-body"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <div className="sv-treat-body-inner">
+                          <div className="sv-treat-img">
+                            <Image src={tr.img} alt={tr.alt} fill sizes="(max-width: 900px) 100vw, 260px" />
+                          </div>
+                          <div className="sv-treat-copy">
+                            <span className="sv-mono">{tr.time.toUpperCase()} · BEST FOR {tr.dosha.join(" & ").toUpperCase()}</span>
+                            <p>{tr.text}</p>
+                            <span className="sv-treat-dosha">
+                              {tr.dosha.map((dh) => (
+                                <span key={dh} className="sv-chip sv-chip-solid">{dh}</span>
+                              ))}
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ---- what's included: animated checklist + herbs image ---- */}
+            {/* ---- what's included: numbered grid + full-width herbs band ---- */}
       <section className="sv-section sv-section-soft" id="included">
-        <div className="sv-wrap sv-included-grid">
+        <div className="sv-wrap">
           <BlurReveal>
-            <div className="sv-included-media">
-              <Image src={HERBS_IMG} alt="Herbs and oils used in the treatments" fill sizes="(max-width: 900px) 100vw, 44vw" className="sv-bw" />
-              <div className="sv-included-caption">
+            <span className="sv-mono">(06) WHAT&apos;S INCLUDED</span>
+            <h2>Everything is taken care of.</h2>
+            <p className="sv-lede">
+              One price, no extras to think about. You arrive, we handle the
+              rest — treatments, food, yoga and the boat ride included.
+            </p>
+          </BlurReveal>
+          <div className="sv-inc-grid">
+            {INCLUDED.map((it, i) => (
+              <motion.div
+                key={it}
+                className="sv-inc-item"
+                initial={reduce ? false : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ delay: (i % 2) * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span className="sv-inc-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                <span className="sv-inc-text">{it}</span>
+              </motion.div>
+            ))}
+          </div>
+          <BlurReveal>
+            <div className="sv-inc-band">
+              <Image src={HERBS_IMG} alt="Herbs and oils used in the treatments" fill sizes="100vw" className="sv-bw" />
+              <div className="sv-inc-band-cap">
                 <span className="sv-mono">FROM OUR OWN GARDEN</span>
                 <strong>Herbs, oils &amp; steam</strong>
                 <span>Blended on site, for your dosha, every morning.</span>
               </div>
             </div>
           </BlurReveal>
-          <div>
-            <BlurReveal>
-              <span className="sv-mono">(06) WHAT&apos;S INCLUDED</span>
-              <h2>Everything is taken care of.</h2>
-              <p className="sv-lede">
-                One price, no extras to think about. You arrive, we handle the
-                rest — treatments, food, yoga and the boat ride included.
-              </p>
-            </BlurReveal>
-            <ul className="sv-checks">
-              {INCLUDED.map((it, i) => (
-                <motion.li
-                  key={it}
-                  initial={reduce ? false : { opacity: 0, x: -14 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={reduce ? undefined : { x: 4 }}
-                >
-                  <span className="sv-check-mark" aria-hidden="true">
-                    <motion.svg viewBox="0 0 20 20" width="20" height="20" fill="none">
-                      <motion.path
-                        d="M4 10.5 L8.5 15 L16 5.5"
-                        stroke="currentColor"
-                        strokeWidth="2.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        initial={{ pathLength: 0 }}
-                        whileInView={{ pathLength: 1 }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{ delay: 0.18 + i * 0.07, duration: 0.45, ease: "easeOut" }}
-                      />
-                    </motion.svg>
-                  </span>
-                  {it}
-                </motion.li>
-              ))}
-            </ul>
-          </div>
         </div>
       </section>
 
-      {/* ---- practitioners: three, first names only ---- */}
+            {/* ---- practitioners: one featured, two stacked ---- */}
       <section className="sv-section" id="practitioners">
         <div className="sv-wrap">
           <BlurReveal>
@@ -888,124 +920,174 @@ export default function Sattva() {
               sleep by day two.
             </p>
           </BlurReveal>
-          <div className="sv-prac-grid">
-            {PRACTITIONERS.map((pr, i) => (
-              <motion.article
-                key={pr.name}
-                className="sv-prac"
-                initial={reduce ? false : { opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={reduce ? undefined : { y: -6 }}
-              >
-                <div className="sv-prac-img">
-                  <Image src={pr.img} alt={pr.alt} fill sizes="(max-width: 900px) 100vw, 30vw" />
-                </div>
-                <div className="sv-prac-body">
-                  <span className="sv-mono">{pr.role.toUpperCase()}</span>
-                  <h3>{pr.name}</h3>
-                  <p className="sv-prac-focus">{pr.focus}</p>
-                  <p>{pr.text}</p>
-                </div>
-              </motion.article>
-            ))}
+          <div className="sv-prac-layout">
+            <SoftTilt className="sv-prac-feat">
+              <div className="sv-prac-feat-img">
+                <Image src={PRACTITIONERS[0].img} alt={PRACTITIONERS[0].alt} fill sizes="(max-width: 900px) 100vw, 50vw" />
+              </div>
+              <div className="sv-prac-feat-body">
+                <span className="sv-mono">{PRACTITIONERS[0].role.toUpperCase()}</span>
+                <h3>{PRACTITIONERS[0].name}</h3>
+                <p className="sv-prac-focus">{PRACTITIONERS[0].focus}</p>
+                <p>{PRACTITIONERS[0].text}</p>
+                <blockquote className="sv-prac-quote">&ldquo;{PRACTITIONERS[0].quote}&rdquo;</blockquote>
+              </div>
+            </SoftTilt>
+            <div className="sv-prac-side">
+              {PRACTITIONERS.slice(1).map((pr, i) => (
+                <motion.article
+                  key={pr.name}
+                  className="sv-prac-mini"
+                  initial={reduce ? false : { opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={reduce ? undefined : { y: -4 }}
+                >
+                  <div className="sv-prac-mini-img">
+                    <Image src={pr.img} alt={pr.alt} fill sizes="160px" />
+                  </div>
+                  <div className="sv-prac-mini-body">
+                    <span className="sv-mono">{pr.role.toUpperCase()}</span>
+                    <h3>{pr.name}</h3>
+                    <p className="sv-prac-focus">{pr.focus}</p>
+                    <p>{pr.text}</p>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---- stats: sage band, count-up ---- */}
-      <section className="sv-stats">
+            {/* ---- stats: dark deep-green, huge numbers, thin dividers ---- */}
+      <section className="sv-stats-dark">
         <div className="sv-wrap">
-          <div className="sv-stats-grid">
+          <div className="sv-stats-row">
             {STATS.map((st, i) => (
               <motion.div
                 key={st.label}
-                className="sv-stat"
+                className="sv-stat-dark"
                 initial={reduce ? false : { opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span className="sv-stat-num"><CountUp n={st.n} suffix={st.suffix} /></span>
-                <span className="sv-stat-label">{st.label}</span>
+                <span className="sv-stat-dark-num"><CountUp n={st.n} suffix={st.suffix} /></span>
+                <span className="sv-stat-dark-label">{st.label}</span>
               </motion.div>
             ))}
           </div>
-          <p className="sv-stats-note">Placeholder figures — replace with the retreat&apos;s real numbers.</p>
+          <p className="sv-stats-dark-note">Placeholder figures — replace with the retreat&apos;s real numbers.</p>
         </div>
       </section>
 
-      {/* ---- guest voices ---- */}
+            {/* ---- guest voices: one rotating featured quote ---- */}
       <section className="sv-section" id="voices">
         <div className="sv-wrap">
           <BlurReveal>
             <span className="sv-mono">(08) GUEST VOICES</span>
             <h2>What guests say, in their own words.</h2>
           </BlurReveal>
-          <div className="sv-voice-grid">
-            {VOICES.map((v, i) => (
-              <motion.figure
-                key={v.who}
-                className="sv-voice"
-                initial={reduce ? false : { opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={reduce ? undefined : { y: -4 }}
+          <div
+            className="sv-voice-stage"
+            onMouseEnter={() => setVoicePaused(true)}
+            onMouseLeave={() => setVoicePaused(false)}
+          >
+            <span className="sv-voice-mark" aria-hidden="true">&ldquo;</span>
+            <div className="sv-voice-quote">
+              <AnimatePresence mode="wait">
+                <motion.figure
+                  key={voice}
+                  className="sv-voice-item"
+                  initial={reduce ? false : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, y: -12 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <blockquote>{VOICES[voice].quote}</blockquote>
+                  <figcaption>— {VOICES[voice].who}</figcaption>
+                </motion.figure>
+              </AnimatePresence>
+            </div>
+            <div className="sv-voice-nav">
+              <button
+                type="button"
+                className="sv-voice-arrow"
+                aria-label="Previous quote"
+                onClick={() => setVoice((voice - 1 + VOICES.length) % VOICES.length)}
               >
-                <blockquote>&ldquo;{v.quote}&rdquo;</blockquote>
-                <figcaption>— {v.who}</figcaption>
-              </motion.figure>
-            ))}
+                ←
+              </button>
+              <span className="sv-voice-dots">
+                {VOICES.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`sv-voice-dot${voice === i ? " on" : ""}`}
+                    aria-label={`Show quote ${i + 1}`}
+                    onClick={() => setVoice(i)}
+                  />
+                ))}
+              </span>
+              <button
+                type="button"
+                className="sv-voice-arrow"
+                aria-label="Next quote"
+                onClick={() => setVoice((voice + 1) % VOICES.length)}
+              >
+                →
+              </button>
+            </div>
           </div>
           <p className="sv-voices-note">Guest words are placeholders — replace with real reviews.</p>
         </div>
       </section>
 
-      {/* ---- FAQ: single-open accordion ---- */}
+            {/* ---- FAQ: questions left, answer panel right ---- */}
       <section className="sv-section sv-section-soft" id="faq">
-        <div className="sv-wrap sv-faq-wrap">
+        <div className="sv-wrap">
           <BlurReveal>
             <span className="sv-mono">(09) QUESTIONS</span>
             <h2>Before you ask.</h2>
           </BlurReveal>
-          <div className="sv-faq">
-            {FAQS.map((f, i) => {
-              const open = faqOpen === i;
-              return (
-                <div key={f.q} className={`sv-faq-item${open ? " on" : ""}`}>
-                  <button
-                    type="button"
-                    className="sv-faq-q"
-                    aria-expanded={open}
-                    onClick={() => setFaqOpen(open ? -1 : i)}
-                  >
-                    <span>{f.q}</span>
-                    <span className="sv-faq-icon" aria-hidden="true">{open ? "−" : "+"}</span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {open ? (
-                      <motion.div
-                        className="sv-faq-a"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        <p>{f.a}</p>
-                      </motion.div>
-                    ) : null}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+          <div className="sv-faq-grid">
+            <div className="sv-faq-list" role="tablist" aria-label="Questions">
+              {FAQS.map((f, i) => (
+                <button
+                  key={f.q}
+                  type="button"
+                  role="tab"
+                  aria-selected={faqOpen === i}
+                  className={`sv-faq-tab${faqOpen === i ? " on" : ""}`}
+                  onClick={() => setFaqOpen(i)}
+                >
+                  <span>{f.q}</span>
+                  <span className="sv-faq-tab-arrow" aria-hidden="true">→</span>
+                </button>
+              ))}
+            </div>
+            <div className="sv-faq-panel">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={faqOpen}
+                  initial={reduce ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, y: -8 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="sv-mono">QUESTION 0{faqOpen + 1}</span>
+                  <h3>{FAQS[faqOpen].q}</h3>
+                  <p>{FAQS[faqOpen].a}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---- booking: form with live price summary ---- */}
-      <section className="sv-section" id="book">
+            {/* ---- booking: dark sage, form in a light card, sticky summary ---- */}
+      <section className="sv-section sv-book-dark" id="book">
         <div className="sv-wrap">
           <BlurReveal>
             <span className="sv-mono">(10) BOOK</span>
@@ -1015,15 +1097,7 @@ export default function Sattva() {
               Send the request and we confirm within a day.
             </p>
           </BlurReveal>
-          <div className="sv-book-grid">
-            <div className="sv-book-media">
-              <Image src={PLANTS_IMG} alt="Green leaves in the retreat garden" fill sizes="(max-width: 900px) 100vw, 40vw" />
-              <div className="sv-book-caption">
-                <span className="sv-mono">SATTVA · KERALA</span>
-                <strong>Slow days, warm oil.</strong>
-                <span>{PLACE}</span>
-              </div>
-            </div>
+          <div className="sv-book-layout">
             {booked ? (
               <motion.div
                 className="sv-book-done"
@@ -1034,17 +1108,8 @@ export default function Sattva() {
                 <span className="sv-mono">REQUEST RECEIVED</span>
                 <h3>Thank you{name ? `, ${name.split(" ")[0]}` : ""}.</h3>
                 <p>
-                  Your request for the <strong>{p.title}</strong>
-                  {s.supplement > 0 ? ` in the ${s.title}` : ` in the ${s.title}`} is with
-                  us. We will confirm within a day at {email || "your email"}.
+                  {`Your request for the ${p.title} in the ${s.title} is with us. We will confirm within a day at ${email || "your email"}.`}
                 </p>
-                <div className="sv-book-summary">
-                  <div><span>Programme</span><strong>{p.title} · £{p.price}</strong></div>
-                  <div><span>Stay</span><strong>{s.title} · {s.supplement === 0 ? "Included" : `+ £${s.supplement}`}</strong></div>
-                  <div><span>Arrival</span><strong>{date || "To be confirmed"}</strong></div>
-                  <div><span>Guests</span><strong>{guests}</strong></div>
-                  <div className="sv-book-total"><span>Total</span><strong>£{total} per person</strong></div>
-                </div>
                 <button type="button" className="sv-btn sv-btn-ghost" onClick={() => setBooked(false)}>
                   Book another stay →
                 </button>
@@ -1064,7 +1129,7 @@ export default function Sattva() {
                   <select value={programme} onChange={(e) => setProgramme(Number(e.target.value))}>
                     {PROGRAMMES.map((pg, i) => (
                       <option key={pg.title} value={i}>
-                        {pg.title} — £{pg.price}
+                        {`${pg.title} — ${gbp(pg.price)}`}
                       </option>
                     ))}
                   </select>
@@ -1074,7 +1139,7 @@ export default function Sattva() {
                   <select value={stay} onChange={(e) => setStay(Number(e.target.value))}>
                     {STAYS.map((st, i) => (
                       <option key={st.title} value={i}>
-                        {st.title}{st.supplement === 0 ? " — Included" : ` — + £${st.supplement}`}
+                        {`${st.title}${st.supplement === 0 ? " — Included" : ` — + ${gbp(st.supplement)}`}`}
                       </option>
                     ))}
                   </select>
@@ -1096,13 +1161,8 @@ export default function Sattva() {
                   <span>Anything we should know? (optional)</span>
                   <textarea rows={3} placeholder="Dietary needs, health notes, a question…" />
                 </label>
-                <div className="sv-book-summary">
-                  <div><span>Programme</span><strong>{p.title} · £{p.price}</strong></div>
-                  <div><span>Stay</span><strong>{s.title} · {s.supplement === 0 ? "Included" : `+ £${s.supplement}`}</strong></div>
-                  <div className="sv-book-total"><span>Total</span><strong>£{total} per person</strong></div>
-                </div>
                 <button type="submit" className="sv-btn sv-btn-accent sv-form-submit">
-                  Request booking — £{total} →
+                  {`Request booking — ${gbp(total)} →`}
                 </button>
                 <p className="sv-form-note">
                   No payment is taken now. We confirm availability first, then
@@ -1110,18 +1170,54 @@ export default function Sattva() {
                 </p>
               </form>
             )}
+            <aside className="sv-book-side">
+              <div className="sv-book-summary-card">
+                <span className="sv-mono">YOUR STAY</span>
+                <div className="sv-book-sum-row"><span>Programme</span><strong>{`${p.title} · ${gbp(p.price)}`}</strong></div>
+                <div className="sv-book-sum-row"><span>Stay</span><strong>{`${s.title} · ${s.supplement === 0 ? "Included" : `+ ${gbp(s.supplement)}`}`}</strong></div>
+                <div className="sv-book-sum-row"><span>Arrival</span><strong>{date || "To be confirmed"}</strong></div>
+                <div className="sv-book-sum-row"><span>Guests</span><strong>{guests}</strong></div>
+                <div className="sv-book-sum-total"><span>Total</span><strong>{priceLabel(total)}</strong></div>
+                <p className="sv-book-side-note">{PLACE}</p>
+              </div>
+              <div className="sv-book-side-media">
+                <Image src={PLANTS_IMG} alt="Green leaves in the retreat garden" fill sizes="(max-width: 900px) 100vw, 30vw" />
+                <div className="sv-book-side-cap">
+                  <span className="sv-mono">SATTVA · KERALA</span>
+                  <strong>Slow days, warm oil.</strong>
+                </div>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
 
-      {/* ---- footer: giant wordmark ---- */}
+            {/* ---- footer: newsletter + links + giant wordmark ---- */}
       <footer className="sv-footer">
         <div className="sv-wrap">
-          <div className="sv-footer-top">
+          <div className="sv-footer-news">
             <div>
-              <span className="sv-mono">SATTVA — AYURVEDA &amp; DETOX RETREAT</span>
+              <span className="sv-mono">THE NEXT GROUP, FIRST</span>
               <p className="sv-footer-line">Slow days, warm oil, backwater mornings.</p>
+              <p className="sv-footer-news-text">One email when the next group opens — no noise, no offers, just the date.</p>
             </div>
+            {newsDone ? (
+              <p className="sv-news-done">You&apos;re on the list — we&apos;ll write when the next group opens.</p>
+            ) : (
+              <form className="sv-news-form" onSubmit={onNews}>
+                <input
+                  type="email"
+                  value={newsEmail}
+                  onChange={(e) => setNewsEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  aria-label="Email for the next group"
+                  required
+                />
+                <button type="submit" className="sv-btn sv-btn-accent">Join →</button>
+              </form>
+            )}
+          </div>
+          <div className="sv-footer-links">
             <nav aria-label="Explore">
               <a href="#dosha">Dosha</a>
               <a href="#ritual">Ritual</a>
