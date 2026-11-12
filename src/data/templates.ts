@@ -215,6 +215,7 @@ export const TEMPLATES: TemplateEntry[] = [
       "A slow, earthy Ayurveda and detox retreat template: a dosha selector, a seven-day ritual timeline, programmes with live pricing, stays, treatments, practitioners and a booking form — built around Kerala backwater photography.",
     image:
       "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1600&auto=format&fit=crop",
+    cover: "/templates/covers/sattva.jpg",
     href: "/templates/sattva",
   },
   {
