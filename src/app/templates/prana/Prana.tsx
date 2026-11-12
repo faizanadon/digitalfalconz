@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { AnimatedCounter, Reveal } from "@/components/Motion";
 
 const PHONE = "+91 135 000 0000";
@@ -142,7 +142,7 @@ const TEACHERS = [
     name: "Sofia",
     role: "Meditation · Yoga Nidra",
     text: "Guides the sunset sits and the evening yoga nidra. Her sessions are the reason many guests come back.",
-    img: U("1534528741775-53994a69daeb", 800),
+    img: U("1494790108377-be9c29b29330", 800),
     alt: "Portrait of Sofia",
   },
 ];
@@ -192,15 +192,25 @@ const FAQS = [
   },
 ];
 
+const TICKER = [
+  "Breathe in",
+  "Breathe out",
+  "Sunrise practice",
+  "River Ganges",
+  "Slow food",
+  "Small groups",
+  "Rishikesh",
+];
+
 /** Blur-to-sharp reveal — the signature Framer heading entrance. */
 function BlurReveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, filter: "blur(10px)", y: 18 }}
+      initial={reduce ? false : { opacity: 0, filter: "blur(14px)", y: 28 }}
       whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 0.61, 0.21, 1] }}
+      transition={{ duration: 0.85, delay, ease: [0.22, 0.61, 0.21, 1] }}
     >
       {children}
     </motion.div>
@@ -250,12 +260,58 @@ function BreathPacer() {
   );
 }
 
+/** Live Rishikesh clock for the hero HUD strip — ticks every second. */
+function LiveClock() {
+  const [now, setNow] = useState("");
+  useEffect(() => {
+    const tick = () =>
+      setNow(
+        new Date().toLocaleTimeString("en-GB", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+      );
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <>
+      {now || "—"} IST
+    </>
+  );
+}
+
 export default function Prana() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sent, setSent] = useState(false);
   const [part, setPart] = useState(0);
   const [programme, setProgramme] = useState(1);
   const [stay, setStay] = useState(0);
+  const reduce = useReducedMotion();
+
+  /* Hero parallax: the full-bleed photo drifts down slowly as the hero
+     scrolls away. */
+  const heroRef = useRef<HTMLElement | null>(null);
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroY = useTransform(heroProgress, [0, 1], ["0%", "10%"]);
+
+  /* Pinned breath moment: the core grows on the inhale half of the scroll
+     and settles on the exhale half, with the word crossfading. */
+  const breathRef = useRef<HTMLElement | null>(null);
+  const { scrollYProgress: breathProgress } = useScroll({
+    target: breathRef,
+    offset: ["start start", "end end"],
+  });
+  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 1.55, 0.7]);
+  const inhaleOpacity = useTransform(breathProgress, [0.05, 0.25, 0.45], [0, 1, 0]);
+  const exhaleOpacity = useTransform(breathProgress, [0.55, 0.75, 0.95], [0, 1, 0]);
+  const breathLineOpacity = useTransform(breathProgress, [0.8, 0.95], [0, 1]);
 
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -288,31 +344,89 @@ export default function Prana() {
         </div>
       </header>
 
-      {/* ---- hero: split — words and the breath pacer left, B&W photo right ---- */}
-      <section className="pr-hero" id="top">
-        <div className="pr-wrap pr-hero-grid">
-          <div className="pr-hero-copy">
-            <BlurReveal>
-              <span className="pr-mono">(00) PRANA — YOGA &amp; WELLNESS RETREAT, RISHIKESH</span>
-              <h1 className="pr-hero-title">
-                Come back to <em>your breath.</em>
-              </h1>
-              <p className="pr-hero-sub">
-                A small yoga and wellness retreat on the banks of the Ganges —
-                sunrise practice, slow food, river evenings and nothing you
-                have to keep up with.
-              </p>
-              <div className="pr-hero-cta">
-                <a className="pr-btn pr-btn-accent" href="#programmes">See programmes ↓</a>
-                <a className="pr-btn pr-btn-ghost" href="#rhythm">A day at Prana</a>
-              </div>
-            </BlurReveal>
+      {/* ---- hero: full-bleed B&W photo, huge white headline, glowing pacer ---- */}
+      <section className="pr-hero" id="top" ref={heroRef}>
+        <motion.div
+          className="pr-hero-media pr-bw"
+          style={reduce ? undefined : { y: heroY }}
+          aria-hidden="true"
+        >
+          <Image src={HERO_IMG} alt="" fill priority sizes="100vw" />
+          <div className="pr-hero-shade" />
+        </motion.div>
+        <div className="pr-wrap pr-hero-over">
+          <div className="pr-hero-grid">
+            <div className="pr-hero-copy">
+              <BlurReveal>
+                <span className="pr-mono">(00) PRANA — YOGA &amp; WELLNESS RETREAT, RISHIKESH</span>
+                <h1 className="pr-hero-title">
+                  Come back to <em>your breath.</em>
+                </h1>
+                <p className="pr-hero-sub">
+                  A small yoga and wellness retreat on the banks of the Ganges —
+                  sunrise practice, slow food, river evenings and nothing you
+                  have to keep up with.
+                </p>
+                <div className="pr-hero-cta">
+                  <a className="pr-btn pr-btn-accent" href="#programmes">See programmes ↓</a>
+                  <a className="pr-btn pr-btn-ghost-light" href="#rhythm">A day at Prana</a>
+                </div>
+              </BlurReveal>
+            </div>
             <BreathPacer />
           </div>
-          <div className="pr-hero-media pr-bw">
-            <Image src={HERO_IMG} alt="Yoga silhouette at sunset" fill priority sizes="(max-width: 900px) 100vw, 50vw" />
-            <span className="pr-hero-chip">RISHIKESH · ON THE GANGES</span>
+          <div className="pr-hero-facts">
+            <span><b>From £480</b>per person</span>
+            <span><b>12 guests</b>at most</span>
+            <span><b>Every Monday</b>new groups start</span>
+            <span><b><LiveClock /></b>in Rishikesh</span>
           </div>
+          <a className="pr-scroll-cue" href="#rhythm">
+            Scroll to breathe <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </section>
+
+      {/* ---- marquee ticker: clay strip, repeating ---- */}
+      <div className="pr-ticker" aria-hidden="true">
+        <div className="pr-ticker-track">
+          {[...TICKER, ...TICKER].map((t, i) => (
+            <span key={i}>
+              {t}
+              <i>✦</i>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ---- pinned breath moment: the core grows as you scroll ---- */}
+      <section className="pr-breath" ref={breathRef} aria-label="A breath, slowed down">
+        <div className="pr-breath-sticky">
+          <span className="pr-breath-wordmark" aria-hidden="true">BREATHE</span>
+          <motion.div
+            className="pr-breath-core"
+            style={reduce ? undefined : { scale: breathScale }}
+            aria-hidden="true"
+          >
+            <motion.span
+              className="pr-breath-label"
+              style={reduce ? undefined : { opacity: inhaleOpacity }}
+            >
+              Inhale
+            </motion.span>
+            <motion.span
+              className="pr-breath-label"
+              style={reduce ? undefined : { opacity: exhaleOpacity }}
+            >
+              Exhale
+            </motion.span>
+          </motion.div>
+          <motion.p
+            className="pr-breath-line"
+            style={reduce ? undefined : { opacity: breathLineOpacity }}
+          >
+            One breath. That&rsquo;s all it takes.
+          </motion.p>
         </div>
       </section>
 
@@ -371,7 +485,8 @@ export default function Prana() {
       </section>
 
       {/* ---- programmes: three cards, selection carries into the booking form ---- */}
-      <section className="pr-section pr-section-soft" id="programmes">
+      <section className="pr-section pr-section-soft pr-wordmark-sec" id="programmes">
+        <span className="pr-wordmark" aria-hidden="true">PRANA</span>
         <div className="pr-wrap">
           <BlurReveal>
             <span className="pr-mono">(02) PROGRAMMES</span>
@@ -427,6 +542,7 @@ export default function Prana() {
                 <div className="pr-stay-img">
                   <Image src={st.img} alt={st.alt} width={1000} height={700} sizes="(max-width: 900px) 100vw, 33vw" />
                   <span className="pr-stay-tag">{st.tag}</span>
+                  {stay === i && <span className="pr-stay-chip">Selected ✓</span>}
                 </div>
                 <div className="pr-stay-body">
                   <h3>{st.title}</h3>
