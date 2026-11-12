@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { AnimatedCounter, Reveal } from "@/components/Motion";
 
 const PHONE = "+91 135 000 0000";
@@ -202,13 +202,15 @@ const TICKER = [
   "Rishikesh",
 ];
 
-/** Blur-to-sharp reveal — the signature Framer heading entrance. */
+/** Blur-to-sharp 3D reveal — the signature Framer heading entrance, now with
+    a perspective tilt so sections swing in rather than just fading. */
 function BlurReveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, filter: "blur(14px)", y: 28 }}
-      whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+      style={{ transformPerspective: 1100 }}
+      initial={reduce ? false : { opacity: 0, filter: "blur(14px)", y: 28, rotateX: 12, scale: 0.97 }}
+      whileInView={{ opacity: 1, filter: "blur(0px)", y: 0, rotateX: 0, scale: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.85, delay, ease: [0.22, 0.61, 0.21, 1] }}
     >
@@ -284,6 +286,197 @@ function LiveClock() {
   );
 }
 
+/** Living gradient — a lightweight canvas of slow-drifting clay/peach/cream
+    light. requestAnimationFrame, paused when off-screen, static fallback
+    when reduced motion is on. No library, no video. */
+function LivingGradient({ className }: { className?: string }) {
+  const ref = useRef<HTMLCanvasElement | null>(null);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    if (reduce) return;
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let raf = 0;
+    let running = true;
+    let w = 0;
+    let h = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      w = r.width;
+      h = r.height;
+      canvas.width = Math.max(1, Math.floor(w * dpr));
+      canvas.height = Math.max(1, Math.floor(h * dpr));
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    const blobs = [
+      { x: 0.18, y: 0.28, r: 0.5, c: [176, 90, 58], sp: 0.00021, ph: 0 },
+      { x: 0.78, y: 0.22, r: 0.42, c: [246, 201, 168], sp: 0.00016, ph: 2 },
+      { x: 0.62, y: 0.82, r: 0.52, c: [138, 69, 39], sp: 0.00013, ph: 4 },
+      { x: 0.22, y: 0.78, r: 0.4, c: [250, 246, 239], sp: 0.00018, ph: 1 },
+    ];
+    const draw = (t: number) => {
+      if (!running) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      for (const b of blobs) {
+        const bx = (b.x + Math.sin(t * b.sp + b.ph) * 0.09) * w;
+        const by = (b.y + Math.cos(t * b.sp * 1.3 + b.ph) * 0.09) * h;
+        const br = b.r * Math.max(w, h);
+        const g = ctx.createRadialGradient(bx, by, 0, bx, by, br);
+        const [R, G, B] = b.c;
+        g.addColorStop(0, `rgba(${R},${G},${B},0.5)`);
+        g.addColorStop(1, `rgba(${R},${G},${B},0)`);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !running) {
+        running = true;
+        raf = requestAnimationFrame(draw);
+      } else if (!e.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    });
+    io.observe(canvas);
+    raf = requestAnimationFrame(draw);
+    return () => {
+      running = false;
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      ro.disconnect();
+    };
+  }, [reduce]);
+  if (reduce) {
+    return (
+      <div
+        className={className}
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(60% 50% at 30% 30%, rgba(176,90,58,.35), transparent 70%), radial-gradient(50% 60% at 75% 70%, rgba(246,201,168,.3), transparent 70%)",
+        }}
+      />
+    );
+  }
+  return <canvas ref={ref} className={className} aria-hidden="true" />;
+}
+
+/** Magnetic wrapper — the child drifts gently toward the cursor on hover,
+    then springs back. */
+function Magnetic({ children, className }: { children: ReactNode; className?: string }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 180, damping: 14, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 180, damping: 14, mass: 0.4 });
+  const onMove = (e: React.MouseEvent) => {
+    if (reduce || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    x.set((e.clientX - (r.left + r.width / 2)) * 0.35);
+    y.set((e.clientY - (r.top + r.height / 2)) * 0.35);
+  };
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+  };
+  return (
+    <motion.span
+      ref={ref}
+      className={className ? `pr-magnetic ${className}` : "pr-magnetic"}
+      onMouseMove={onMove}
+      onMouseLeave={reset}
+      style={reduce ? undefined : { x: sx, y: sy }}
+    >
+      {children}
+    </motion.span>
+  );
+}
+
+/** 3D tilt card — rotates toward the cursor with a sweeping glare.
+    The tilt lives on the card; inner links and buttons keep working. */
+function TiltCard({ className, children }: { className: string; children: ReactNode }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 160, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 160, damping: 18 });
+  const gx = useMotionValue(50);
+  const gy = useMotionValue(50);
+  const go = useMotionValue(0);
+  const glare = useMotionTemplate`radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,.38), transparent 62%)`;
+  const onMove = (e: React.MouseEvent) => {
+    if (reduce || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    ry.set((px - 0.5) * 10);
+    rx.set((0.5 - py) * 10);
+    gx.set(px * 100);
+    gy.set(py * 100);
+    go.set(1);
+  };
+  const reset = () => {
+    rx.set(0);
+    ry.set(0);
+    go.set(0);
+  };
+  return (
+    <motion.article
+      ref={ref}
+      className={className}
+      onMouseMove={onMove}
+      onMouseLeave={reset}
+      style={reduce ? undefined : { rotateX: srx, rotateY: sry, transformPerspective: 1000 }}
+    >
+      {children}
+      <motion.span
+        className="pr-glare"
+        aria-hidden="true"
+        style={reduce ? undefined : { background: glare, opacity: go }}
+      />
+    </motion.article>
+  );
+}
+
+/** Hero headline with a 3D letter flip — words rotate up from 90deg,
+    staggered, so the headline tumbles into place. */
+function FlipTitle() {
+  const reduce = useReducedMotion();
+  const words: { t: string; em?: boolean }[] = [
+    { t: "Come" },
+    { t: "back" },
+    { t: "to" },
+    { t: "your breath.", em: true },
+  ];
+  return (
+    <h1 className="pr-hero-title">
+      {words.map((w, i) => (
+        <span key={w.t} className="pr-flip-word">
+          <motion.span
+            className="pr-flip-inner"
+            style={{ transformPerspective: 900 }}
+            initial={reduce ? false : { rotateX: 88, y: 34, opacity: 0 }}
+            animate={{ rotateX: 0, y: 0, opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.15 + i * 0.11, ease: [0.22, 0.61, 0.21, 1] }}
+          >
+            {w.em ? <em>{w.t}</em> : w.t}
+          </motion.span>
+        </span>
+      ))}
+    </h1>
+  );
+}
+
 export default function Prana() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [sent, setSent] = useState(false);
@@ -308,10 +501,36 @@ export default function Prana() {
     target: breathRef,
     offset: ["start start", "end end"],
   });
-  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 2.0, 0.85]);
+  const breathScale = useTransform(breathProgress, [0, 0.5, 1], [0.55, 2.3, 0.85]);
+  const breathGlow = useTransform(breathProgress, [0, 0.5, 1], [0.35, 1, 0.5]);
+  const breathWordTilt = useTransform(breathProgress, [0, 1], [10, -8]);
   const inhaleOpacity = useTransform(breathProgress, [0.02, 0.12, 0.38, 0.48], [0, 1, 1, 0]);
   const exhaleOpacity = useTransform(breathProgress, [0.52, 0.62, 0.82, 0.92], [0, 1, 1, 0]);
-  const breathLineOpacity = useTransform(breathProgress, [0.72, 0.86, 1], [0, 1, 1]);
+  const breathLineOpacity = useTransform(breathProgress, [0.68, 0.82, 1], [0, 1, 1]);
+
+  /* Hero mouse parallax — orbs and the pacer tilt follow the cursor. */
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const smx = useSpring(mx, { stiffness: 55, damping: 18 });
+  const smy = useSpring(my, { stiffness: 55, damping: 18 });
+  const orbAX = useTransform(smx, (v) => v * 36);
+  const orbAY = useTransform(smy, (v) => v * 26);
+  const orbBX = useTransform(smx, (v) => v * -48);
+  const orbBY = useTransform(smy, (v) => v * -34);
+  const orbCX = useTransform(smx, (v) => v * 22);
+  const orbCY = useTransform(smy, (v) => v * -18);
+  const pacerTiltX = useTransform(smy, (v) => v * -5);
+  const pacerTiltY = useTransform(smx, (v) => v * 7);
+  const onHeroMouse = (e: React.MouseEvent<HTMLElement>) => {
+    if (reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
+    my.set(((e.clientY - r.top) / r.height) * 2 - 1);
+  };
+  const onHeroMouseLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
 
   const onBook = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -345,7 +564,13 @@ export default function Prana() {
       </header>
 
       {/* ---- hero: full-bleed B&W photo, huge white headline, glowing pacer ---- */}
-      <section className="pr-hero" id="top" ref={heroRef}>
+      <section
+        className="pr-hero"
+        id="top"
+        ref={heroRef}
+        onMouseMove={onHeroMouse}
+        onMouseLeave={onHeroMouseLeave}
+      >
         <motion.div
           className="pr-hero-media pr-bw"
           style={reduce ? undefined : { y: heroY }}
@@ -354,26 +579,46 @@ export default function Prana() {
           <Image src={HERO_IMG} alt="" fill priority sizes="100vw" />
           <div className="pr-hero-shade" />
         </motion.div>
+        <LivingGradient className="pr-hero-glow" />
+        <div className="pr-hero-orbs" aria-hidden="true">
+          <motion.span
+            className="pr-orb pr-orb-a"
+            style={reduce ? undefined : { x: orbAX, y: orbAY }}
+          />
+          <motion.span
+            className="pr-orb pr-orb-b"
+            style={reduce ? undefined : { x: orbBX, y: orbBY }}
+          />
+          <motion.span
+            className="pr-orb pr-orb-c"
+            style={reduce ? undefined : { x: orbCX, y: orbCY }}
+          />
+        </div>
         <div className="pr-wrap pr-hero-over">
           <div className="pr-hero-grid">
             <div className="pr-hero-copy">
               <BlurReveal>
                 <span className="pr-mono">(00) PRANA — YOGA &amp; WELLNESS RETREAT, RISHIKESH</span>
-                <h1 className="pr-hero-title">
-                  Come back to <em>your breath.</em>
-                </h1>
+                <FlipTitle />
                 <p className="pr-hero-sub">
                   A small yoga and wellness retreat on the banks of the Ganges —
                   sunrise practice, slow food, river evenings and nothing you
                   have to keep up with.
                 </p>
                 <div className="pr-hero-cta">
-                  <a className="pr-btn pr-btn-accent" href="#programmes">See programmes ↓</a>
+                  <Magnetic>
+                    <a className="pr-btn pr-btn-accent" href="#programmes">See programmes ↓</a>
+                  </Magnetic>
                   <a className="pr-btn pr-btn-ghost-light" href="#rhythm">A day at Prana</a>
                 </div>
               </BlurReveal>
             </div>
-            <BreathPacer />
+            <motion.div
+              className="pr-hero-pacer-tilt"
+              style={reduce ? undefined : { rotateX: pacerTiltX, rotateY: pacerTiltY, transformPerspective: 1000 }}
+            >
+              <BreathPacer />
+            </motion.div>
           </div>
           <div className="pr-hero-facts">
             <span><b>From £480</b>per person</span>
@@ -401,9 +646,21 @@ export default function Prana() {
 
       {/* ---- pinned breath moment: the core grows as you scroll ---- */}
       <section className="pr-breath" ref={breathRef} aria-label="A breath, slowed down">
+        <LivingGradient className="pr-breath-glow" />
         <div className="pr-breath-sticky">
-          <span className="pr-breath-wordmark" aria-hidden="true">BREATHE</span>
+          <motion.span
+            className="pr-breath-wordmark"
+            aria-hidden="true"
+            style={{ x: "-50%", y: "-50%", transformPerspective: 1200, rotateX: reduce ? 0 : breathWordTilt }}
+          >
+            BREATHE
+          </motion.span>
           <div className="pr-breath-stage">
+            <motion.div
+              className="pr-breath-halo"
+              style={reduce ? undefined : { opacity: breathGlow, scale: breathScale }}
+              aria-hidden="true"
+            />
             <motion.div
               className="pr-breath-core"
               style={reduce ? undefined : { scale: breathScale }}
@@ -456,7 +713,7 @@ export default function Prana() {
                 transition={{ duration: 1.4, ease: "easeInOut" }}
               />
               <motion.circle
-                cx="500" cy="85" r="7" fill="var(--pr-accent)"
+                cx="500" cy="28" r="7" fill="var(--pr-accent)"
                 style={{ transformBox: "fill-box", transformOrigin: "center" }}
                 initial={{ scale: 0, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -464,7 +721,7 @@ export default function Prana() {
                 transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
               />
               <motion.circle
-                cx="500" cy="85" r="7" fill="none" stroke="var(--pr-accent)" strokeWidth="2"
+                cx="500" cy="28" r="7" fill="none" stroke="var(--pr-accent)" strokeWidth="2"
                 style={{ transformBox: "fill-box", transformOrigin: "center" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0, 0.6, 0], scale: [1, 2.4, 1] }}
@@ -482,8 +739,8 @@ export default function Prana() {
                 initial={{ opacity: 0, x: "-50%", y: "-30%", scale: 0.85 }}
                 whileInView={{ opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.45, delay: 0.3 + i * 0.16, ease: "easeOut" }}
-                whileHover={{ y: "-56%" }}
+                transition={{ duration: 0.45, delay: 0.3 + i * 0.22, ease: "easeOut" }}
+                whileHover={{ y: "-62%", scale: 1.06 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="pr-arc-time">{rt.time}</span>
@@ -528,7 +785,7 @@ export default function Prana() {
           </BlurReveal>
           <div className="pr-prog-grid">
             {PROGRAMMES.map((pg, i) => (
-              <article key={pg.title} className={`pr-prog${programme === i ? " on" : ""}${pg.popular ? " pr-prog-pop" : ""}`}>
+              <TiltCard key={pg.title} className={`pr-prog${programme === i ? " on" : ""}${pg.popular ? " pr-prog-pop" : ""}`}>
                 {pg.popular && <span className="pr-prog-flag">MOST CHOSEN</span>}
                 <span className="pr-mono">{pg.days}</span>
                 <h3>{pg.title}</h3>
@@ -548,7 +805,7 @@ export default function Prana() {
                 >
                   {programme === i ? "Selected ✓" : "Reserve this programme →"}
                 </a>
-              </article>
+              </TiltCard>
             ))}
           </div>
         </div>
@@ -568,7 +825,7 @@ export default function Prana() {
           </BlurReveal>
           <div className="pr-stay-grid">
             {STAYS.map((st, i) => (
-              <article key={st.title} className={`pr-stay${stay === i ? " on" : ""}`}>
+              <TiltCard key={st.title} className={`pr-stay${stay === i ? " on" : ""}`}>
                 <div className="pr-stay-img">
                   <Image src={st.img} alt={st.alt} width={1000} height={700} sizes="(max-width: 900px) 100vw, 33vw" />
                   <span className="pr-stay-tag">{st.tag}</span>
@@ -586,7 +843,7 @@ export default function Prana() {
                     {stay === i ? "Selected ✓" : "Reserve this stay →"}
                   </a>
                 </div>
-              </article>
+              </TiltCard>
             ))}
           </div>
         </div>
@@ -617,7 +874,14 @@ export default function Prana() {
                   transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
                   whileHover={{ x: 4 }}
                 >
-                  <span className="pr-check-mark" aria-hidden="true">
+                  <motion.span
+                    className="pr-check-mark"
+                    aria-hidden="true"
+                    initial={{ scale: 0.4, opacity: 0 }}
+                    whileInView={{ scale: [0.4, 1.25, 1], opacity: 1 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.5, delay: i * 0.08 + 0.15, ease: "easeOut" }}
+                  >
                     <svg viewBox="0 0 24 24" fill="none">
                       <motion.path
                         d="M4 12.5 L9.5 18 L20 6"
@@ -631,7 +895,7 @@ export default function Prana() {
                         transition={{ duration: 0.45, delay: i * 0.08 + 0.18, ease: "easeOut" }}
                       />
                     </svg>
-                  </span>
+                  </motion.span>
                   {it}
                 </motion.li>
               ))}
@@ -653,14 +917,20 @@ export default function Prana() {
           </BlurReveal>
           <div className="pr-teacher-grid">
             {TEACHERS.map((t) => (
-              <article key={t.name} className="pr-teacher">
+              <motion.article
+                key={t.name}
+                className="pr-teacher"
+                style={{ transformPerspective: 900 }}
+                whileHover={reduce ? undefined : { y: -8, rotateX: -3, rotateY: 3 }}
+                transition={{ type: "spring", stiffness: 200, damping: 18 }}
+              >
                 <div className="pr-teacher-img">
                   <Image src={t.img} alt={t.alt} width={800} height={1000} sizes="(max-width: 900px) 100vw, 33vw" />
                 </div>
                 <h3>{t.name}</h3>
                 <span className="pr-mono">{t.role}</span>
                 <p>{t.text}</p>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>
@@ -701,6 +971,18 @@ export default function Prana() {
           </div>
         </div>
       </section>
+
+      {/* ---- second marquee: dark strip, runs the other way ---- */}
+      <div className="pr-ticker pr-ticker-dark" aria-hidden="true">
+        <div className="pr-ticker-track pr-ticker-rev">
+          {[...TICKER, ...TICKER].map((t, i) => (
+            <span key={i}>
+              {t}
+              <i>✦</i>
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ---- faq: single-open accordion ---- */}
       <section className="pr-section pr-section-soft" id="faq">
@@ -830,9 +1112,11 @@ export default function Prana() {
                     placeholder="Tell us about your trip, your experience, or anything you need…"
                   />
                 </label>
-                <button className="pr-btn pr-btn-accent pr-btn-lg" type="submit">
-                  Request booking — £{total}
-                </button>
+                <Magnetic className="pr-form-submit">
+                  <button className="pr-btn pr-btn-accent pr-btn-lg" type="submit">
+                    Request booking — £{total}
+                  </button>
+                </Magnetic>
               </form>
             )}
           </Reveal>
