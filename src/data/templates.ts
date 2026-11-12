@@ -193,6 +193,18 @@ export const TEMPLATES: TemplateEntry[] = [
     href: "/templates/yogagrove",
   },
   {
+    slug: "prana",
+    name: "Prana — Yoga & Wellness Retreat",
+    category: "Wellness & Retreats",
+    niche: "retreats",
+    tagline: "A yoga & wellness retreat on the Ganges, Rishikesh",
+    description:
+      "A calm, breath-led yoga and wellness retreat template: a breathing pacer, a daily rhythm arc, programmes with live pricing, stays, teachers, guest voices and a booking form — built around real yoga and Himalayan photography.",
+    image:
+      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1600&auto=format&fit=crop",
+    href: "/templates/prana",
+  },
+  {
     slug: "ventsure-lev-testing",
     name: "VentSure — LEV Testing & COSHH Compliance",
     category: "Industrial & Compliance",

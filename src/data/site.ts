@@ -698,6 +698,19 @@ export const pageMeta = {
     "source_file": "templates/yogagrove",
     "publication_priority": "Core"
   },
+  "/templates/prana": {
+    "page_type": "main",
+    "url_path": "/templates/prana",
+    "canonical": "https://digitalfalconz.com/templates/prana",
+    "seo_title": "Prana Yoga & Wellness Retreat — Website Template | DigitalFalconz",
+    "title_chars": 65,
+    "meta_description": "A calm, breath-led yoga and wellness retreat website template: daily rhythm, programmes, stays, teachers and booking, built around real yoga photography.",
+    "description_chars": 152,
+    "h1": "Prana — a yoga & wellness retreat",
+    "words": 600,
+    "source_file": "templates/prana",
+    "publication_priority": "Core"
+  },
   "/templates/ventsure-lev-testing": {
     "page_type": "main",
     "url_path": "/templates/ventsure-lev-testing",
