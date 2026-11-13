@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useScroll } from "framer-motion";
 
 const MEET = "https://meet.digitalfalconz.com/";
 const u = (id: string, w = 1600) =>
@@ -20,6 +20,11 @@ const IMG = {
   demoRetreat: u("1571896349842-33c89424de2d", 1200),
   demoCorp: u("1553877522-43269d4ea984", 1200),
   ctaBg: u("1506905925346-21bda4d32df4", 1800),
+  bandLake: u("1476514525535-07fb3b4ae5f1", 2000),
+  bandOffice: u("1497366216548-37526070297c", 2000),
+  progYoga: u("1545205597-3d9d02c29597", 1200),
+  progBreath: u("1506126613408-eca07ce68773", 1200),
+  progMountain: u("1519681393784-d120267933ba", 1200),
 };
 
 /* Guarded GA4/GTM event. Never sends PII. */
@@ -30,6 +35,30 @@ function track(event: string, params?: Record<string, string>) {
     if (Array.isArray(dl)) dl.push({ event, ...(params ?? {}) });
   } catch {
     /* analytics must never break the page */
+  }
+}
+
+/* After an in-page interaction changes a section's height (Process accordion
+   swap, selector audience switch), the section heading can end up with its
+   first line tucked under the sticky header. The anchor offsets (Lenis −72px,
+   scroll-margin 64px) only apply when a scroll happens — these interactions
+   don't scroll, and scroll anchoring doesn't compensate for a height change
+   inside the visible viewport. So, once the layout has settled, check the
+   heading: if it straddles the header's bottom edge (top hidden under the
+   header, bottom still visible), nudge it back to the same offset anchor
+   landings use. If it's fully visible or already scrolled past, do nothing. */
+function nudgeHeadingClear(headingId: string) {
+  const el = document.getElementById(headingId);
+  if (!el) return;
+  const header = document.querySelector("header.site");
+  const headerBottom = header ? header.getBoundingClientRect().bottom : 52;
+  const r = el.getBoundingClientRect();
+  if (r.top < headerBottom && r.bottom > headerBottom) {
+    const lenis = (window as unknown as {
+      __lenis?: { scrollTo: (t: HTMLElement, o: { offset: number; duration: number }) => void };
+    }).__lenis;
+    if (lenis) lenis.scrollTo(el, { offset: -72, duration: 0.5 });
+    else el.scrollIntoView(); // instant; scroll-margin-top: 64px applies
   }
 }
 
@@ -60,6 +89,163 @@ function BlurReveal({
 
 function Kicker({ children }: { children: React.ReactNode }) {
   return <p className="indx-kicker">{children}</p>;
+}
+
+/* ---------------- Icons (inline stroke SVGs, gold via currentColor) ---------------- */
+
+const ICON_PATHS: Record<string, React.ReactNode> = {
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </>
+  ),
+  megaphone: (
+    <>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
+  sparkle: <path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4L12 2z" />,
+  pen: (
+    <>
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+    </>
+  ),
+  target: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </>
+  ),
+  doc: (
+    <>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+    </>
+  ),
+  funnel: <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />,
+  sliders: (
+    <>
+      <line x1="4" y1="21" x2="4" y2="14" />
+      <line x1="4" y1="10" x2="4" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12" y2="3" />
+      <line x1="20" y1="21" x2="20" y2="16" />
+      <line x1="20" y1="12" x2="20" y2="3" />
+      <line x1="1" y1="14" x2="7" y2="14" />
+      <line x1="9" y1="8" x2="15" y2="8" />
+      <line x1="17" y1="16" x2="23" y2="16" />
+    </>
+  ),
+  grid: (
+    <>
+      <rect x="3" y="3" width="7" height="7" />
+      <rect x="14" y="3" width="7" height="7" />
+      <rect x="14" y="14" width="7" height="7" />
+      <rect x="3" y="14" width="7" height="7" />
+    </>
+  ),
+  compass: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+    </>
+  ),
+  link: (
+    <>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </>
+  ),
+  heart: (
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </>
+  ),
+};
+
+function Icon({ name }: { name: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {ICON_PATHS[name] ?? ICON_PATHS.globe}
+    </svg>
+  );
+}
+
+/* ---------------- Connected-systems diagram ---------------- */
+
+const FLOW_NODES = [
+  { icon: "megaphone", label: "Marketing", sub: "Demand & acquisition" },
+  { icon: "globe", label: "Website", sub: "Design & development" },
+  { icon: "calendar", label: "Booking", sub: "Reservations & deposits" },
+  { icon: "users", label: "CRM", sub: "Guest & client records" },
+  { icon: "sparkle", label: "Automation", sub: "AI assistants & workflows" },
+];
+
+function ConnectedFlow() {
+  return (
+    <div className="indx-flow-diagram">
+      <p className="indx-flow-diagram-title">One connected approach — not five separate tools</p>
+      <div className="indx-flow-track">
+        {FLOW_NODES.map((n, i) => (
+          <Fragment key={n.label}>
+            <BlurReveal className="indx-flow-node" delay={i * 0.1}>
+              <span className="indx-icon" aria-hidden="true">
+                <Icon name={n.icon} />
+              </span>
+              <span className="indx-flow-node-label">{n.label}</span>
+              <span className="indx-flow-node-sub">{n.sub}</span>
+            </BlurReveal>
+            {i < FLOW_NODES.length - 1 && <span className="indx-flow-link" aria-hidden="true" />}
+          </Fragment>
+        ))}
+      </div>
+      <p className="indx-flow-caption">
+        Marketing, website, booking, CRM and automation — connected, so the business behind the experience
+        runs as one system.
+      </p>
+    </div>
+  );
+}
+
+/* ---------------- Full-width image break ---------------- */
+
+function Band({ src, alt, caption }: { src: string; alt: string; caption: string }) {
+  return (
+    <figure className="indx-band" aria-label={caption}>
+      <div className="indx-band-img">
+        <Image src={src} alt={alt} fill sizes="100vw" />
+      </div>
+      <figcaption className="indx-band-cap">{caption}</figcaption>
+    </figure>
+  );
 }
 
 /* ---------------- Data (copy verbatim from the developer brief) ---------------- */
@@ -481,6 +667,8 @@ const DEMO_PROGRAMMES = [
     nights: 3,
     price: 420,
     dates: ["12–15 Mar 2027", "9–12 Apr 2027", "7–10 May 2027"],
+    img: "progYoga" as const,
+    imgAlt: "A group yoga session on a beach at sunrise — illustrative imagery",
   },
   {
     name: "Coastal Breathwork Weekend",
@@ -488,6 +676,8 @@ const DEMO_PROGRAMMES = [
     nights: 2,
     price: 350,
     dates: ["19–21 Mar 2027", "16–18 Apr 2027"],
+    img: "progBreath" as const,
+    imgAlt: "A woman meditating at sunrise — illustrative imagery",
   },
   {
     name: "Mountain Mindfulness Week",
@@ -495,6 +685,8 @@ const DEMO_PROGRAMMES = [
     nights: 6,
     price: 890,
     dates: ["3–9 May 2027", "14–20 Jun 2027"],
+    img: "progMountain" as const,
+    imgAlt: "Snowy mountains under a starry sky — illustrative imagery",
   },
 ];
 
@@ -598,6 +790,9 @@ function RetreatDemo() {
                 <div>
                   <h4>1 · Choose a Retreat</h4>
                   <p className="indx-demo-note">Select the programme, preferred dates and available options.</p>
+                  <figure className="indx-prog-img">
+                    <Image key={programme.img} src={IMG[programme.img]} alt={programme.imgAlt} fill sizes="(max-width: 900px) 100vw, 620px" />
+                  </figure>
                   <div className="indx-demo-progs" role="radiogroup" aria-label="Sample programmes">
                     {DEMO_PROGRAMMES.map((p, i) => (
                       <button
@@ -1124,31 +1319,66 @@ function ChallengeGrid({ items, id }: { items: Challenge[]; id: string }) {
   );
 }
 
-function SolutionList({ items }: { items: Solution[] }) {
+const RETREAT_SOLUTION_ICONS = ["globe", "calendar", "megaphone", "users", "sparkle", "pen"];
+const CORP_SOLUTION_ICONS = ["target", "doc", "funnel", "sliders", "grid", "pen"];
+const WHY_ICONS = ["compass", "link", "sliders", "heart", "clock"];
+
+function SolutionList({ items, icons }: { items: Solution[]; icons: string[] }) {
+  const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="indx-solutions">
-      {items.map((s, i) => (
-        <BlurReveal key={s.title} delay={Math.min(i * 0.05, 0.2)}>
-          <article className="indx-solution">
-            <div className="indx-solution-head">
-              <span className="indx-solution-n">{s.n}</span>
-              <h3>{s.title}</h3>
-            </div>
-            <p className="indx-solution-intro">{s.intro}</p>
-            <ul className="indx-solution-bullets">
-              {s.bullets.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-            <p className="indx-solution-outcome">
-              <span>Intended outcome</span> {s.outcome}
-            </p>
-            <Link className="indx-solution-link" href={s.href}>
-              {s.linkLabel} →
-            </Link>
-          </article>
-        </BlurReveal>
-      ))}
+      {items.map((s, i) => {
+        const isOpen = open === i;
+        return (
+          <BlurReveal key={s.title} delay={Math.min(i * 0.05, 0.2)}>
+            <article className={`indx-solution${isOpen ? " on" : ""}`}>
+              <div className="indx-solution-head">
+                <span className="indx-icon" aria-hidden="true">
+                  <Icon name={icons[i] ?? "globe"} />
+                </span>
+                <div className="indx-solution-head-text">
+                  <span className="indx-solution-n">{s.n}</span>
+                  <h3>{s.title}</h3>
+                </div>
+              </div>
+              <p className="indx-solution-intro">{s.intro}</p>
+              <button
+                type="button"
+                className="indx-solution-more"
+                aria-expanded={isOpen}
+                onClick={() => setOpen(isOpen ? null : i)}
+              >
+                {isOpen ? "Show less −" : "See what’s included +"}
+              </button>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className="indx-solution-detail">
+                      <ul className="indx-solution-bullets">
+                        {s.bullets.map((b) => (
+                          <li key={b}>{b}</li>
+                        ))}
+                      </ul>
+                      <p className="indx-solution-outcome">
+                        <span>Intended outcome</span> {s.outcome}
+                      </p>
+                      <Link className="indx-solution-link" href={s.href}>
+                        {s.linkLabel} →
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </article>
+          </BlurReveal>
+        );
+      })}
     </div>
   );
 }
@@ -1166,6 +1396,8 @@ function ProblemSelector() {
   const switchAudience = (a: "retreat" | "corporate") => {
     setAudience(a);
     setSelected(null);
+    // Panel drops to the shorter empty state instantly; check after React commits.
+    window.setTimeout(() => nudgeHeadingClear("indx-selector-h"), 80);
   };
 
   return (
@@ -1303,39 +1535,57 @@ function FaqAccordion() {
 
 function ProcessTimeline() {
   const [open, setOpen] = useState<number | null>(0);
+  const reduce = useReducedMotion();
+  const listRef = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 0.85", "end 0.6"] });
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    // Height animation is 280ms; check once the layout has settled.
+    const t = window.setTimeout(() => nudgeHeadingClear("indx-process-h"), 320);
+    return () => window.clearTimeout(t);
+  }, [open ]);
   return (
-    <ol className="indx-process">
-      {PROCESS.map((s, i) => {
-        const isOpen = open === i;
-        return (
-          <li key={s.title} className={`indx-process-step${isOpen ? " on" : ""}`}>
-            <button
-              type="button"
-              className="indx-process-btn"
-              aria-expanded={isOpen}
-              onClick={() => setOpen(isOpen ? null : i)}
-            >
-              <span className="indx-process-n">{s.n}</span>
-              <span className="indx-process-title">{s.title}</span>
-              <span className="indx-process-plus" aria-hidden="true">{isOpen ? "−" : "+"}</span>
-            </button>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ overflow: "hidden" }}
-                >
-                  <p className="indx-process-body">{s.body}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </li>
-        );
-      })}
-    </ol>
+    <div className="indx-process-wrap">
+      <div className="indx-process-rail" aria-hidden="true">
+        <motion.div className="indx-process-progress" style={{ scaleY: reduce ? 1 : scrollYProgress }} />
+      </div>
+      <ol className="indx-process" ref={listRef}>
+        {PROCESS.map((s, i) => {
+          const isOpen = open === i;
+          return (
+            <li key={s.title} className={`indx-process-step${isOpen ? " on" : ""}`}>
+              <button
+                type="button"
+                className="indx-process-btn"
+                aria-expanded={isOpen}
+                onClick={() => setOpen(isOpen ? null : i)}
+              >
+                <span className="indx-process-n">{s.n}</span>
+                <span className="indx-process-title">{s.title}</span>
+                <span className="indx-process-plus" aria-hidden="true">{isOpen ? "−" : "+"}</span>
+              </button>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <p className="indx-process-body">{s.body}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
@@ -1485,6 +1735,7 @@ export default function IndustriesPreview() {
               </a>
             </BlurReveal>
           </div>
+          <ConnectedFlow />
         </div>
       </section>
 
@@ -1547,7 +1798,7 @@ export default function IndustriesPreview() {
             <Kicker>Connected Retreat Growth &amp; Operations</Kicker>
             <h2 id="indx-rsol-h">From First Discovery to a Confident Booking.</h2>
           </BlurReveal>
-          <SolutionList items={RETREAT_SOLUTIONS} />
+          <SolutionList items={RETREAT_SOLUTIONS} icons={RETREAT_SOLUTION_ICONS} />
           <BlurReveal className="indx-section-cta">
             <a className="indx-btn indx-btn-accent" href="#retreat-demo">
               Explore a Connected Retreat Solution ↓
@@ -1584,6 +1835,12 @@ export default function IndustriesPreview() {
           <RetreatDemo />
         </div>
       </section>
+
+      <Band
+        src={IMG.bandLake}
+        alt="A wooden boat on a turquoise mountain lake — illustrative imagery"
+        caption="The journey from first enquiry to confirmed booking — illustrative imagery"
+      />
 
       {/* 07 — Corporate intro */}
       <section className="indx-section indx-section-alt" id="corporate-offsites" aria-labelledby="indx-corp-h">
@@ -1644,7 +1901,7 @@ export default function IndustriesPreview() {
             <Kicker>Technology for a More Connected Event Business</Kicker>
             <h2 id="indx-csol-h">From Corporate Enquiry to Confirmed Engagement.</h2>
           </BlurReveal>
-          <SolutionList items={CORP_SOLUTIONS} />
+          <SolutionList items={CORP_SOLUTIONS} icons={CORP_SOLUTION_ICONS} />
           <BlurReveal className="indx-section-cta">
             <a className="indx-btn indx-btn-accent" href="#corporate-demo">
               Explore Corporate Offsite Solutions ↓
@@ -1695,6 +1952,9 @@ export default function IndustriesPreview() {
             {WHY.map((w, i) => (
               <BlurReveal key={w.title} delay={Math.min(i * 0.05, 0.2)}>
                 <article className="indx-why-card">
+                  <span className="indx-icon indx-why-icon" aria-hidden="true">
+                    <Icon name={WHY_ICONS[i] ?? "compass"} />
+                  </span>
                   <span className="indx-why-n">{String(i + 1).padStart(2, "0")}</span>
                   <h3>{w.title}</h3>
                   <p>{w.body}</p>
@@ -1726,6 +1986,12 @@ export default function IndustriesPreview() {
           <FaqAccordion />
         </div>
       </section>
+
+      <Band
+        src={IMG.bandOffice}
+        alt="A modern office interior — illustrative imagery"
+        caption="Where the planning happens — illustrative imagery"
+      />
 
       {/* 14 — Final consultation CTA */}
       <section className="indx-cta" id="consultation" aria-labelledby="indx-cta-h">
