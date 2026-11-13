@@ -8,16 +8,16 @@ const MEET = "https://meet.digitalfalconz.com/";
 const u = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?q=80&w=${w}&auto=format&fit=crop`;
 
-/* Verified Unsplash imagery (all return HTTP 200). Illustrative only — never
-   presented as DigitalFalconz client photography. */
+/* Verified Unsplash imagery (all return HTTP 200 and were visually checked).
+   Illustrative only — never presented as DigitalFalconz client photography. */
 const IMG = {
-  heroRetreat: u("1540541338287-41700207dee6", 1600),
-  heroCorp: u("1552664730-d307ca884978", 1600),
+  heroRetreat: u("1470071459604-3b5ec3a7fe05", 1600),
+  heroCorp: u("1522202176988-66273c2fd55f", 1200),
   cardRetreat: u("1544367567-0f2fcb009e0b", 1200),
   cardCorp: u("1522071820081-009f0129c71c", 1200),
   storyRetreat: u("1602216056096-3b40cc0c9944", 1400),
   storyCorp: u("1556761175-b413da4baf72", 1400),
-  demoRetreat: u("1571896349842-33c89424de2d", 1200),
+  demoRetreat: u("1544161515-4ab6ce6db874", 1200),
   demoCorp: u("1553877522-43269d4ea984", 1200),
   ctaBg: u("1506905925346-21bda4d32df4", 1800),
   bandLake: u("1476514525535-07fb3b4ae5f1", 2000),
@@ -25,6 +25,9 @@ const IMG = {
   progYoga: u("1545205597-3d9d02c29597", 1200),
   progBreath: u("1506126613408-eca07ce68773", 1200),
   progMountain: u("1519681393784-d120267933ba", 1200),
+  showRetreat: u("1507525428034-b723cf961d3e", 1400),
+  showCorp: u("1521737711867-e3b97375f902", 1200),
+  showSystems: u("1504384308090-c894fdcc538d", 1400),
 };
 
 /* Guarded GA4/GTM event. Never sends PII. */
@@ -217,7 +220,7 @@ function ConnectedFlow() {
         {FLOW_NODES.map((n, i) => (
           <Fragment key={n.label}>
             <BlurReveal className="indx-flow-node" delay={i * 0.1}>
-              <span className="indx-icon" aria-hidden="true">
+              <span className="indx-icon indx-flow-icon" aria-hidden="true">
                 <Icon name={n.icon} />
               </span>
               <span className="indx-flow-node-label">{n.label}</span>
@@ -248,7 +251,58 @@ function Band({ src, alt, caption }: { src: string; alt: string; caption: string
   );
 }
 
-/* ---------------- Data (copy verbatim from the developer brief) ---------------- */
+/* ---------------- Visual showcase strip (three frames) ---------------- */
+
+const SHOWCASE = [
+  {
+    src: "showRetreat" as const,
+    alt: "A tropical beach at sunset — illustrative imagery",
+    cap: "Retreats",
+    sub: "The experience guests remember",
+  },
+  {
+    src: "showCorp" as const,
+    alt: "A team working together in a lodge — illustrative imagery",
+    cap: "Corporate offsites",
+    sub: "The planning that makes it happen",
+  },
+  {
+    src: "showSystems" as const,
+    alt: "A team working in an open-plan office — illustrative imagery",
+    cap: "The system behind it",
+    sub: "Connected, not scattered",
+  },
+];
+
+function Showcase() {
+  return (
+    <section className="indx-section indx-showcase" aria-labelledby="indx-show-h">
+      <div className="indx-wrap">
+        <BlurReveal>
+          <Kicker>In three frames</Kicker>
+          <h2 id="indx-show-h">The Experience. The Planning. The System Behind It.</h2>
+        </BlurReveal>
+        <div className="indx-showcase-grid">
+          {SHOWCASE.map((f, i) => (
+            <BlurReveal key={f.cap} delay={i * 0.08}>
+              <figure className="indx-show-fig">
+                <span className="indx-show-img">
+                  <Image src={IMG[f.src]} alt={f.alt} fill sizes="(max-width: 900px) 100vw, 33vw" />
+                </span>
+                <figcaption>
+                  <strong>{f.cap}</strong>
+                  <span>{f.sub}</span>
+                </figcaption>
+              </figure>
+            </BlurReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Data (tightened from the developer brief — same substance, fewer words) ---------------- */
 
 type Solution = {
   n: string;
@@ -266,14 +320,12 @@ const RETREAT_SOLUTIONS: Solution[] = [
     title: "Retreat Website Design & Development",
     intro: "A digital experience that reflects the quality of your retreats.",
     bullets: [
-      "Distinct pages for individual retreats and programmes.",
-      "Accommodation options, itineraries and pricing presentation.",
-      "Mobile-first booking and enquiry journeys.",
-      "Integrated registration or booking functionality.",
-      "Search-friendly content structure and analytics.",
+      "Distinct pages per retreat & programme",
+      "Accommodation, itineraries & pricing",
+      "Mobile-first booking journeys",
+      "Search-friendly structure & analytics",
     ],
-    outcome:
-      "Make it easier for prospective guests to discover, understand and enquire about your retreats.",
+    outcome: "Easier for guests to discover, understand and enquire.",
     href: "/services/website-design-development",
     linkLabel: "Website design & development",
   },
@@ -282,15 +334,12 @@ const RETREAT_SOLUTIONS: Solution[] = [
     title: "Custom Retreat Booking & Reservation Systems",
     intro: "The right booking experience, built around your actual availability rules.",
     bullets: [
-      "Retreat-specific booking dates and capacity.",
-      "Single, twin and shared accommodation options.",
-      "Room availability and occupancy rules.",
-      "Deposits, instalments and balance reminders.",
-      "Waitlists, cancellations and approved overflow arrangements.",
-      "Booking confirmations and administrative controls.",
+      "Dates & capacity rules",
+      "Single, twin & shared rooms",
+      "Deposits, instalments & reminders",
+      "Waitlists & cancellations",
     ],
-    outcome:
-      "A booking process designed to reduce manual coordination and avoid preventable booking errors.",
+    outcome: "Less manual coordination, fewer booking errors.",
     href: "/services/custom-software-development",
     linkLabel: "Custom software development",
   },
@@ -299,15 +348,12 @@ const RETREAT_SOLUTIONS: Solution[] = [
     title: "Retreat Marketing & Guest Acquisition",
     intro: "Reach the people most likely to value your experience.",
     bullets: [
-      "Google and Meta advertising.",
-      "Retreat-specific landing pages.",
-      "SEO and AI search discoverability.",
-      "Campaign strategy for upcoming retreat dates.",
-      "Retargeting and enquiry follow-up.",
-      "Performance tracking and optimisation.",
+      "Google & Meta advertising",
+      "Retreat landing pages",
+      "SEO & AI search",
+      "Retargeting & follow-up",
     ],
-    outcome:
-      "Build a more structured path from discovering a retreat to making an enquiry or booking.",
+    outcome: "A clearer path from discovery to booking.",
     href: "/services/lead-generation",
     linkLabel: "Lead generation",
   },
@@ -316,15 +362,12 @@ const RETREAT_SOLUTIONS: Solution[] = [
     title: "Guest CRM & Communication Automation",
     intro: "Keep the personal touch. Reduce repetitive work.",
     bullets: [
-      "Enquiry and booking records.",
-      "Confirmation and preparation emails.",
-      "Payment and balance reminders.",
-      "Guest information and preference collection.",
-      "Post-retreat feedback and follow-up.",
-      "Past-guest re-engagement campaigns.",
+      "Enquiry & booking records",
+      "Confirmations & reminders",
+      "Guest preferences",
+      "Re-engagement campaigns",
     ],
-    outcome:
-      "Support a more consistent guest journey while preserving genuine human relationships.",
+    outcome: "A consistent guest journey, with the human touch kept.",
     href: "/services/crm-implementation",
     linkLabel: "CRM implementation",
   },
@@ -333,13 +376,11 @@ const RETREAT_SOLUTIONS: Solution[] = [
     title: "AI Assistants & Workflow Integrations",
     intro: "Give routine questions a faster path to answers.",
     bullets: [
-      "Assist with common enquiries about retreat dates, accommodation, programme details and booking steps.",
-      "Connect structured enquiries to approved booking and CRM workflows.",
-      "Escalate sensitive, unusual or decision-dependent questions to a person.",
-      "Use human-reviewed knowledge sources and privacy-appropriate handling.",
+      "Answers on dates, rooms & booking steps",
+      "Connects to approved booking & CRM flows",
+      "Escalates sensitive questions to a person",
     ],
-    outcome:
-      "Improve responsiveness without replacing the human care behind the retreat experience.",
+    outcome: "Faster answers, without losing the human care.",
     href: "/services/ai-chatbots",
     linkLabel: "AI chatbots",
   },
@@ -348,13 +389,11 @@ const RETREAT_SOLUTIONS: Solution[] = [
     title: "Retreat Branding, Content & Creative",
     intro: "Make the experience compelling before the guest arrives.",
     bullets: [
-      "Brand direction and graphic design.",
-      "Promotional video editing and motion content.",
-      "Social media creative and digital brochures.",
-      "Advertising creative, email visuals and campaign assets.",
+      "Brand direction & design",
+      "Video editing & motion",
+      "Social & campaign creative",
     ],
-    outcome:
-      "Present a distinctive and consistent experience across the guest journey.",
+    outcome: "One distinctive experience, everywhere guests see you.",
     href: "/services/branding-identity",
     linkLabel: "Branding & identity",
   },
@@ -366,14 +405,12 @@ const CORP_SOLUTIONS: Solution[] = [
     title: "Corporate Lead Generation & Demand Creation",
     intro: "Get in front of companies planning their next team experience.",
     bullets: [
-      "Google Search and LinkedIn advertising.",
-      "B2B landing pages and enquiry forms.",
-      "Corporate retreat and team-offsite SEO.",
-      "Audience and campaign strategy.",
-      "Lead qualification and CRM integration.",
-      "Marketing attribution and reporting.",
+      "Google & LinkedIn advertising",
+      "B2B landing pages & forms",
+      "Corporate SEO",
+      "Lead qualification & CRM",
     ],
-    outcome: "Build a more measurable pipeline of relevant corporate enquiries.",
+    outcome: "A measurable pipeline of relevant enquiries.",
     href: "/services/lead-generation",
     linkLabel: "Lead generation",
   },
@@ -382,14 +419,12 @@ const CORP_SOLUTIONS: Solution[] = [
     title: "Premium Corporate Websites & Proposal Experiences",
     intro: "Make a stronger impression before the first sales conversation.",
     bullets: [
-      "Corporate offsite service pages.",
-      "Destination and experience showcases.",
-      "Case-study and portfolio experiences.",
-      "Conversion-focused enquiry forms.",
-      "Personalised proposal landing pages.",
-      "Interactive presentations and client-facing resources.",
+      "Service pages & destination showcases",
+      "Case studies & portfolio",
+      "Personalised proposal pages",
+      "Conversion-focused enquiry forms",
     ],
-    outcome: "Give prospective corporate clients a clear reason to start a conversation.",
+    outcome: "A stronger first impression — before the first call.",
     href: "/services/website-design-development",
     linkLabel: "Website design & development",
   },
@@ -398,14 +433,12 @@ const CORP_SOLUTIONS: Solution[] = [
     title: "CRM & Corporate Sales Pipeline Automation",
     intro: "Keep every opportunity moving with greater clarity.",
     bullets: [
-      "Enquiry capture and lead routing.",
-      "Qualification by headcount, budget, dates and location.",
-      "Opportunity stages and pipeline visibility.",
-      "Follow-up tasks and reminders.",
-      "Proposal status tracking.",
-      "Reporting across enquiries and closed engagements.",
+      "Enquiry capture & routing",
+      "Qualification by headcount, budget & dates",
+      "Pipeline visibility & follow-ups",
+      "Proposal status tracking",
     ],
-    outcome: "Support more organised and consistent sales execution.",
+    outcome: "Every opportunity moving, with clarity.",
     href: "/services/crm-implementation",
     linkLabel: "CRM implementation",
   },
@@ -414,15 +447,12 @@ const CORP_SOLUTIONS: Solution[] = [
     title: "Proposal & Quotation Workflow Automation",
     intro: "Spend less time assembling documents. More time winning the right projects.",
     bullets: [
-      "Standardised discovery forms.",
-      "Reusable proposal sections.",
-      "Draft itinerary and budget templates.",
-      "Internal review and approval stages.",
-      "Client-facing proposal documents or pages.",
-      "Follow-up and status notifications.",
+      "Standard discovery forms",
+      "Reusable proposal sections",
+      "Draft itineraries & budgets",
+      "Review & approval stages",
     ],
-    outcome:
-      "A more efficient, professional process from brief to proposal. All commercial details remain subject to human review and approval before being sent.",
+    outcome: "Brief to proposal, faster — always human-approved.",
     href: "/services/sales-marketing-automation",
     linkLabel: "Sales & marketing automation",
   },
@@ -431,14 +461,12 @@ const CORP_SOLUTIONS: Solution[] = [
     title: "Event Operations & Client Portals",
     intro: "Connect planning information in one place.",
     bullets: [
-      "Project timelines and task ownership.",
-      "Venue and supplier information.",
-      "Client document sharing.",
-      "Attendee and preference collection.",
-      "Budget and milestone tracking.",
-      "Event updates and communication workflows.",
+      "Timelines & task ownership",
+      "Venue & supplier details",
+      "Attendee & budget tracking",
+      "Client document sharing",
     ],
-    outcome: "Improve visibility across active events and reduce avoidable coordination gaps.",
+    outcome: "One place for every active event.",
     href: "/services/custom-software-development",
     linkLabel: "Custom software development",
   },
@@ -447,12 +475,11 @@ const CORP_SOLUTIONS: Solution[] = [
     title: "Branding, Design & Corporate Event Creative",
     intro: "Make every client interaction feel considered.",
     bullets: [
-      "Pitch presentations and proposal design.",
-      "Event identity and marketing collateral.",
-      "Event landing pages and video production.",
-      "Motion graphics and professional creative assets.",
+      "Pitch & proposal design",
+      "Event identity & collateral",
+      "Landing pages & video",
     ],
-    outcome: "Support polished and consistent event communication.",
+    outcome: "Polished, consistent client communication.",
     href: "/services/branding-identity",
     linkLabel: "Branding & identity",
   },
@@ -463,31 +490,31 @@ type Challenge = { title: string; body: string; solution: string; solutionHref: 
 const RETREAT_CHALLENGES: Challenge[] = [
   {
     title: "Your Website Inspires Interest, but Booking Feels Difficult",
-    body: "Visitors explore your retreats, but programme details, accommodation choices or booking steps may not be clear enough to help them confidently reserve a place.",
+    body: "Programme details, accommodation or booking steps aren't clear enough to book with confidence.",
     solution: "01 — Retreat Website Design & Development",
     solutionHref: "#retreat-solutions",
   },
   {
     title: "Room Availability Lives in Spreadsheets",
-    body: "Single and shared rooms, changing occupancy, capacity limits and last-minute changes can make availability difficult to manage.",
+    body: "Single and shared rooms, changing occupancy and last-minute changes make availability hard to manage.",
     solution: "02 — Custom Retreat Booking & Reservation Systems",
     solutionHref: "#retreat-solutions",
   },
   {
     title: "Deposits and Guest Records Need Manual Attention",
-    body: "Payments, retreat selection, remaining balances and guest information may be tracked across several tools.",
+    body: "Payments, balances and guest details tracked across several tools.",
     solution: "04 — Guest CRM & Communication Automation",
     solutionHref: "#retreat-solutions",
   },
   {
     title: "Enquiries Don’t Always Become Bookings",
-    body: "Potential guests ask questions, consider their options and sometimes disappear without a structured follow-up process.",
+    body: "Guests ask questions, consider their options — and disappear without structured follow-up.",
     solution: "03 — Retreat Marketing & Guest Acquisition",
     solutionHref: "#retreat-solutions",
   },
   {
     title: "Every Retreat Launch Starts From Scratch",
-    body: "Promotional campaigns, guest communications and operational preparation can consume more time than they should.",
+    body: "Campaigns, guest comms and prep consume more time than they should.",
     solution: "03 — Retreat Marketing & Guest Acquisition",
     solutionHref: "#retreat-solutions",
   },
@@ -496,31 +523,31 @@ const RETREAT_CHALLENGES: Challenge[] = [
 const CORP_CHALLENGES: Challenge[] = [
   {
     title: "Qualified Corporate Enquiries Are Difficult to Generate Consistently",
-    body: "Finding companies actively planning leadership retreats, team offsites or employee experiences requires a focused B2B acquisition strategy.",
+    body: "Finding companies actively planning offsites takes a focused B2B acquisition strategy.",
     solution: "01 — Corporate Lead Generation & Demand Creation",
     solutionHref: "#corporate-solutions",
   },
   {
     title: "Every Client Brief Comes With Different Requirements",
-    body: "Team size, objectives, destinations, dates, budgets and venue preferences all influence the proposal.",
+    body: "Team size, objectives, destinations, dates, budgets and venues — every brief is different.",
     solution: "04 — Proposal & Quotation Workflow Automation",
     solutionHref: "#corporate-solutions",
   },
   {
     title: "Proposals Take Time to Prepare",
-    body: "When information is scattered across documents and suppliers, creating accurate, tailored proposals becomes unnecessarily labour-intensive.",
+    body: "Information scattered across documents and suppliers makes tailored proposals slow to build.",
     solution: "04 — Proposal & Quotation Workflow Automation",
     solutionHref: "#corporate-solutions",
   },
   {
     title: "Opportunities Can Stall Between Enquiry and Approval",
-    body: "Corporate purchasing may involve HR, executive assistants, procurement teams and senior decision-makers. Without an organised follow-up process, valuable opportunities can lose momentum.",
+    body: "HR, EAs, procurement, senior decision-makers — without organised follow-up, opportunities stall.",
     solution: "03 — CRM & Corporate Sales Pipeline Automation",
     solutionHref: "#corporate-solutions",
   },
   {
     title: "Operations Become More Complex as Projects Increase",
-    body: "Guest lists, venue information, timelines, supplier details and client updates need to remain coordinated as the business grows.",
+    body: "Guest lists, venues, timelines and suppliers — all needing to stay coordinated as you grow.",
     solution: "05 — Event Operations & Client Portals",
     solutionHref: "#corporate-solutions",
   },
@@ -529,23 +556,23 @@ const CORP_CHALLENGES: Challenge[] = [
 const WHY = [
   {
     title: "Industry-Relevant Thinking",
-    body: "We start by understanding how your business sells, books and delivers its experiences.",
+    body: "We start with how you sell, book and deliver.",
   },
   {
     title: "Connected Capabilities",
-    body: "Our approach brings together growth marketing, websites, CRM, software and AI where they genuinely add value.",
+    body: "Marketing, websites, CRM, software and AI — where they genuinely add value.",
   },
   {
     title: "Practical Technology Decisions",
-    body: "We evaluate whether to optimise your existing platforms, integrate appropriate tools or build custom functionality.",
+    body: "Optimise what you have, integrate where it helps, build only when it should be custom.",
   },
   {
     title: "Human-Centred Automation",
-    body: "Automation should support your team and your customers—not create unnecessary friction or remove important human oversight.",
+    body: "Automation that supports your team — never friction, never removing human oversight.",
   },
   {
     title: "Designed for Long-Term Use",
-    body: "We consider usability, maintainability, integrations and future improvements as part of the project planning process.",
+    body: "Usability, maintainability and what's next — planned in from the start.",
   },
 ];
 
@@ -553,62 +580,62 @@ const PROCESS = [
   {
     n: "01",
     title: "Discover",
-    body: "We map the current customer journey, operational workflow, technology and key challenges.",
+    body: "We map your customer journey, workflows, technology and key challenges.",
   },
   {
     n: "02",
     title: "Define",
-    body: "We identify the highest-priority improvements and recommend the appropriate implementation approach.",
+    body: "We find the highest-priority improvements and the right approach.",
   },
   {
     n: "03",
     title: "Design & Build",
-    body: "We create the agreed digital experience, marketing system, integration or software solution.",
+    body: "We create the agreed experience, system or integration.",
   },
   {
     n: "04",
     title: "Connect & Validate",
-    body: "We test relevant workflows, customer interactions, data flows and business rules before launch.",
+    body: "We test workflows, data and rules before launch.",
   },
   {
     n: "05",
     title: "Support & Improve",
-    body: "Where ongoing support is agreed, we monitor performance, resolve issues and identify opportunities for improvement.",
+    body: "We monitor, resolve and keep improving — where support is agreed.",
   },
 ];
 
 const FAQS = [
   {
     q: "Do you work with independent retreat organisers or only established centres?",
-    a: "We can support both independent organisers and established retreat businesses. The approach depends on your booking requirements, budget, current technology and operational complexity.",
+    a: "Both. The approach depends on your booking needs, budget, technology and complexity.",
   },
   {
     q: "Can you improve our existing retreat booking system instead of replacing it?",
-    a: "Yes, where the platform supports the required improvements. We first assess the existing system and its integration options before recommending custom development.",
+    a: "Yes, where the platform allows it. We assess your system and its integrations before recommending custom work.",
   },
   {
     q: "Can you build booking workflows for different room types and deposit rules?",
-    a: "These requirements can be considered during technical discovery. We would define and test the specific room allocation, pricing, availability and payment rules before implementation.",
+    a: "Yes — during technical discovery we define and test your room, pricing, availability and payment rules before building.",
   },
   {
     q: "Do you provide marketing as well as booking or CRM technology?",
-    a: "Yes. Depending on your requirements, we can combine marketing, websites, lead generation, CRM and automation into a connected project.",
+    a: "Yes — marketing, websites, lead generation, CRM and automation, combined into one connected project.",
   },
   {
     q: "Can you help our corporate offsite company attract more B2B clients?",
-    a: "We can develop acquisition strategies using appropriate channels such as Google Search, LinkedIn, SEO, landing pages and CRM-connected lead generation. Performance depends on your market, offer, budget and sales process.",
+    a: "Yes — Google Search, LinkedIn, SEO, landing pages and CRM-connected lead generation. Results depend on your market, offer, budget and sales process.",
   },
   {
     q: "Can you integrate our existing event planning and sales tools?",
-    a: "Many systems support integrations through APIs, webhooks or approved automation platforms. Feasibility depends on your current software and required workflows.",
+    a: "Many do — via APIs, webhooks or approved automation platforms. It depends on your current software and workflows.",
   },
   {
     q: "Do we need a custom application?",
-    a: "Not necessarily. We may recommend improving existing tools or using established software if that offers a better balance of capability, cost and maintenance.",
+    a: "Not necessarily. Improving your existing tools or using established software is often the better balance of capability, cost and maintenance.",
   },
   {
     q: "What happens after an initial consultation?",
-    a: "We review your requirements and, where appropriate, recommend a discovery assessment, scoped proposal or implementation roadmap. There’s no obligation to proceed.",
+    a: "We review your requirements and recommend a discovery assessment, scoped proposal or roadmap — with no obligation to proceed.",
   },
 ];
 
@@ -751,12 +778,11 @@ function RetreatDemo() {
           <p className="indx-demo-label">Illustrative Demo — No Live Availability or Payments</p>
           <h3>Explore a Smarter Retreat Booking Journey</h3>
           <p className="indx-demo-intro">
-            A sample booking flow. Every selection below updates the sample availability, deposit and
-            summary in real time. All programmes, rooms and prices are fictional samples.
+            A sample flow — every choice updates availability, deposit and summary live. All fictional.
           </p>
         </div>
         <div className="indx-demo-img">
-          <Image src={IMG.demoRetreat} alt="A retreat pool at golden hour — illustrative imagery" fill sizes="(max-width: 900px) 100vw, 340px" />
+          <Image src={IMG.demoRetreat} alt="A spa treatment with warm oil — illustrative imagery" fill sizes="(max-width: 900px) 100vw, 340px" />
         </div>
       </div>
 
@@ -843,7 +869,7 @@ function RetreatDemo() {
               {step === 2 && (
                 <div>
                   <h4>2 · Select Accommodation</h4>
-                  <p className="indx-demo-note">Room choices for {programme.name} on {date}. Availability is sample data.</p>
+                  <p className="indx-demo-note">Rooms for {programme.name} on {date}. Availability is sample data.</p>
                   <div className="indx-demo-rooms" role="radiogroup" aria-label="Sample rooms">
                     {DEMO_ROOMS.map((r, i) => {
                       const full = r.available === 0;
@@ -958,7 +984,7 @@ function RetreatDemo() {
               {step === 3 && (
                 <div>
                   <h4>3 · Review Booking Details</h4>
-                  <p className="indx-demo-note">Check the sample selection, total price, deposit requirements and policies.</p>
+                  <p className="indx-demo-note">Check the sample selection, total and deposit.</p>
                   <dl className="indx-review">
                     <div><dt>Programme</dt><dd>{programme.name} <em>(sample)</em></dd></div>
                     <div><dt>Dates</dt><dd>{date} <em>(sample)</em></dd></div>
@@ -987,8 +1013,8 @@ function RetreatDemo() {
                 <div>
                   <h4>4 · Confirm the Reservation</h4>
                   <p className="indx-demo-note">
-                    In a live system this step would record the booking and payment status, update availability and
-                    trigger the confirmation workflow. This is a sample — no payment is taken and nothing is booked.
+                    In a live system this would record the booking, update availability and trigger
+                    confirmation. Sample only — no payment taken, nothing booked.
                   </p>
                   {!confirmed ? (
                     <button type="button" className="indx-btn indx-btn-accent" onClick={confirmBooking}>
@@ -1081,7 +1107,6 @@ const CORP_STAGES = [
     desc: "Collect company name, group size, destination preferences, expected dates and budget range.",
     brief: [
       ["Company", "Northgate Consulting (sample)"],
-      ["Contact", "Alex Morgan — Head of People (sample)"],
       ["Group size", "24 people (sample)"],
       ["Destination", "Lake District (sample)"],
       ["Dates", "12–14 March 2027 (sample)"],
@@ -1090,7 +1115,6 @@ const CORP_STAGES = [
     tasks: [
       "Log the enquiry in the CRM (sample)",
       "Send an acknowledgement within the hour (sample)",
-      "Assign an owner and a follow-up date (sample)",
     ],
     output: "Enquiry logged — status: New (sample)",
     next: "Qualify the brief within one working day (sample)",
@@ -1108,7 +1132,6 @@ const CORP_STAGES = [
     tasks: [
       "Discovery call with Alex Morgan (sample)",
       "Confirm venue availability for the dates (sample)",
-      "Map the decision process and approvers (sample)",
     ],
     output: "Qualified opportunity — stage: Discovery (sample)",
     next: "Prepare a tailored proposal (sample)",
@@ -1145,7 +1168,6 @@ const CORP_STAGES = [
     tasks: [
       "Answer the client's questions (sample)",
       "Revise the proposal and re-issue (sample)",
-      "Track approval and send the contract (sample)",
     ],
     output: "Proposal approved — contract sent (sample)",
     next: "Coordinate delivery (sample)",
@@ -1163,7 +1185,6 @@ const CORP_STAGES = [
     tasks: [
       "Share the project timeline with the client (sample)",
       "Confirm suppliers and transfers (sample)",
-      "Collect attendee details and preferences (sample)",
     ],
     output: "Event plan live — all workstreams on track (sample)",
     next: "Deliver the offsite (sample)",
@@ -1190,8 +1211,7 @@ function CorporateDemo() {
           <p className="indx-demo-label">Illustrative Workflow — No Live CRM Data</p>
           <h3>Explore the Corporate Client Journey</h3>
           <p className="indx-demo-intro">
-            A sample enquiry moving through a structured sales process. Click a stage to see the brief data,
-            tasks, output and next actions. All company details are fictional.
+            A sample enquiry through a structured sales process. Click a stage. All fictional.
           </p>
         </div>
         <div className="indx-demo-img">
@@ -1407,8 +1427,8 @@ function ProblemSelector() {
           <Kicker>Where to start</Kicker>
           <h2 id="indx-selector-h">Where is your business losing momentum?</h2>
           <p className="indx-lede">
-            Pick the problem that sounds most familiar. We’ll point you to the relevant solution — a starting
-            point for a conversation, not a diagnosis or a guaranteed outcome.
+            Pick the problem that sounds most familiar. We’ll point you to the right solution — a starting
+            point, not a diagnosis.
           </p>
         </BlurReveal>
         <div className="indx-toggle" role="tablist" aria-label="Choose your business type">
@@ -1453,8 +1473,7 @@ function ProblemSelector() {
                 <p className="indx-selector-kicker">Suggested direction</p>
                 <h3>{active.solution}</h3>
                 <p className="indx-selector-note">
-                  For: {active.problem}. This points to the relevant service area — the right next step is a
-                  short conversation about your business.
+                  For: {active.problem}. The right next step is a short conversation about your business.
                 </p>
                 <div className="indx-selector-actions">
                   <a className="indx-btn indx-btn-accent" href={active.href}>
@@ -1614,11 +1633,9 @@ export default function IndustriesPreview() {
               Exceptional Experiences. <em>Better Business Systems.</em>
             </h1>
             <p className="indx-lede">
-              Behind every successful retreat or corporate offsite is a business that needs to attract the right
-              people, manage complex details and deliver an experience worth remembering. We bring growth
-              marketing, websites, booking technology, CRM and intelligent automation together to help retreat
-              operators and corporate offsite planners build more connected, efficient businesses. Your expertise
-              creates the experience. Our technology helps power the business behind it.
+              Behind every great retreat or offsite is a business that has to attract the right people and
+              manage the details. We bring marketing, websites, booking, CRM and automation together — so the
+              business behind the experience runs as one system.
             </p>
             <div className="indx-hero-ctas">
               <a
@@ -1661,12 +1678,13 @@ export default function IndustriesPreview() {
             </div>
           </BlurReveal>
           <BlurReveal className="indx-hero-media" delay={0.1}>
-            <figure className="indx-hero-fig">
-              <Image src={IMG.heroRetreat} alt="A retreat resort pool at golden hour — illustrative imagery, not a DigitalFalconz client" fill priority sizes="(max-width: 900px) 100vw, 46vw" />
+            <span className="indx-hero-ring" aria-hidden="true" />
+            <figure className="indx-hero-fig indx-hero-fig-main">
+              <Image src={IMG.heroRetreat} alt="A misty mountain valley at sunrise — illustrative imagery, not a DigitalFalconz client" fill priority sizes="(max-width: 900px) 100vw, 46vw" />
               <figcaption>Retreat landscape — illustrative imagery</figcaption>
             </figure>
-            <figure className="indx-hero-fig indx-hero-fig-b">
-              <Image src={IMG.heroCorp} alt="A corporate team in a workshop session — illustrative imagery, not a DigitalFalconz client" fill sizes="(max-width: 900px) 100vw, 46vw" />
+            <figure className="indx-hero-fig indx-hero-fig-over">
+              <Image src={IMG.heroCorp} alt="A corporate team laughing over laptops — illustrative imagery, not a DigitalFalconz client" fill sizes="(max-width: 900px) 60vw, 22vw" />
               <figcaption>Corporate team offsite — illustrative imagery</figcaption>
             </figure>
           </BlurReveal>
@@ -1680,10 +1698,9 @@ export default function IndustriesPreview() {
             <Kicker>Two Specialisations. One Connected Approach.</Kicker>
             <h2 id="indx-spec-h">Built Around How Your Business Actually Works.</h2>
             <p className="indx-lede">
-              A wellness retreat selling individual places and a corporate offsite company pitching an executive
-              retreat operate differently. Their audiences, purchasing decisions, booking processes and
-              operational requirements are not the same. That’s why our approach starts with the business
-              model—not a predefined package.
+              A retreat selling individual places and a corporate company pitching an executive offsite work
+              differently. Their audiences, decisions and booking processes aren’t the same — so our approach
+              starts with the business model, not a package.
             </p>
           </BlurReveal>
           <div className="indx-cards">
@@ -1703,8 +1720,7 @@ export default function IndustriesPreview() {
                     For yoga, wellness, meditation, fitness, transformational and destination retreat businesses.
                   </span>
                   <span className="indx-card-f">
-                    <strong>Focus</strong> Guest acquisition, programme bookings, room availability, deposits,
-                    guest communications and repeat bookings.
+                    <strong>Focus</strong> Guest acquisition, bookings, rooms, deposits — and repeat guests.
                   </span>
                   <span className="indx-card-cta">Explore Retreat Solutions →</span>
                 </span>
@@ -1727,8 +1743,7 @@ export default function IndustriesPreview() {
                     and company gatherings.
                   </span>
                   <span className="indx-card-f">
-                    <strong>Focus</strong> Corporate enquiries, lead qualification, proposals, client
-                    relationships and event-planning workflows.
+                    <strong>Focus</strong> Enquiries, qualification, proposals and event workflows.
                   </span>
                   <span className="indx-card-cta">Explore Corporate Offsite Solutions →</span>
                 </span>
@@ -1746,11 +1761,9 @@ export default function IndustriesPreview() {
             <Kicker>For Retreat Owners, Hosts &amp; Wellness Operators</Kicker>
             <h2 id="indx-retreat-h">Create Transformative Experiences. Simplify Everything Behind Them.</h2>
             <p>
-              Your attention belongs with your guests and the experiences you create—not endless booking emails,
-              disconnected spreadsheets or manual payment follow-ups. DigitalFalconz helps retreat businesses
-              build a smoother journey from the first website visit to the final booking confirmation. Whether
-              you run a boutique wellness retreat, an established retreat centre or programmes across multiple
-              destinations, we can help connect your digital presence, guest acquisition and booking operations.
+              Your attention belongs with your guests — not booking emails, spreadsheets or payment chases. We
+              connect your website, guest acquisition and booking operations, from first visit to final
+              confirmation.
             </p>
             <div className="indx-ctas">
               <a
@@ -1783,8 +1796,8 @@ export default function IndustriesPreview() {
             <Kicker>Understanding the Business Behind the Experience</Kicker>
             <h2 id="indx-rchal-h">When the Booking Process Gets Complicated, Growth Gets Harder.</h2>
             <p className="indx-lede">
-              Click a challenge to see the solution it connects to. The answer isn’t always a completely new
-              system. Sometimes it’s a better website, a smarter integration or a more connected workflow.
+              Click a challenge to see its solution. The answer isn’t always a new system — sometimes it’s a
+              better website, a smarter integration, or a more connected workflow.
             </p>
           </BlurReveal>
           <ChallengeGrid items={RETREAT_CHALLENGES} id="retreat-challenges" />
@@ -1814,21 +1827,19 @@ export default function IndustriesPreview() {
             <Kicker>Experience the Difference</Kicker>
             <h2 id="indx-rdemo-h">See How a More Connected Retreat Journey Could Work.</h2>
             <p className="indx-lede">
-              Explore an illustrative retreat booking flow, from selecting a programme to choosing accommodation
-              and confirming a deposit.
+              An illustrative booking flow — programme to deposit. All sample data.
             </p>
           </BlurReveal>
           <ol className="indx-flow">
             {[
-              ["1. Choose a Retreat", "Select the programme, preferred dates and available options."],
-              ["2. Select Accommodation", "Display suitable room choices based on the selected programme and booking rules."],
-              ["3. Review Booking Details", "Show the guest’s selection, total price, deposit requirements and relevant policies."],
-              ["4. Confirm the Reservation", "Record the booking and payment status, update availability and trigger the appropriate confirmation workflow."],
-              ["5. Manage the Guest Journey", "Keep booking details, remaining balances and guest communications organised."],
-            ].map(([t, d]) => (
+              "1. Choose a Retreat",
+              "2. Select Accommodation",
+              "3. Review Booking Details",
+              "4. Confirm the Reservation",
+              "5. Manage the Guest Journey",
+            ].map((t) => (
               <li key={t}>
                 <strong>{t}</strong>
-                <span>{d}</span>
               </li>
             ))}
           </ol>
@@ -1849,11 +1860,9 @@ export default function IndustriesPreview() {
             <Kicker>For Corporate Retreat &amp; Offsite Planning Companies</Kicker>
             <h2 id="indx-corp-h">Win the Brief. Simplify the Planning. Deliver the Experience.</h2>
             <p>
-              Planning exceptional company retreats requires more than finding an impressive venue. Behind every
-              successful offsite are client requirements, proposals, budget conversations, suppliers, attendees
-              and countless moving parts. DigitalFalconz helps corporate retreat and offsite planning businesses
-              connect lead generation, sales workflows, websites and intelligent automation—so teams can spend
-              more time building exceptional events and less time coordinating disconnected systems.
+              Great offsites need more than a good venue — client requirements, proposals, budgets, suppliers,
+              attendees. We connect lead generation, sales, websites and automation, so your team plans events
+              instead of chasing systems.
             </p>
             <div className="indx-ctas">
               <a
@@ -1886,8 +1895,8 @@ export default function IndustriesPreview() {
             <Kicker>The Complexity Behind Every Corporate Event</Kicker>
             <h2 id="indx-cchal-h">More Than Event Planning. A Complex B2B Sales Journey.</h2>
             <p className="indx-lede">
-              Click a challenge to see the solution it connects to. We connect the marketing and operational
-              systems that support your sales process—from the first qualified enquiry to event delivery.
+              Click a challenge to see its solution. We connect the systems behind your sales process — first
+              enquiry to event delivery.
             </p>
           </BlurReveal>
           <ChallengeGrid items={CORP_CHALLENGES} id="corporate-challenges" />
@@ -1917,20 +1926,19 @@ export default function IndustriesPreview() {
             <Kicker>From Brief to Business</Kicker>
             <h2 id="indx-cdemo-h">Explore a More Connected Corporate Sales Workflow.</h2>
             <p className="indx-lede">
-              See how a corporate retreat enquiry could move through a structured sales process.
+              How a corporate enquiry moves through a structured sales process.
             </p>
           </BlurReveal>
           <ol className="indx-flow">
             {[
-              ["1. Capture the Brief", "Collect company name, group size, destination preferences, expected dates and budget range."],
-              ["2. Qualify the Opportunity", "Organise client requirements, decision-makers and next actions in a CRM pipeline."],
-              ["3. Prepare the Proposal", "Bring selected venue options, approved pricing, service inclusions and itinerary details into a tailored proposal."],
-              ["4. Manage the Decision", "Track client responses, revisions, approvals and follow-up activities."],
-              ["5. Coordinate Delivery", "Connect confirmed project details with the relevant event-planning workflows."],
-            ].map(([t, d]) => (
+              "1. Capture the Brief",
+              "2. Qualify the Opportunity",
+              "3. Prepare the Proposal",
+              "4. Manage the Decision",
+              "5. Coordinate Delivery",
+            ].map((t) => (
               <li key={t}>
                 <strong>{t}</strong>
-                <span>{d}</span>
               </li>
             ))}
           </ol>
@@ -1940,6 +1948,9 @@ export default function IndustriesPreview() {
 
       {/* Problem-to-solution selector */}
       <ProblemSelector />
+
+      {/* Visual showcase strip */}
+      <Showcase />
 
       {/* 11 — Why DigitalFalconz */}
       <section className="indx-section" id="why" aria-labelledby="indx-why-h">
@@ -1971,7 +1982,7 @@ export default function IndustriesPreview() {
           <BlurReveal>
             <Kicker>How We Work</Kicker>
             <h2 id="indx-process-h">Understand the Business. Connect the Right Solutions.</h2>
-            <p className="indx-lede">Five steps, from first conversation to ongoing improvement. Click a step to read it.</p>
+            <p className="indx-lede">Five steps, first conversation to ongoing improvement.</p>
           </BlurReveal>
           <ProcessTimeline />
         </div>
@@ -2003,9 +2014,8 @@ export default function IndustriesPreview() {
             <Kicker>Built Around Your Business</Kicker>
             <h2 id="indx-cta-h">You Create the Experience. Let’s Build What Supports It.</h2>
             <p className="indx-lede">
-              Whether you’re filling your next retreat or planning your next corporate offsite, the right
-              digital systems can help make growth and operations more connected. Tell us where your business is
-              today and what you’re working towards.
+              Whether you’re filling your next retreat or planning your next offsite, the right systems make
+              growth and operations more connected. Tell us where you are — and where you’re heading.
             </p>
             <div className="indx-ctas">
               <a
