@@ -4457,8 +4457,9 @@ html{overflow-x:clip}
 .indx h2{font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight:800;margin:0 0 28px;max-width:24ch}
 .indx h3{font-size:clamp(1.25rem,2vw,1.6rem);font-weight:700}
 .indx-section{padding:clamp(64px,8vw,104px) 0}
+.indx-section-tight-t{padding-top:clamp(48px,5vw,64px)}
 .indx-section-alt{background:var(--indx-bg2)}
-.indx-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px}
+.indx-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;margin-bottom:32px}
 .indx-section-cta{margin-top:56px}
 /* Buttons */
 .indx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;white-space:nowrap;padding:15px 22px;border-radius:12px;border:1px solid transparent;cursor:pointer;transition:background .2s ease,border-color .2s ease,transform .2s ease}
@@ -4468,7 +4469,7 @@ html{overflow-x:clip}
 .indx-btn-ghost:hover{border-color:var(--indx-gold);color:var(--indx-gold)}
 .indx-btn:focus-visible,.indx-tab:focus-visible,.indx-demo-step:focus-visible,.indx-opt:focus-visible{outline:2px solid var(--indx-gold);outline-offset:3px}
 /* Hero */
-.indx-hero{padding:clamp(72px,8vw,112px) 0 clamp(80px,9vw,120px);background:linear-gradient(180deg,#141518 0%,var(--indx-bg) 70%)}
+.indx-hero{padding:clamp(72px,8vw,112px) 0 clamp(48px,5vw,64px);background:linear-gradient(180deg,#141518 0%,var(--indx-bg) 70%)}
 .indx-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(48px,6vw,96px);align-items:start}
 .indx-hero .indx-lede{margin:28px 0 0}
 .indx-hero-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px}
@@ -4490,8 +4491,8 @@ html{overflow-x:clip}
 /* Audience block */
 .indx-sec-head{margin-bottom:56px}
 .indx-sec-head .indx-lede{margin-top:24px}
-.indx-sub{font-size:clamp(1.2rem,2vw,1.5rem);font-weight:700;margin:0 0 28px}
-.indx-sub-gap{margin-top:64px}
+.indx h3.indx-sub{font-size:clamp(1.2rem,2vw,1.5rem);font-weight:700;margin:0 0 36px}
+.indx h3.indx-sub-gap{margin-top:64px}
 /* Split (problems + image / reassurance image + text) */
 .indx-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(48px,6vw,96px);align-items:center}
 .indx-split-p{color:var(--indx-ink2);line-height:1.85;margin-top:24px;max-width:56rem}
@@ -4520,7 +4521,7 @@ html{overflow-x:clip}
 .indx-demo{margin-top:64px;background:var(--indx-surface);border:1px solid var(--indx-line);border-radius:24px;padding:clamp(32px,5vw,52px)}
 .indx-demo-head{display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start;scroll-margin-top:120px}
 .indx-demo-label{font-family:var(--font-mono),"Space Mono",monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--indx-gold);margin:0 0 10px}
-.indx-demo-head h3{margin:0 0 10px}
+.indx-demo-head h3{margin:0 0 12px;font-size:clamp(1.7rem,2.8vw,2.3rem)}
 .indx-demo-intro{color:var(--indx-ink2);line-height:1.8;max-width:52rem}
 .indx-demo-img{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;border:1px solid var(--indx-line);margin:0}
 .indx-demo-img img{object-fit:cover}
@@ -4531,7 +4532,8 @@ html{overflow-x:clip}
 .indx-demo-step.on{border-color:var(--indx-gold);background:var(--indx-gold-soft);color:var(--indx-ink)}
 .indx-demo-step.done .indx-demo-step-n{background:var(--indx-gold);color:#14100a;border-color:var(--indx-gold)}
 .indx-demo-panel{min-height:280px}
-.indx-demo-nav{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px}
+.indx-demo-nav{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px;margin-bottom:36px}
+.indx-confirm .indx-demo-nav{margin-bottom:0}
 .indx-demo-disclaimer{color:var(--indx-ink2);font-size:.85rem;line-height:1.7;border-top:1px solid var(--indx-line);padding-top:24px;margin-top:36px}
 .indx-demo-cta{margin-top:28px}
 .indx-opts{display:grid;gap:14px}
@@ -4562,7 +4564,7 @@ html{overflow-x:clip}
 .indx-cta-inner .indx-kicker,.indx-cta-inner .indx-lede{margin-left:auto;margin-right:auto}
 .indx-cta-inner .indx-ctas{justify-content:center}
 .indx-cta-inner h2{margin-left:auto;margin-right:auto}
-.indx-contact{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin-top:48px;color:var(--indx-ink2);font-size:.95rem}
+.indx p.indx-contact{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin-top:48px;color:var(--indx-ink2);font-size:.95rem}
 .indx-contact a{text-decoration:none}
 .indx-contact a:hover{color:var(--indx-gold)}
 /* Responsive */

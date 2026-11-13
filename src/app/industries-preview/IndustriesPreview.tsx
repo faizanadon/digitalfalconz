@@ -872,7 +872,7 @@ export default function IndustriesPreview() {
 
       {/* 02 — Audience selector */}
       <section
-        className="indx-section"
+        className="indx-section indx-section-tight-t"
         id="indx-selector"
         aria-labelledby="indx-selector-h"
       >
