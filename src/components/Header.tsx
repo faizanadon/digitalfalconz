@@ -12,7 +12,6 @@ import { CtaArrow } from "@/components/Motion";
 
 const NAV = [
   { label: "Work", href: "/work" },
-  { label: "Industries", href: "/industries" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
 ];
