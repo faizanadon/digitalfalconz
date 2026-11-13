@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -151,6 +151,106 @@ function Icon({ name, className = "indx-icon" }: { name: string; className?: str
         {ICON_PATHS[name]}
       </svg>
     </span>
+  );
+}
+
+/* ---------------- Animated connected-systems flow diagram ----------------
+   Centerpiece graphic for the reassurance section: Marketing → Website →
+   Booking → CRM → Automation. Nodes reveal with a stagger on scroll; a gold
+   dot flows along each connector (CSS keyframes, staggered delays). No
+   moving dot under reduced motion — the diagram renders static. */
+
+const FLOW_NODES = [
+  { icon: "megaphone", title: "Marketing", caption: "Demand & acquisition" },
+  { icon: "globe", title: "Website", caption: "Design & development" },
+  { icon: "calendar", title: "Booking", caption: "Reservations & deposits" },
+  { icon: "users", title: "CRM", caption: "Guest & client records" },
+  { icon: "layers", title: "Automation", caption: "AI assistants & workflows" },
+];
+
+function FlowDiagram() {
+  const reduce = useReducedMotion();
+  return (
+    <div className="indx-flow">
+      <div className="indx-flow-row">
+        {FLOW_NODES.map((n, i) => (
+          <Fragment key={n.title}>
+            <BlurReveal className="indx-flow-node" delay={i * 0.1}>
+              <Icon name={n.icon} className="indx-flow-icon" />
+              <span className="indx-flow-title">{n.title}</span>
+              <span className="indx-flow-cap">{n.caption}</span>
+            </BlurReveal>
+            {i < FLOW_NODES.length - 1 && (
+              <div className="indx-flow-link" aria-hidden="true">
+                <span className="indx-flow-line" />
+                {!reduce && (
+                  <span
+                    className="indx-flow-dot"
+                    style={{ animationDelay: `${i * 0.55}s` }}
+                  />
+                )}
+              </div>
+            )}
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Shared demo steps + animated progress ----------------
+   The step buttons show done/current/upcoming (the number ticks to a check
+   with a small scale-in when a step completes); a gold progress fill under
+   the buttons advances as the user moves through the steps. Under reduced
+   motion the number swaps instantly and the fill jumps to its width (the
+   global .indx reduced-motion rule makes the CSS width transition instant). */
+
+function DemoSteps({
+  steps,
+  step,
+  setStep,
+  label,
+}: {
+  steps: { label: string }[];
+  step: number;
+  setStep: (n: number) => void;
+  label: string;
+}) {
+  const reduce = useReducedMotion();
+  const pct = (step / (steps.length - 1)) * 100;
+  return (
+    <>
+      <div className="indx-demo-steps" role="group" aria-label={label}>
+        {steps.map((s, i) => (
+          <button
+            key={s.label}
+            type="button"
+            className={`indx-demo-step${step === i ? " on" : ""}${step > i ? " done" : ""}`}
+            aria-current={step === i ? "step" : undefined}
+            onClick={() => setStep(i)}
+          >
+            <span className="indx-demo-step-n" aria-hidden="true">
+              {reduce ? (
+                step > i ? "✓" : `0${i + 1}`
+              ) : (
+                <motion.span
+                  key={step > i ? "done" : "num"}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {step > i ? "✓" : `0${i + 1}`}
+                </motion.span>
+              )}
+            </span>
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <div className="indx-demo-progress" aria-hidden="true">
+        <div className="indx-demo-progress-fill" style={{ width: `${pct}%` }} />
+      </div>
+    </>
   );
 }
 
@@ -384,26 +484,12 @@ function RetreatDemo() {
         </figure>
       </div>
 
-      <div
-        className="indx-demo-steps"
-        role="group"
-        aria-label="Booking journey steps"
-      >
-        {RETREAT_STEPS.map((s, i) => (
-          <button
-            key={s.label}
-            type="button"
-            className={`indx-demo-step${step === i ? " on" : ""}${step > i ? " done" : ""}`}
-            aria-current={step === i ? "step" : undefined}
-            onClick={() => setStep(i)}
-          >
-            <span className="indx-demo-step-n" aria-hidden="true">
-              {step > i ? "✓" : `0${i + 1}`}
-            </span>
-            {s.label}
-          </button>
-        ))}
-      </div>
+      <DemoSteps
+        steps={RETREAT_STEPS}
+        step={step}
+        setStep={setStep}
+        label="Booking journey steps"
+      />
 
       {reduce ? (
         <div className="indx-demo-panel">{panel}</div>
@@ -606,26 +692,12 @@ function CorporateDemo() {
         </figure>
       </div>
 
-      <div
-        className="indx-demo-steps"
-        role="group"
-        aria-label="Enquiry workflow steps"
-      >
-        {CORP_STEPS.map((s, i) => (
-          <button
-            key={s.label}
-            type="button"
-            className={`indx-demo-step${step === i ? " on" : ""}${step > i ? " done" : ""}`}
-            aria-current={step === i ? "step" : undefined}
-            onClick={() => setStep(i)}
-          >
-            <span className="indx-demo-step-n" aria-hidden="true">
-              {step > i ? "✓" : `0${i + 1}`}
-            </span>
-            {s.label}
-          </button>
-        ))}
-      </div>
+      <DemoSteps
+        steps={CORP_STEPS}
+        step={step}
+        setStep={setStep}
+        label="Enquiry workflow steps"
+      />
 
       {reduce ? (
         <div className="indx-demo-panel">{panel}</div>
@@ -749,7 +821,7 @@ function AudienceBlock({
       <h3 className="indx-sub indx-sub-gap">Four connected solutions</h3>
       <div className="indx-solutions">
         {solutions.map((s, i) => (
-          <BlurReveal key={s.title} delay={i * 0.06}>
+          <BlurReveal key={s.title} delay={i * 0.09}>
             <article className="indx-solution">
               <div className="indx-solution-head">
                 <Icon name={s.icon} />
@@ -846,7 +918,9 @@ export default function IndustriesPreview() {
             </div>
           </BlurReveal>
           <BlurReveal className="indx-hero-media" delay={0.1}>
-            <span className="indx-hero-ring" aria-hidden="true" />
+            <span className="indx-hero-ring" aria-hidden="true">
+              <span className="indx-hero-ring-dot" aria-hidden="true" />
+            </span>
             <figure className="indx-hero-fig indx-hero-fig-main">
               <Image
                 src={IMG.heroRetreat}
@@ -955,32 +1029,35 @@ export default function IndustriesPreview() {
         id="indx-reassurance"
         aria-labelledby="indx-reassure-h"
       >
-        <div className="indx-wrap indx-split">
-          <BlurReveal>
-            <figure className="indx-fig">
-              <Image
-                src={IMG.boat}
-                alt="A wooden boat on a turquoise mountain lake"
-                fill
-                sizes="(max-width: 1100px) 100vw, 50vw"
-                loading="lazy"
-              />
-              <figcaption>Illustrative imagery</figcaption>
-            </figure>
-          </BlurReveal>
-          <BlurReveal delay={0.1}>
-            <h2 id="indx-reassure-h">One partner. The right combination of expertise.</h2>
-            <p className="indx-split-p">
-              We start with the problem, not the technology. Whether you need a
-              better booking experience, a stronger acquisition strategy or
-              connected operations, DigitalFalconz helps define and implement the
-              right approach.
-            </p>
-            <p className="indx-support">
-              Marketing × Software × AI <span aria-hidden="true">|</span> Growth,
-              engineered.
-            </p>
-          </BlurReveal>
+        <div className="indx-wrap">
+          <div className="indx-split">
+            <BlurReveal>
+              <figure className="indx-fig">
+                <Image
+                  src={IMG.boat}
+                  alt="A wooden boat on a turquoise mountain lake"
+                  fill
+                  sizes="(max-width: 1100px) 100vw, 50vw"
+                  loading="lazy"
+                />
+                <figcaption>Illustrative imagery</figcaption>
+              </figure>
+            </BlurReveal>
+            <BlurReveal delay={0.1}>
+              <h2 id="indx-reassure-h">One partner. The right combination of expertise.</h2>
+              <p className="indx-split-p">
+                We start with the problem, not the technology. Whether you need a
+                better booking experience, a stronger acquisition strategy or
+                connected operations, DigitalFalconz helps define and implement the
+                right approach.
+              </p>
+              <p className="indx-support">
+                Marketing × Software × AI <span aria-hidden="true">|</span> Growth,
+                engineered.
+              </p>
+            </BlurReveal>
+          </div>
+          <FlowDiagram />
         </div>
       </section>
 
