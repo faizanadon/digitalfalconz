@@ -4453,6 +4453,12 @@ html{overflow-x:clip}
 .indx h2{font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight:800;margin:0 0 28px;max-width:24ch}
 .indx h3{font-size:clamp(1.25rem,2vw,1.6rem);font-weight:700}
 .indx-section{padding:clamp(72px,9vw,116px) 0}
+/* Join tightening — two adjacent sections each add up to 116px, so a join
+   reaches 232px of empty black. These trim one side of a join where the
+   neighbouring block already carries its own internal space; a tightened
+   join lands at ~96–128px, still airy, no longer a void. */
+.indx-section-tight-t{padding-top:clamp(48px,5vw,64px)}
+.indx-section-tight-b{padding-bottom:clamp(48px,5vw,64px)}
 .indx-section-alt{background:var(--indx-bg2)}
 .indx-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px}
 .indx-section-cta{margin-top:56px}
@@ -4679,7 +4685,7 @@ html{overflow-x:clip}
 .indx-signoff{margin-top:40px;font-family:var(--font-mono),"Space Mono",monospace;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--indx-gold)}
 
 /* Connected-systems diagram (one connected approach) */
-.indx-flow-diagram{margin-top:56px;background:radial-gradient(ellipse at 50% 0%,rgba(184,138,62,.13),transparent 62%),var(--indx-surface);border:1px solid var(--indx-line);border-top:2px solid var(--indx-gold);border-radius:24px;padding:clamp(40px,5vw,60px) clamp(24px,4vw,48px);box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.indx-flow-diagram{margin-top:56px;background:radial-gradient(ellipse at 50% 0%,rgba(184,138,62,.26),transparent 68%),radial-gradient(ellipse at 50% 100%,rgba(184,138,62,.10),transparent 60%),var(--indx-surface);border:1px solid var(--indx-line);border-top:2px solid var(--indx-gold);border-radius:24px;padding:clamp(40px,5vw,60px) clamp(24px,4vw,48px);box-shadow:0 30px 60px rgba(0,0,0,.3),0 0 70px rgba(184,138,62,.10)}
 .indx-flow-diagram-title{font-family:var(--font-mono),"Space Mono",monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--indx-gold);margin:0 0 36px;text-align:center}
 .indx-flow-track{display:flex;align-items:center}
 .indx-flow-node{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}

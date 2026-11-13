@@ -276,7 +276,7 @@ const SHOWCASE = [
 
 function Showcase() {
   return (
-    <section className="indx-section indx-showcase" aria-labelledby="indx-show-h">
+    <section className="indx-section indx-showcase indx-section-tight-t indx-section-tight-b" aria-labelledby="indx-show-h">
       <div className="indx-wrap">
         <BlurReveal>
           <Kicker>In three frames</Kicker>
@@ -757,6 +757,16 @@ function RetreatDemo() {
     setStep(n);
     track("demo_step", { demo_type: "retreat_booking", step: String(n) });
   };
+  const firstStep = useRef(true);
+  useEffect(() => {
+    if (firstStep.current) {
+      firstStep.current = false;
+      return;
+    }
+    // Step panels swap with a 0.25s exit + 0.25s enter; check once settled.
+    const t = window.setTimeout(() => nudgeHeadingClear("indx-rdemo-h"), 560);
+    return () => window.clearTimeout(t);
+  }, [step]);
   const pickRoom = (i: number) => {
     markStarted();
     const r = DEMO_ROOMS[i];
@@ -1203,6 +1213,16 @@ function CorporateDemo() {
     setStage(i);
     track("demo_step", { demo_type: "corporate_pipeline", step: CORP_STAGES[i].label });
   };
+  const firstStage = useRef(true);
+  useEffect(() => {
+    if (firstStage.current) {
+      firstStage.current = false;
+      return;
+    }
+    // Stage panels swap with a 0.25s exit + 0.25s enter; check once settled.
+    const t = window.setTimeout(() => nudgeHeadingClear("indx-cdemo-h"), 560);
+    return () => window.clearTimeout(t);
+  }, [stage]);
 
   return (
     <div className="indx-demo" id="corporate-demo-inner">
@@ -1421,7 +1441,7 @@ function ProblemSelector() {
   };
 
   return (
-    <section className="indx-section" id="find-your-solution" aria-labelledby="indx-selector-h">
+    <section className="indx-section indx-section-tight-b" id="find-your-solution" aria-labelledby="indx-selector-h">
       <div className="indx-wrap">
         <BlurReveal>
           <Kicker>Where to start</Kicker>
@@ -1692,7 +1712,7 @@ export default function IndustriesPreview() {
       </section>
 
       {/* 02 — Two specialisations */}
-      <section className="indx-section" id="specialisations" aria-labelledby="indx-spec-h">
+      <section className="indx-section indx-section-tight-b" id="specialisations" aria-labelledby="indx-spec-h">
         <div className="indx-wrap">
           <BlurReveal>
             <Kicker>Two Specialisations. One Connected Approach.</Kicker>
@@ -1755,7 +1775,7 @@ export default function IndustriesPreview() {
       </section>
 
       {/* 03 — Retreat intro */}
-      <section className="indx-section indx-section-alt" id="retreat-operators" aria-labelledby="indx-retreat-h">
+      <section className="indx-section indx-section-alt indx-section-tight-t" id="retreat-operators" aria-labelledby="indx-retreat-h">
         <div className="indx-wrap indx-split">
           <BlurReveal className="indx-split-copy">
             <Kicker>For Retreat Owners, Hosts &amp; Wellness Operators</Kicker>
@@ -1953,7 +1973,7 @@ export default function IndustriesPreview() {
       <Showcase />
 
       {/* 11 — Why DigitalFalconz */}
-      <section className="indx-section" id="why" aria-labelledby="indx-why-h">
+      <section className="indx-section indx-section-tight-t" id="why" aria-labelledby="indx-why-h">
         <div className="indx-wrap">
           <BlurReveal>
             <Kicker>Strategy. Technology. Execution.</Kicker>
