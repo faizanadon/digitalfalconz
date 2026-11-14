@@ -4436,16 +4436,26 @@ html{overflow-x:clip}
 .sv *{animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important;}
 }
 
-/* ============ Industries preview (.indx) — staging, dark, restrained metallic gold ============ */
-/* Compact 5-section page per the concise brief (2026-11-13): hero, audience
-   selector, audience solutions + demo, reassurance, final CTA. */
+/* ============ Industries preview (.indx) — staging, restrained metallic gold ============ */
+/* Compact page per the concise brief (2026-11-13): hero, both audiences'
+   solutions + demos stacked (Retreat first), reassurance, final CTA.
+   Audience selector removed 2026-11-14 per Faizan. The page follows the
+   site theme: dark by default (variables below), light via the
+   html[data-theme="light"] overrides. */
 .indx{--indx-bg:#101113;--indx-bg2:#181A1D;--indx-surface:#1C1F22;--indx-surface2:#23272B;--indx-gold:#B88A3E;--indx-gold-soft:rgba(184,138,62,.14);--indx-ink:#F5F2EB;--indx-ink2:#C5C0B6;--indx-line:rgba(245,242,235,.12);--indx-line2:rgba(245,242,235,.22);background:var(--indx-bg);color:var(--indx-ink);font-family:var(--font-body),"Inter",system-ui,sans-serif;line-height:1.75;overflow-x:clip}
+/* Light mode — redefines the page variables to the site's light palette
+   (bg #fffdf8, surface #fff, ink #000, ink-2 #4d483c); gold stays #B88A3E.
+   Dark mode is untouched. Two rules below use hardcoded dark values, so
+   they get their own light overrides: the hero gradient and the dark
+   caption pills over photos (which keep light text in both modes). */
+html[data-theme="light"] .indx{--indx-bg:#fffdf8;--indx-bg2:#f6f1e4;--indx-surface:#ffffff;--indx-surface2:#faf6ec;--indx-gold:#B88A3E;--indx-gold-soft:rgba(184,138,62,.12);--indx-ink:#000000;--indx-ink2:#4d483c;--indx-line:rgba(0,0,0,.12);--indx-line2:rgba(0,0,0,.22)}
+html[data-theme="light"] .indx-hero{background:linear-gradient(180deg,#f5efe0 0%,var(--indx-bg) 70%)}
+html[data-theme="light"] .indx-hero-fig figcaption,html[data-theme="light"] .indx-fig figcaption,html[data-theme="light"] .indx-demo-img figcaption{color:#F5F2EB}
 .indx a:not(.indx-btn){color:inherit}
 .indx ul,.indx ol{margin:0;padding:0;list-style:none}
 .indx h1,.indx h2,.indx h3,.indx h4{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;line-height:1.08;letter-spacing:-.01em;margin:0}
 .indx p{margin:0}
 .indx em{font-style:normal}
-.indx [hidden]{display:none !important}
 .indx section[id]{scroll-margin-top:120px}
 .indx-sec-head{scroll-margin-top:120px}
 .indx-wrap{max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
@@ -4457,7 +4467,6 @@ html{overflow-x:clip}
 .indx h2{font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight:800;margin:0 0 28px;max-width:24ch}
 .indx h3{font-size:clamp(1.25rem,2vw,1.6rem);font-weight:700}
 .indx-section{padding:clamp(64px,8vw,104px) 0}
-.indx-section-tight-t{padding-top:clamp(48px,5vw,64px)}
 .indx-section-alt{background:var(--indx-bg2)}
 .indx-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;margin-bottom:32px}
 .indx-section-cta{margin-top:56px}
@@ -4467,7 +4476,7 @@ html{overflow-x:clip}
 .indx-btn-accent:hover{background:#c99a4e}
 .indx-btn-ghost{background:transparent;color:var(--indx-ink);border-color:var(--indx-line2)}
 .indx-btn-ghost:hover{border-color:var(--indx-gold);color:var(--indx-gold)}
-.indx-btn:focus-visible,.indx-tab:focus-visible,.indx-demo-step:focus-visible,.indx-opt:focus-visible{outline:2px solid var(--indx-gold);outline-offset:3px}
+.indx-btn:focus-visible,.indx-demo-step:focus-visible,.indx-opt:focus-visible{outline:2px solid var(--indx-gold);outline-offset:3px}
 /* Hero */
 .indx-hero{padding:clamp(72px,8vw,112px) 0 clamp(48px,5vw,64px);background:linear-gradient(180deg,#141518 0%,var(--indx-bg) 70%)}
 .indx-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(48px,6vw,96px);align-items:start}
@@ -4482,16 +4491,11 @@ html{overflow-x:clip}
 .indx-hero-ring-dot{position:absolute;top:-4px;left:50%;width:9px;height:9px;margin-left:-4px;border-radius:50%;background:var(--indx-gold);box-shadow:0 0 12px rgba(184,138,62,.9)}
 @keyframes indx-ring-spin{to{transform:rotate(360deg)}}
 .indx-hero-fig figcaption{position:absolute;left:12px;bottom:12px;background:rgba(16,17,19,.82);color:var(--indx-ink);font-size:.72rem;letter-spacing:.08em;padding:7px 11px;border-radius:999px;backdrop-filter:blur(4px)}
-/* Audience tabs */
-.indx-tabs{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,32px);margin-top:48px}
-.indx-tab{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--indx-surface);border:1px solid var(--indx-line);border-radius:20px;padding:28px 32px;cursor:pointer;transition:border-color .2s ease,background .2s ease,transform .2s ease;color:var(--indx-ink);font-family:inherit}
-.indx-tab:hover{border-color:var(--indx-gold);transform:translateY(-2px)}
-.indx-tab.on{border-color:var(--indx-gold);background:var(--indx-gold-soft)}
-.indx-tab-k{font-family:var(--font-mono),"Space Mono",monospace;font-size:.68rem;letter-spacing:.2em;color:var(--indx-gold)}
-.indx-tab-t{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;font-weight:700;font-size:clamp(1.15rem,2vw,1.4rem);line-height:1.3}
-.indx-tab-d{color:var(--indx-ink2);line-height:1.7}
 /* Audience block */
 .indx-sec-head{margin-bottom:56px}
+/* Stacked audiences: the second block (Corporate) is separated from the
+   first by generous space and a hairline divider. */
+.indx-aud + .indx-aud{margin-top:clamp(72px,9vw,112px);border-top:1px solid var(--indx-line);padding-top:clamp(64px,8vw,104px)}
 .indx-sec-head .indx-lede{margin-top:24px}
 .indx h3.indx-sub{font-size:clamp(1.2rem,2vw,1.5rem);font-weight:700;margin:0 0 36px}
 .indx h3.indx-sub-gap{margin-top:64px}
@@ -4592,7 +4596,6 @@ html{overflow-x:clip}
 .indx-demo-img{max-width:520px}
 }
 @media (max-width:767px){
-.indx-tabs{grid-template-columns:1fr}
 .indx-solutions{grid-template-columns:1fr}
 .indx-hero-media{padding-bottom:48px}
 .indx-hero-fig-over{width:62%}
@@ -4611,7 +4614,6 @@ html{overflow-x:clip}
 @media (max-width:480px){
 .indx-review>div{grid-template-columns:1fr;gap:4px}
 .indx-btn{white-space:normal;text-align:center}
-.indx-tab{padding:24px}
 .indx-demo{padding:28px 22px}
 }
 @media (prefers-reduced-motion: reduce) {

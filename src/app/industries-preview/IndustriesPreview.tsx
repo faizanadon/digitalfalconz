@@ -21,10 +21,9 @@ const IMG = {
   boat: u("1476514525535-07fb3b4ae5f1", 1600),
 };
 
-/* After an in-page interaction changes a section's height (audience tab
-   swap, demo step change), the section heading can end up with its first
-   line — or its eyebrow — tucked under the sticky header. The anchor offsets
-   only apply when a scroll happens; these interactions don't scroll, and
+/* After an in-page interaction changes a section's height (a demo step
+   change), the section heading can end up with its first line — or its
+   eyebrow — tucked under the sticky header. The anchor offsets only apply when a scroll happens; these interactions don't scroll, and
    scroll anchoring doesn't compensate for a height change inside the visible
    viewport. So, once the layout has settled, check the heading wrapper: if
    it straddles the header's bottom edge, or sits just above it (fully hidden
@@ -255,8 +254,6 @@ function DemoSteps({
 }
 
 /* ---------------- Brief copy — verbatim ---------------- */
-
-type AudienceKey = "retreat" | "corporate";
 
 const RETREAT_PROBLEMS = [
   "Hard-to-book websites and manual enquiries.",
@@ -753,8 +750,7 @@ function CorporateDemo() {
 /* ---------------- Audience block (problems + solutions + demo) ---------------- */
 
 function AudienceBlock({
-  audienceKey,
-  active,
+  id,
   kicker,
   heading,
   headingId,
@@ -765,8 +761,7 @@ function AudienceBlock({
   imageAlt,
   demo,
 }: {
-  audienceKey: AudienceKey;
-  active: boolean;
+  id: string;
   kicker: string;
   heading: string;
   headingId: string;
@@ -778,12 +773,7 @@ function AudienceBlock({
   demo: React.ReactNode;
 }) {
   return (
-    <div
-      id={`indx-aud-${audienceKey}`}
-      role="tabpanel"
-      aria-labelledby={`indx-tab-${audienceKey}`}
-      hidden={!active}
-    >
+    <div id={id} className="indx-aud">
       <div className="indx-sec-head" id={headingId}>
         <Kicker>{kicker}</Kicker>
         <h2>{heading}</h2>
@@ -845,49 +835,12 @@ function AudienceBlock({
 
 /* ---------------- Page ---------------- */
 
-const TABS: { key: AudienceKey; num: string; title: string; desc: string }[] = [
-  {
-    key: "retreat",
-    num: "01",
-    title: "Retreat Operators",
-    desc: "Fill places, simplify reservations and manage guest journeys.",
-  },
-  {
-    key: "corporate",
-    num: "02",
-    title: "Corporate Offsite Planners",
-    desc: "Win corporate enquiries, streamline proposals and coordinate delivery.",
-  },
-];
+/* No audience selector: both audiences' content is stacked on the page —
+   Retreat first, then Corporate — per Faizan (2026-11-14, "remove this i
+   dont think we need this at this point"). The hero CTA anchors to the
+   first solutions block (#indx-audience). */
 
 export default function IndustriesPreview() {
-  const [audience, setAudience] = useState<AudienceKey>("retreat");
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const selectAudience = (key: AudienceKey) => {
-    setAudience(key);
-    /* The audience swap changes the section height instantly; nudge the
-       newly visible block's heading clear once the layout has settled. */
-    window.setTimeout(
-      () => nudgeHeadingClear(key === "retreat" ? "indx-aud-r-h" : "indx-aud-c-h"),
-      120,
-    );
-  };
-
-  const onTabKeyDown = (e: React.KeyboardEvent, index: number) => {
-    let next: number | null = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (index + 1) % TABS.length;
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
-      next = (index - 1 + TABS.length) % TABS.length;
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = TABS.length - 1;
-    if (next !== null) {
-      e.preventDefault();
-      selectAudience(TABS[next].key);
-      tabRefs.current[next]?.focus();
-    }
-  };
-
   return (
     <div className="indx">
       {/* 01 — Hero */}
@@ -904,7 +857,7 @@ export default function IndustriesPreview() {
               delivering remarkable experiences, not managing disconnected systems.
             </p>
             <div className="indx-hero-ctas">
-              <a className="indx-btn indx-btn-accent" href="#indx-selector">
+              <a className="indx-btn indx-btn-accent" href="#indx-audience">
                 Explore Solutions
               </a>
               <a
@@ -944,50 +897,7 @@ export default function IndustriesPreview() {
         </div>
       </section>
 
-      {/* 02 — Audience selector */}
-      <section
-        className="indx-section indx-section-tight-t"
-        id="indx-selector"
-        aria-labelledby="indx-selector-h"
-      >
-        <div className="indx-wrap">
-          <BlurReveal>
-            <h2 id="indx-selector-h">WHICH BUSINESS DO YOU RUN?</h2>
-          </BlurReveal>
-          <div
-            className="indx-tabs"
-            role="tablist"
-            aria-label="Choose your business type"
-          >
-            {TABS.map((t, i) => (
-              <button
-                key={t.key}
-                ref={(el) => {
-                  tabRefs.current[i] = el;
-                }}
-                type="button"
-                role="tab"
-                id={`indx-tab-${t.key}`}
-                aria-selected={audience === t.key}
-                aria-controls={`indx-aud-${t.key}`}
-                tabIndex={audience === t.key ? 0 : -1}
-                className={`indx-tab${audience === t.key ? " on" : ""}`}
-                onClick={() => selectAudience(t.key)}
-                onKeyDown={(e) => onTabKeyDown(e, i)}
-              >
-                <span className="indx-tab-k" aria-hidden="true">
-                  {t.num}
-                </span>
-                <span className="indx-tab-t">{t.title}</span>
-                <span className="indx-tab-d">{t.desc}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 03 — Audience-specific solutions (both versions in the crawlable HTML;
-          the inactive one is hidden, not removed from the DOM) */}
+      {/* 02 — Audience solutions (both audiences stacked, Retreat first) */}
       <section
         className="indx-section indx-section-alt"
         id="indx-audience"
@@ -995,8 +905,7 @@ export default function IndustriesPreview() {
       >
         <div className="indx-wrap">
           <AudienceBlock
-            audienceKey="retreat"
-            active={audience === "retreat"}
+            id="indx-aud-retreat"
             kicker="Retreat Operators"
             heading="Focus on your guests. We’ll help simplify everything around them."
             headingId="indx-aud-r-h"
@@ -1008,8 +917,7 @@ export default function IndustriesPreview() {
             demo={<RetreatDemo />}
           />
           <AudienceBlock
-            audienceKey="corporate"
-            active={audience === "corporate"}
+            id="indx-aud-corporate"
             kicker="Corporate Offsite Planners"
             heading="Win the brief. Simplify the planning."
             headingId="indx-aud-c-h"
@@ -1023,7 +931,7 @@ export default function IndustriesPreview() {
         </div>
       </section>
 
-      {/* 04 — Shared reassurance */}
+      {/* 03 — Shared reassurance */}
       <section
         className="indx-section"
         id="indx-reassurance"
@@ -1061,7 +969,7 @@ export default function IndustriesPreview() {
         </div>
       </section>
 
-      {/* 05 — Final CTA */}
+      {/* 04 — Final CTA */}
       <section className="indx-cta" id="indx-cta" aria-labelledby="indx-cta-h">
         <div className="indx-wrap indx-cta-inner">
           <BlurReveal>
