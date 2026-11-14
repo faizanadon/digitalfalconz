@@ -42,6 +42,7 @@ const EXPLORE: { label: string; href: string }[] = [
   { label: "Selected work", href: "/work" },
   { label: "Contact", href: "/contact" },
   { label: "Industries", href: "/industries" },
+  { label: "All Industries", href: "/all-industries" },
   { label: "FAQs", href: "/faq" },
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Website Terms", href: "/terms" },
