@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ChatBot from "@/components/ChatBot";
 import { ScrollProgress } from "@/components/Motion";
 
 /**
@@ -30,6 +31,9 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       <Header />
       <main id="main">{children}</main>
       <Footer />
+      {/* Chatbot — agency branch only, so standalone template pages
+          (/templates/*) never get it, same rule as the header/footer. */}
+      <ChatBot />
     </>
   );
 }
