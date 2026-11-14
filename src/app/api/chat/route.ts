@@ -20,13 +20,19 @@ const SYSTEM_PROMPT =
   "Keep every reply short.";
 
 // How long the Gemini call may take before we give up and show the
-// friendly fallback. Vercel Hobby serverless functions cap at ~10s, so a
-// 20s Gemini timeout was too long anyway — and AbortSignal.timeout(20000)
-// did not cut the live call off at 20s (a 42.8s fallback was observed), so
-// the route also races the fetch against a hard timeout that resolves no
-// matter what the fetch promise does.
-const GEMINI_TIMEOUT_MS = 9000;
-const ROUTE_TIMEOUT_MS = 10000;
+// friendly fallback. This was 9s/10s, but live evidence (2026-11-14)
+// overturned that: Gemini currently takes ~13s just to reject a bad key
+// (12.67s from the parent agent's machine, ~8.5s from this sandbox), so
+// a real generation — which has to produce text on top of that — needs
+// far longer than 10s, and the 9s abort was killing calls that would
+// eventually have succeeded. The Vercel function demonstrably runs 40s+
+// (live fallbacks returned HTTP 200 at 42.8s and 25.0s, not a Vercel
+// timeout), so a 30s abort / 35s race cap is safe. Priority: a valid key
+// + a timeout long enough for a slow Gemini response = a real reply.
+// The race still guarantees the route always answers even if the fetch
+// promise never settles after the abort (the original 42.8s hang).
+const GEMINI_TIMEOUT_MS = 30000;
+const ROUTE_TIMEOUT_MS = 35000;
 
 const FALLBACK_REPLY =
   "Thanks for reaching out! Our AI assistant is unavailable right now, but we'd love to chat — book a free consultation call and we'll talk through how DigitalFalconz can help.";
@@ -88,10 +94,10 @@ export async function POST(request: Request) {
       return unavailable("no_key");
     }
 
-    // Abort the fetch at 9s AND race it against a hard 10s timeout: the
+    // Abort the fetch at 30s AND race it against a hard 35s timeout: the
     // abort alone did not cut a hung live call off (42.8s observed), so the
-    // race guarantees the route always answers within ~10s even if the
-    // fetch promise never settles.
+    // race guarantees the route always answers even if the fetch promise
+    // never settles.
     const controller = new AbortController();
     const abortTimer = setTimeout(
       () => controller.abort(),

@@ -4628,6 +4628,7 @@ html[data-theme="light"] .indx-hero{background:linear-gradient(180deg,#f5efe0 0%
 .cb-launcher{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;background:var(--gold);color:#000;display:grid;place-items:center;box-shadow:0 10px 28px -8px rgba(0,0,0,.45);transition:background .2s ease,transform .2s ease}
 .cb-launcher:hover{background:var(--gold-light);transform:translateY(-2px)}
 .cb-launcher svg{flex:none}
+.cb-launcher .cb-claude{color:#A34A1F}
 .cb-panel{position:fixed;right:20px;bottom:88px;width:min(380px,calc(100vw - 32px));max-height:min(600px,70dvh);display:flex;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px -18px rgba(0,0,0,.45);overflow:hidden;animation:cb-in .25s cubic-bezier(.22,.61,.21,1) both}
 @keyframes cb-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .cb-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 12px;border-bottom:1px solid var(--line);background:var(--bg)}
@@ -4635,7 +4636,7 @@ html[data-theme="light"] .indx-hero{background:linear-gradient(180deg,#f5efe0 0%
 .cb-sub{margin:2px 0 0;font-size:.82rem;line-height:1.4;color:var(--ink-2)}
 .cb-close{flex:none;background:none;border:none;border-radius:8px;padding:6px;cursor:pointer;color:var(--ink);display:grid;place-items:center}
 .cb-close:hover{background:var(--line)}
-.cb-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:120px}
+.cb-messages{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:120px}
 .cb-msg{display:flex;flex-direction:column;gap:6px;max-width:88%}
 .cb-msg.cb-user{align-self:flex-end;align-items:flex-end}
 .cb-msg.cb-assistant{align-self:flex-start;align-items:flex-start}

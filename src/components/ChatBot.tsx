@@ -1,8 +1,34 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Calendar, MessageCircle, Send, X } from "lucide-react";
+import { Calendar, Send, X } from "lucide-react";
 
 const BOOKING_URL = "https://meet.digitalfalconz.com/";
+
+// Claude's starburst mark (MingCute "Claude Line", Apache 2.0) as an
+// inline SVG — the launcher icon. Claude's brand orange #D97757 is
+// darkened to #A34A1F in .cb-launcher .cb-claude so the mark reads on
+// the gold launcher (the plain orange is ~1.9:1 on gold; the darkened
+// one is ~3.6:1). The bot itself stays Gemini-powered — icon only.
+function ClaudeMark() {
+  return (
+    <svg
+      className="cb-claude"
+      width="26"
+      height="26"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <g fill="none">
+        <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+        <path
+          fill="currentColor"
+          d="M13.604 2.006a1 1 0 0 1 .89 1.099l-.643 6.104l3.868-4.834a1 1 0 0 1 1.562 1.25l-4.19 5.237l5.68-1.336a1.001 1.001 0 0 1 .458 1.948l-3.77.886l3.715.656a1 1 0 1 1-.348 1.968l-4.901-.865l4.225 3.622a.999.999 0 1 1-1.3 1.518l-2.324-1.991l1.331 2.217a1 1 0 0 1-1.715 1.03l-2.992-4.988l-.657 5.59a1 1 0 0 1-1.986-.234l.556-4.732l-3.256 4.44a1 1 0 0 1-1.614-1.183l2.564-3.497l-3.242 1.947a1 1 0 0 1-1.03-1.715l4.693-2.817L2.948 13a1 1 0 0 1 .105-1.998l6.218.327L3.901 7.3A1 1 0 1 1 5.1 5.7l4.446 3.335l-2.93-5.57a1 1 0 0 1 1.769-.93l3.466 6.584l.655-6.223a1 1 0 0 1 1.098-.89"
+        />
+      </g>
+    </svg>
+  );
+}
 
 const GREETING =
   "Hi! I'm DigitalFalconz's AI assistant. Ask me about our services — performance marketing, websites, booking systems, CRM and AI — or book a free consultation call and we'll talk through your project.";
@@ -173,7 +199,15 @@ export default function ChatBot() {
             </button>
           </div>
 
-          <div className="cb-messages" ref={listRef}>
+          <div
+            className="cb-messages"
+            ref={listRef}
+            // Lenis smooth-scrolls the whole page and intercepts wheel
+            // events inside nested scrollables — data-lenis-prevent lets
+            // this message list scroll natively instead (same pattern as
+            // the mobile menu in Header.tsx).
+            data-lenis-prevent
+          >
             {messages.map((m, i) => (
               <div key={i} className={`cb-msg cb-${m.role}`}>
                 <div className="cb-bubble">
@@ -277,7 +311,7 @@ export default function ChatBot() {
           aria-label={open ? "Close chat" : "Open chat with DigitalFalconz"}
           aria-expanded={open}
         >
-          {open ? <X size={26} /> : <MessageCircle size={26} />}
+          {open ? <X size={26} /> : <ClaudeMark />}
         </button>
       </div>
     </div>
