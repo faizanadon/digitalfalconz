@@ -477,7 +477,6 @@ function RetreatDemo() {
             sizes="(max-width: 1100px) 520px, 340px"
             loading="lazy"
           />
-          <figcaption>Illustrative imagery</figcaption>
         </figure>
       </div>
 
@@ -685,7 +684,6 @@ function CorporateDemo() {
             sizes="(max-width: 1100px) 520px, 340px"
             loading="lazy"
           />
-          <figcaption>Illustrative imagery</figcaption>
         </figure>
       </div>
 
@@ -803,7 +801,6 @@ function AudienceBlock({
               sizes="(max-width: 1100px) 100vw, 50vw"
               loading="lazy"
             />
-            <figcaption>Illustrative imagery</figcaption>
           </figure>
         </BlurReveal>
       </div>
@@ -882,7 +879,6 @@ export default function IndustriesPreview() {
                 sizes="(max-width: 1100px) 100vw, 50vw"
                 priority
               />
-              <figcaption>Illustrative imagery</figcaption>
             </figure>
             <figure className="indx-hero-fig indx-hero-fig-over">
               <Image
@@ -891,7 +887,6 @@ export default function IndustriesPreview() {
                 fill
                 sizes="(max-width: 1100px) 60vw, 30vw"
               />
-              <figcaption>Illustrative imagery</figcaption>
             </figure>
           </BlurReveal>
         </div>
@@ -948,7 +943,6 @@ export default function IndustriesPreview() {
                   sizes="(max-width: 1100px) 100vw, 50vw"
                   loading="lazy"
                 />
-                <figcaption>Illustrative imagery</figcaption>
               </figure>
             </BlurReveal>
             <BlurReveal delay={0.1}>

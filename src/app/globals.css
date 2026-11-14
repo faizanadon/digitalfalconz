@@ -4445,12 +4445,10 @@ html{overflow-x:clip}
 .indx{--indx-bg:#101113;--indx-bg2:#181A1D;--indx-surface:#1C1F22;--indx-surface2:#23272B;--indx-gold:#B88A3E;--indx-gold-soft:rgba(184,138,62,.14);--indx-ink:#F5F2EB;--indx-ink2:#C5C0B6;--indx-line:rgba(245,242,235,.12);--indx-line2:rgba(245,242,235,.22);background:var(--indx-bg);color:var(--indx-ink);font-family:var(--font-body),"Inter",system-ui,sans-serif;line-height:1.75;overflow-x:clip}
 /* Light mode — redefines the page variables to the site's light palette
    (bg #fffdf8, surface #fff, ink #000, ink-2 #4d483c); gold stays #B88A3E.
-   Dark mode is untouched. Two rules below use hardcoded dark values, so
-   they get their own light overrides: the hero gradient and the dark
-   caption pills over photos (which keep light text in both modes). */
+   Dark mode is untouched. One rule below uses a hardcoded dark value, so
+   it gets its own light override: the hero gradient. */
 html[data-theme="light"] .indx{--indx-bg:#fffdf8;--indx-bg2:#f6f1e4;--indx-surface:#ffffff;--indx-surface2:#faf6ec;--indx-gold:#B88A3E;--indx-gold-soft:rgba(184,138,62,.12);--indx-ink:#000000;--indx-ink2:#4d483c;--indx-line:rgba(0,0,0,.12);--indx-line2:rgba(0,0,0,.22)}
 html[data-theme="light"] .indx-hero{background:linear-gradient(180deg,#f5efe0 0%,var(--indx-bg) 70%)}
-html[data-theme="light"] .indx-hero-fig figcaption,html[data-theme="light"] .indx-fig figcaption,html[data-theme="light"] .indx-demo-img figcaption{color:#F5F2EB}
 .indx a:not(.indx-btn){color:inherit}
 .indx ul,.indx ol{margin:0;padding:0;list-style:none}
 .indx h1,.indx h2,.indx h3,.indx h4{font-family:var(--font-head),"Inter Tight",system-ui,sans-serif;line-height:1.08;letter-spacing:-.01em;margin:0}
@@ -4490,7 +4488,6 @@ html[data-theme="light"] .indx-hero-fig figcaption,html[data-theme="light"] .ind
 .indx-hero-ring{position:absolute;top:-22px;left:-22px;width:110px;height:110px;border:1px solid var(--indx-gold);border-radius:50%;opacity:.45;pointer-events:none;animation:indx-ring-spin 28s linear infinite}
 .indx-hero-ring-dot{position:absolute;top:-4px;left:50%;width:9px;height:9px;margin-left:-4px;border-radius:50%;background:var(--indx-gold);box-shadow:0 0 12px rgba(184,138,62,.9)}
 @keyframes indx-ring-spin{to{transform:rotate(360deg)}}
-.indx-hero-fig figcaption{position:absolute;left:12px;bottom:12px;background:rgba(16,17,19,.82);color:var(--indx-ink);font-size:.72rem;letter-spacing:.08em;padding:7px 11px;border-radius:999px;backdrop-filter:blur(4px)}
 /* Audience block */
 .indx-sec-head{margin-bottom:56px}
 /* Stacked audiences: the second block (Corporate) is separated from the
@@ -4504,7 +4501,6 @@ html[data-theme="light"] .indx-hero-fig figcaption,html[data-theme="light"] .ind
 .indx-split-p{color:var(--indx-ink2);line-height:1.85;margin-top:24px;max-width:56rem}
 .indx-fig{position:relative;aspect-ratio:16/11;border-radius:20px;overflow:hidden;margin:0;border:1px solid var(--indx-line)}
 .indx-fig img{object-fit:cover}
-.indx-fig figcaption{position:absolute;left:12px;bottom:12px;background:rgba(16,17,19,.82);color:var(--indx-ink);font-size:.72rem;letter-spacing:.08em;padding:7px 11px;border-radius:999px;backdrop-filter:blur(4px)}
 /* Problems */
 .indx-problems{display:grid;gap:16px}
 .indx-problem{display:flex;gap:16px;align-items:flex-start;background:var(--indx-surface);border:1px solid var(--indx-line);border-radius:16px;padding:22px 26px;line-height:1.65}
@@ -4531,7 +4527,6 @@ html[data-theme="light"] .indx-hero-fig figcaption,html[data-theme="light"] .ind
 .indx-demo-intro{color:var(--indx-ink2);line-height:1.8;max-width:52rem}
 .indx-demo-img{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;border:1px solid var(--indx-line);margin:0}
 .indx-demo-img img{object-fit:cover}
-.indx-demo-img figcaption{position:absolute;left:12px;bottom:12px;background:rgba(16,17,19,.82);color:var(--indx-ink);font-size:.72rem;letter-spacing:.08em;padding:7px 11px;border-radius:999px;backdrop-filter:blur(4px)}
 .indx-demo-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:36px 0 16px}
 .indx-demo-progress{height:3px;border-radius:999px;background:var(--indx-line);overflow:hidden;margin:0 0 28px}
 .indx-demo-progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indx-gold),#d9ae5f);width:0;transition:width .35s ease}
