@@ -41,8 +41,32 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  // The "Talk to us" label hides while the user scrolls and comes back
+  // ~300ms after scrolling stops.
+  const [scrolling, setScrolling] = useState(false);
+  const scrollingRef = useRef(false);
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (!scrollingRef.current) {
+        scrollingRef.current = true;
+        setScrolling(true);
+      }
+      if (scrollTimer.current) clearTimeout(scrollTimer.current);
+      scrollTimer.current = setTimeout(() => {
+        scrollingRef.current = false;
+        setScrolling(false);
+      }, 300);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimer.current) clearTimeout(scrollTimer.current);
+    };
+  }, []);
 
   // Focus the input when the panel opens; Escape closes it.
   useEffect(() => {
@@ -235,15 +259,27 @@ export default function ChatBot() {
         </div>
       )}
 
-      <button
-        type="button"
-        className="cb-launcher"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close chat" : "Open chat with DigitalFalconz"}
-        aria-expanded={open}
-      >
-        {open ? <X size={26} /> : <MessageCircle size={26} />}
-      </button>
+      <div className="cb-launcher-row">
+        <button
+          type="button"
+          className={`cb-label${open || scrolling ? " cb-label-hidden" : ""}`}
+          onClick={() => setOpen(true)}
+          aria-label="Talk to us — open chat with DigitalFalconz"
+          aria-hidden={open || scrolling}
+          tabIndex={open || scrolling ? -1 : 0}
+        >
+          Talk to us
+        </button>
+        <button
+          type="button"
+          className="cb-launcher"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Close chat" : "Open chat with DigitalFalconz"}
+          aria-expanded={open}
+        >
+          {open ? <X size={26} /> : <MessageCircle size={26} />}
+        </button>
+      </div>
     </div>
   );
 }
