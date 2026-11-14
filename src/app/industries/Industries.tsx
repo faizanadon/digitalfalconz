@@ -26,21 +26,29 @@ const IMG = {
    eyebrow — tucked under the sticky header. The anchor offsets only apply when a scroll happens; these interactions don't scroll, and
    scroll anchoring doesn't compensate for a height change inside the visible
    viewport. So, once the layout has settled, check the heading wrapper: if
-   it straddles the header's bottom edge, or sits just above it (fully hidden
-   but nearby), nudge it back clear. The offset is a generous -120px: the
-   previous -72px offset proved ~20px short on the retreat demo and ~35–40px
-   short on the corporate demo in live checks, so the heading AND its eyebrow
-   now land well clear of the header. If the heading is fully visible or
-   already scrolled well past, do nothing. */
+   its top sits at or above the header's bottom edge — whether it straddles
+   the edge or is fully hidden above it, at ANY distance — nudge it back
+   clear. The offset is a generous -120px: the previous -72px offset proved
+   ~20px short on the retreat demo and ~35–40px short on the corporate demo
+   in live checks, so the heading AND its eyebrow now land well clear of the
+   header. There is deliberately NO distance limit: an earlier version only
+   nudged when the heading was within 400px above the viewport, and on the
+   corporate demo's final step change the heading could sit further up than
+   that (the demo card is ~1.5× the viewport tall and the user has scrolled
+   to the Continue button at its foot), so the nudge silently did nothing and
+   the page rested at the bottom of the demo card with the heading out of
+   view. This only runs on demo step changes, where the user has just
+   interacted with that demo and the new step's heading must be brought into
+   view — so nudging whenever the heading is above the header is always
+   right. If the heading is already fully visible below the header, do
+   nothing. */
 function nudgeHeadingClear(headingId: string) {
   const el = document.getElementById(headingId);
   if (!el) return;
   const header = document.querySelector("header.site");
   const headerBottom = header ? header.getBoundingClientRect().bottom : 52;
   const r = el.getBoundingClientRect();
-  const straddles = r.top < headerBottom && r.bottom > headerBottom;
-  const justAbove = r.bottom <= headerBottom && r.bottom > -400;
-  if (!straddles && !justAbove) return;
+  if (r.top >= headerBottom) return; // already fully visible below the header
   const lenis = (window as unknown as {
     __lenis?: { scrollTo: (t: HTMLElement, o: { offset: number; duration: number }) => void };
   }).__lenis;
