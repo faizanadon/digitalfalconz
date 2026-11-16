@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WLTLH — Los Angeles · In Print &amp; In Fiction</title>
+<meta name="description" content="WLTLH is a Los Angeles investigative newsroom — the newsroom at the centre of Noah Christopher's Logan Hollister novels. Six desks, one edition.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F5F0E6; --ink:#111111; --red:#E01E2E; --beige:#E9E2D2; --beige2:#EDE6D6;
+  --dark:#141414; --black:#0E0E0E; --muted:#6B675E; --rule:#D8D2C4;
+  --serif:"Playfair Display",Georgia,"Times New Roman",serif;
+  --sans:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+.kicker{font:600 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kicker .dot{color:var(--red)}
+.rule{border:0;border-top:1px solid var(--ink)}
+.eyebrow{font:600 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.eyebrow .dot{color:var(--red)}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.05}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(34px,4.5vw,52px)}
+.sec-head .sub{font-size:15px;color:var(--muted);max-width:560px}
+.more-link{font:600 12px/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.more-link span{color:var(--red)}
+
+/* ---------- top strip + masthead ---------- */
+.topstrip{display:flex;justify-content:space-between;gap:16px;padding:12px 0 10px;font:600 11px/1.4 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap}
+.topstrip .dot{color:var(--red)}
+.masthead{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0 18px}
+.masthead .side{flex:1;display:flex;align-items:center;gap:10px;font:600 12px/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.masthead .side.right{justify-content:flex-end}
+.wordmark{font-family:var(--serif);font-weight:900;font-size:clamp(52px,7vw,76px);line-height:1;letter-spacing:-.01em;text-align:center}
+.wordmark:hover{text-decoration:none}
+.burger{font-size:18px;line-height:1}
+.pill{display:inline-block;background:var(--ink);color:var(--cream);border-radius:999px;padding:11px 22px;font:600 12px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink)}
+.pill:hover{text-decoration:none;background:var(--red);border-color:var(--red)}
+.nav{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:11px 0;text-align:center}
+.nav a{font-family:var(--serif);font-size:16px;margin:0 14px;white-space:nowrap}
+.nav a:hover{color:var(--red);text-decoration:none}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:40% 60%;gap:48px;padding:48px 0 40px;align-items:start}
+.hero-kicker{display:flex;justify-content:space-between;align-items:baseline;font:600 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.hero-kicker .dot{color:var(--red)}
+.hero h1{font-size:clamp(38px,4.6vw,60px);margin-bottom:18px}
+.hero h1 a:hover{color:var(--red);text-decoration:none}
+.standfirst{font-size:17px;line-height:1.55;color:#2b2b2b;margin-bottom:16px}
+.byline{font:600 11px/1.6 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hero-list{list-style:none;margin-top:28px;border-top:1px solid var(--rule)}
+.hero-list li{border-bottom:1px solid var(--rule)}
+.hero-list button{display:flex;gap:14px;width:100%;text-align:left;background:none;border:0;padding:13px 2px;cursor:pointer;font-family:var(--serif);font-size:19px;font-weight:700;line-height:1.25;color:var(--ink)}
+.hero-list button .n{font:600 11px/1.6 var(--sans);letter-spacing:.1em;color:var(--muted);padding-top:4px}
+.hero-list button:hover .t,.hero-list button.active .t{color:var(--red)}
+.hero-list button.active .n{color:var(--red)}
+.hero-visual{position:relative}
+.ph{position:relative;overflow:hidden;background:#1c1a17;color:var(--cream);display:flex;flex-direction:column;justify-content:flex-end;min-height:420px;padding:28px}
+.ph::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(120% 90% at 80% 0%,rgba(224,30,46,.55),transparent 55%),
+  radial-gradient(100% 100% at 0% 100%,rgba(245,240,230,.16),transparent 50%),
+  linear-gradient(160deg,#26221d,#0e0d0b)}
+.ph>*{position:relative;z-index:1}
+.ph .big{font-family:var(--serif);font-weight:900;font-size:clamp(40px,5vw,64px);line-height:1;text-transform:uppercase;letter-spacing:-.01em}
+.ph .big em{color:var(--red);font-style:normal}
+.ph .tag{position:absolute;top:16px;left:16px;background:var(--red);color:#fff;font:700 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;padding:7px 10px}
+.ph .ph-sub{margin-top:12px;font:600 11px/1.6 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,230,.75)}
+.ph.v2::before{background:radial-gradient(120% 90% at 20% 0%,rgba(70,110,160,.6),transparent 55%),radial-gradient(100% 100% at 100% 100%,rgba(245,240,230,.14),transparent 50%),linear-gradient(160deg,#1d232b,#0d0f12)}
+.ph.v3::before{background:radial-gradient(120% 90% at 80% 10%,rgba(210,150,60,.55),transparent 55%),linear-gradient(160deg,#2b2417,#14100a)}
+.ph.v4::before{background:radial-gradient(120% 90% at 20% 0%,rgba(190,170,120,.5),transparent 55%),linear-gradient(160deg,#2a2721,#121110)}
+.ph.v5::before{background:radial-gradient(120% 90% at 80% 0%,rgba(40,60,120,.65),transparent 55%),linear-gradient(160deg,#181c28,#0b0d13)}
+.ph-cap{font:600 11px/1.6 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+
+/* ---------- wire ---------- */
+.wire{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:16px 0;display:grid;grid-template-columns:repeat(6,1fr);gap:24px}
+.wire time{display:block;font:700 13px/1.4 var(--sans);letter-spacing:.06em;margin-bottom:4px}
+.wire p{font-size:13.5px;line-height:1.45}
+.wire a:hover{color:var(--red);text-decoration:none}
+
+/* ---------- sections band ---------- */
+.band{background:var(--beige);padding:56px 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:28px 0 24px}
+.tabs button{background:transparent;border:1px solid var(--ink);border-radius:999px;padding:9px 18px;font:600 12px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;color:var(--ink)}
+.tabs button:hover{border-color:var(--red);color:var(--red)}
+.tabs button.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.desk-panel{display:none}
+.desk-panel.active{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:start}
+.desk-lead .ph{min-height:300px}
+.desk-lead h3{font-size:clamp(26px,2.6vw,34px);margin:16px 0 8px}
+.desk-lead h3 a:hover{color:var(--red);text-decoration:none}
+.desk-lead .dek{font-size:15px;color:#2b2b2b;max-width:560px}
+.desk-line{font-size:14px;color:var(--muted);margin-top:14px;border-top:1px solid var(--rule);padding-top:12px}
+.desk-links{list-style:none}
+.desk-links li{border-bottom:1px solid var(--rule);padding:16px 0}
+.desk-links li:first-child{padding-top:0}
+.desk-links a{font-family:var(--serif);font-weight:700;font-size:21px;line-height:1.25}
+.desk-links a:hover{color:var(--red);text-decoration:none}
+.desk-links .byline{margin-top:6px}
+.desk-all{margin-top:20px}
+
+/* ---------- long read ---------- */
+.longread{padding:64px 0}
+.longread .lr-grid{display:grid;grid-template-columns:46% 54%;gap:48px;margin-top:28px;align-items:start}
+.lr-visual{position:sticky;top:24px}
+.lr-visual .ph{min-height:520px}
+.chapter{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.chapter:first-child{padding-top:0}
+.chapter .num{font:600 11px/1.6 var(--sans);letter-spacing:.1em;color:var(--muted);white-space:nowrap;padding-top:6px}
+.chapter .bar{flex:0 0 3px;background:var(--red)}
+.chapter h3{font-size:24px;margin-bottom:8px}
+.chapter p{font-size:15px;color:#2b2b2b}
+.lr-more{margin-top:24px}
+
+/* ---------- latest ---------- */
+.latest{padding:64px 0;border-top:1px solid var(--ink)}
+.latest-grid{display:grid;grid-template-columns:2fr 1fr;gap:56px;margin-top:32px;align-items:start}
+.story-row{display:grid;grid-template-columns:120px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid var(--rule);align-items:start}
+.story-row:first-child{padding-top:0}
+.story-row .thumb{height:88px;display:flex;align-items:center;justify-content:center;background:#1c1a17;color:var(--cream);font-family:var(--serif);font-weight:900;font-size:30px;text-transform:uppercase}
+.story-row .thumb.t2{background:#1d232b}.story-row .thumb.t3{background:#2b2417}.story-row .thumb.t4{background:#2a2721}.story-row .thumb.t5{background:#181c28}.story-row .thumb.t6{background:#3a1418}
+.story-row h3{font-size:clamp(22px,2.2vw,28px);line-height:1.15}
+.story-row h3 a:hover{color:var(--red);text-decoration:none}
+.story-row .ex{font-size:14.5px;color:#2b2b2b;margin-top:6px}
+.story-row .byline{margin-top:8px}
+.sidebar h3{font-size:22px;margin-bottom:6px}
+.sidebar .side-sub{font-size:14px;color:var(--muted);margin-bottom:16px}
+.sidebar ol{list-style:none;counter-reset:mc}
+.sidebar ol li{counter-increment:mc;border-top:1px solid var(--rule);padding:14px 0;display:flex;gap:14px}
+.sidebar ol li::before{content:counter(mc,decimal-leading-zero);font:700 13px/1.6 var(--sans);color:var(--red)}
+.sidebar ol a{font-family:var(--serif);font-weight:700;font-size:18px;line-height:1.25}
+.sidebar ol a:hover{color:var(--red);text-decoration:none}
+.sidebar ol .byline{margin-top:5px}
+
+/* ---------- books band ---------- */
+.books-band{background:var(--beige);padding:64px 0}
+.book-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:32px}
+.book-card{background:var(--cream);border:1px solid var(--ink);padding:28px;display:flex;flex-direction:column;min-height:280px}
+.book-card .kicker{margin-bottom:14px}
+.book-card blockquote,.book-card h3{font-family:var(--serif);font-weight:700;font-size:26px;line-height:1.2}
+.book-card p{font-size:14.5px;color:#2b2b2b;margin-top:12px;flex:1}
+.book-card .card-link{margin-top:18px;font:600 12px/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.book-card .card-link span{color:var(--red)}
+
+/* ---------- dispatch (dark) ---------- */
+.dispatch{background:var(--dark);color:var(--cream);padding:64px 0}
+.dispatch .kicker{color:rgba(245,240,230,.6)}
+.dispatch .sec-head h2{color:var(--cream)}
+.dispatch .sec-head .sub{color:rgba(245,240,230,.65)}
+.dispatch .more-link{color:var(--cream)}
+.dispatch-grid{display:grid;grid-template-columns:38% 62%;gap:48px;margin-top:32px;align-items:start}
+.dispatch-visual .ph{min-height:320px;border:1px solid rgba(245,240,230,.2)}
+.dispatch-visual .ph-cap{color:rgba(245,240,230,.55)}
+.acc{border-top:1px solid rgba(245,240,230,.25)}
+.acc-item{border-bottom:1px solid rgba(245,240,230,.25)}
+.acc-item>button{display:flex;justify-content:space-between;gap:16px;width:100%;background:none;border:0;color:var(--cream);cursor:pointer;padding:18px 0;text-align:left}
+.acc-item .ep{font:600 11px/1.6 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,230,.6);white-space:nowrap;padding-top:4px}
+.acc-item .t{font-family:var(--serif);font-weight:700;font-size:clamp(19px,2vw,23px);line-height:1.25}
+.acc-item .pm{font:600 16px/1 var(--sans);color:var(--red)}
+.acc-body{display:none;padding:0 0 20px}
+.acc-item.open .acc-body{display:block}
+.acc-body p{font-size:15px;color:rgba(245,240,230,.8);max-width:640px}
+.acc-body .byline{color:rgba(245,240,230,.55);margin-top:10px}
+.acc-body .listen{display:inline-block;margin-top:12px;font:600 12px/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--cream)}
+.acc-body .listen span{color:var(--red)}
+
+/* ---------- why ---------- */
+.why{background:var(--beige);padding:64px 0}
+.why-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:56px;margin-top:28px;align-items:start}
+.why p.lede{font-size:17px;line-height:1.6;max-width:640px}
+.stats{display:flex;gap:40px;margin-top:32px;flex-wrap:wrap}
+.stat .fig{font-family:var(--serif);font-weight:700;font-size:clamp(38px,4vw,52px);line-height:1}
+.stat .lab{font:600 11px/1.5 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.why .where{border-left:1px solid var(--ink);padding-left:28px}
+.why .where .big5{font-family:var(--serif);font-weight:700;font-size:64px;line-height:1}
+.why .where ul{list-style:none;margin-top:14px}
+.why .where li{font:600 13px/2 var(--sans);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--rule)}
+
+/* ---------- newsletter ---------- */
+.newsletter{padding:64px 0}
+.news-grid{display:grid;grid-template-columns:46% 54%;gap:56px;align-items:start}
+.news-visual .ph{min-height:380px}
+.news-form h2{font-size:clamp(34px,4vw,48px);margin:10px 0 12px}
+.news-form p{font-size:16px;color:#2b2b2b;max-width:520px}
+.news-form label{display:block;font:600 11px/1.4 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:26px 0 8px}
+.news-form input[type=email]{width:100%;background:transparent;border:0;border-bottom:1px solid var(--ink);padding:10px 0;font:400 17px/1.4 var(--sans);color:var(--ink);outline:none}
+.news-form input[type=email]:focus{border-bottom-color:var(--red)}
+.helper{font:600 11px/1.6 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.news-form .pill{margin-top:22px;cursor:pointer;font-family:var(--sans)}
+.news-form .alt{display:block;margin-top:16px;font:600 12px/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.form-note{display:none;margin-top:18px;font-size:14px;border:1px solid var(--ink);padding:12px 14px}
+.form-note.show{display:block}
+.form-note a{color:var(--red)}
+
+/* ---------- footer ---------- */
+footer{background:var(--black);color:var(--cream);padding:56px 0 32px}
+.foot-word{font-family:var(--serif);font-weight:900;font-size:clamp(72px,16vw,200px);line-height:.95;letter-spacing:-.01em;color:var(--cream);text-align:center}
+.foot-word:hover{text-decoration:none}
+.foot-rule{height:1px;background:var(--red);margin:28px 0;position:relative}
+.foot-rule::after{content:"";position:absolute;right:0;top:-4px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.foot-cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot-cols h4{font:600 11px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,230,.55);margin-bottom:14px}
+.foot-cols ul{list-style:none}
+.foot-cols li{margin-bottom:8px}
+.foot-cols a{font-size:14.5px}
+.foot-cols a:hover{color:#fff;text-decoration:none}
+.foot-cols .tag{font-size:14.5px;color:rgba(245,240,230,.75)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(245,240,230,.2);margin-top:40px;padding-top:20px;font:600 11px/1.6 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,230,.55)}
+.foot-bottom button{background:none;border:0;color:var(--cream);font:600 11px/1.6 var(--sans);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.foot-bottom button:hover{color:var(--red)}
+
+@media (max-width:900px){
+  .hero,.desk-panel.active,.longread .lr-grid,.latest-grid,.why-grid,.news-grid,.dispatch-grid{grid-template-columns:1fr;gap:32px}
+  .wire{grid-template-columns:repeat(2,1fr)}
+  .book-grid{grid-template-columns:1fr}
+  .foot-cols{grid-template-columns:1fr 1fr}
+  .lr-visual{position:static}
+  .ph{min-height:300px}
+  .masthead .side span.txt{display:none}
+  .nav{overflow-x:auto;white-space:nowrap;text-align:left}
+}
+</style>
+</head>
+<body>
+
+<!-- top strip -->
+<div class="wrap">
+  <div class="topstrip">
+    <span id="top-date">Monday, 16 November 2026 · Los Angeles</span>
+    <span>Los Angeles · In Print &amp; In Fiction <span class="dot">●</span> Afternoon Edition</span>
+  </div>
+  <header class="masthead">
+    <div class="side"><a href="#latest"><span class="burger">☰</span> <span class="txt">Latest</span></a></div>
+    <a class="wordmark" href="#top">WLTLH</a>
+    <div class="side right"><a class="pill" href="#dispatch">Subscribe</a></div>
+  </header>
+  <nav class="nav" aria-label="Sections">
+    <a href="#sections">Investigation</a><a href="#sections">Crime &amp; Courts</a><a href="#sections">City Life</a><a href="#sections">The Valley</a><a href="#sections">Arts &amp; City</a><a href="#sections">Los Angeles</a><a href="#dispatch">Dispatch</a>
+  </nav>
+</div>
+
+<main id="top">
+<!-- hero / top stories -->
+<section class="wrap hero" aria-label="Top stories">
+  <div>
+    <div class="hero-kicker"><span><span class="dot">●</span> Top stories</span><span id="hero-counter">01 / 05</span></div>
+    <h1 id="hero-title"><a href="https://localnews.wltlh.com/">The concert was a tribute to Julian Armitage. He died before the applause ended.</a></h1>
+    <p class="standfirst" id="hero-dek">The conductor&rsquo;s former students played in his honour as he sat in a box with his wife. A celebration of his life became a police investigation.</p>
+    <p class="byline" id="hero-byline">Arts &amp; City · 26 October 2026</p>
+    <ol class="hero-list" id="hero-list">
+      <li><button data-i="1" class="active"><span class="n">02</span><span class="t">Harlan Peck found dead at Sun Valley storage yard after an overnight vigil</span></button></li>
+      <li><button data-i="2"><span class="n">03</span><span class="t">A costume maker&rsquo;s door was closed in the middle of the afternoon. Police found Andor Szabo inside.</span></button></li>
+      <li><button data-i="3"><span class="n">04</span><span class="t">The invitations keep coming. The answers are getting harder.</span></button></li>
+      <li><button data-i="4"><span class="n">05</span><span class="t">Ray Delgado came to the Grand Pacific for his last toast. The guests left as witnesses.</span></button></li>
+    </ol>
+  </div>
+  <div class="hero-visual">
+    <div class="ph" id="hero-ph">
+      <span class="tag" id="hero-tag">Arts &amp; City</span>
+      <div class="big" id="hero-big">The<br>Concert<em>.</em></div>
+      <div class="ph-sub" id="hero-cap">The tribute, before the applause ended</div>
+    </div>
+    <p class="ph-cap" id="hero-cap2">A celebration of his life became a police investigation</p>
+  </div>
+</section>
+
+<!-- the wire -->
+<section class="wrap" aria-label="The wire">
+  <div class="wire">
+    <div><time>26 Oct</time><p><a href="https://localnews.wltlh.com/">The concert was a tribute to Julian Armitage</a></p></div>
+    <div><time>25 Oct</time><p><a href="https://localnews.wltlh.com/">Harlan Peck found dead at Sun Valley storage yard</a></p></div>
+    <div><time>24 Oct</time><p><a href="https://localnews.wltlh.com/">Police found Andor Szabo inside his North Hollywood shop</a></p></div>
+    <div><time>23 Oct</time><p><a href="https://localnews.wltlh.com/">The invitations keep coming</a></p></div>
+    <div><time>23 Oct</time><p><a href="https://localnews.wltlh.com/">Bootsie Hale collapsed in her own garden</a></p></div>
+    <div><time>22 Oct</time><p><a href="https://localnews.wltlh.com/">Freddy Ostrander finished the auction</a></p></div>
+  </div>
+</section>
+
+<!-- sections / six desks -->
+<section class="band" id="sections">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot">●</span> Sections</p>
+    <div class="sec-head" style="margin-top:10px">
+      <h2>Six desks, one edition.</h2>
+      <p class="sub">Every section has a beat and a lead story. Pick a desk to see what it filed this week.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Desks">
+      <button class="active" data-desk="investigation">Investigation</button>
+      <button data-desk="crime">Crime &amp; Courts</button>
+      <button data-desk="citylife">City Life</button>
+      <button data-desk="valley">The Valley</button>
+      <button data-desk="arts">Arts &amp; City</button>
+      <button data-desk="la">Los Angeles</button>
+    </div>
+
+    <div class="desk-panel active" id="desk-investigation">
+      <div class="desk-lead">
+        <div class="ph v5"><span class="tag">Investigation</span><div class="big">The<br>Money<em>.</em></div><div class="ph-sub">The mail drop on Wilshire Boulevard</div></div>
+        <h3><a href="https://localnews.wltlh.com/">The Money Behind the Yard Signs: How LA City Council Candidates Launder Donor Intent</a></h3>
+        <p class="dek">A six-month investigation into campaign finance filings reveals a network of consulting firms, shell LLCs, and pass-through payments.</p>
+        <p class="byline">Investigation · 17 December</p>
+        <p class="desk-line">Campaign finance, told through the filings. The desk follows the money — and the firms it passes through.</p>
+      </div>
+      <div>
+        <ul class="desk-links">
+          <li><a href="https://localnews.wltlh.com/">The Permit Pipeline: Why Small Businesses in South LA Wait Three Times Longer Than the Westside</a><p class="byline">Russell · 12 min read · 19 November</p></li>
+          <li><a href="https://localnews.wltlh.com/">Affordable Housing Funds Approved in 2019 Still Haven&rsquo;t Broken Ground. Here&rsquo;s Where the Money Went.</a><p class="byline">Anthony · 11 min read · 10 December</p></li>
+        </ul>
+        <p class="desk-all"><a class="more-link" href="https://localnews.wltlh.com/">All of Investigation <span>→</span></a></p>
+      </div>
+    </div>
+
+    <div class="desk-panel" id="desk-crime">
+      <div class="desk-lead">
+        <div class="ph"><span class="tag">Crime &amp; Courts</span><div class="big">The<br>Auction<em>.</em></div><div class="ph-sub">A locked service room, after a museum benefit</div></div>
+        <h3><a href="https://localnews.wltlh.com/">Freddy Ostrander Finished the Auction. He Never Collected His Car.</a></h3>
+        <p class="dek">A search after a museum benefit ended in a locked service room. The veteran auctioneer&rsquo;s assistant first noticed an unsigned settlement sheet.</p>
+        <p class="byline">Crime &amp; Courts · 22 October</p>
+        <p class="desk-line">Crime and the courts, reported from the room — not the press release.</p>
+      </div>
+      <div>
+        <ul class="desk-links">
+          <li><a href="https://localnews.wltlh.com/">The Man in the Back Row: What Kingdom Coast Witnesses Remember</a><p class="byline">Developing · The Confessor case · 10 January</p></li>
+        </ul>
+        <p class="desk-all"><a class="more-link" href="https://localnews.wltlh.com/">All of Crime &amp; Courts <span>→</span></a></p>
+      </div>
+    </div>
+
+    <div class="desk-panel" id="desk-citylife">
+      <div class="desk-lead">
+        <div class="ph v4"><span class="tag">City Life</span><div class="big">The<br>Invitations<em>.</em></div><div class="ph-sub">A charity circuit built on showing up</div></div>
+        <h3><a href="https://localnews.wltlh.com/">The Invitations Keep Coming. The Answers Are Getting Harder.</a></h3>
+        <p class="dek">Canceled benefits and anxious guests are changing a charity circuit built on showing up. The workers behind the evenings are carrying the uncertainty, too.</p>
+        <p class="byline">City Life · 23 October</p>
+        <p class="desk-line">The city as it is lived — benefits, ballrooms, and the people who work them.</p>
+      </div>
+      <div>
+        <ul class="desk-links">
+          <li><a href="https://localnews.wltlh.com/">County Shelter System Reports Record Overnight Turnaway Numbers Despite Expanded Capacity</a><p class="byline">Joshua · 8 min read · 26 November</p></li>
+        </ul>
+        <p class="desk-all"><a class="more-link" href="https://localnews.wltlh.com/">All of City Life <span>→</span></a></p>
+      </div>
+    </div>
+
+    <div class="desk-panel" id="desk-valley">
+      <div class="desk-lead">
+        <div class="ph v2"><span class="tag">The Valley</span><div class="big">Sun<br>Valley<em>.</em></div><div class="ph-sub">Tuxford Street, first light</div></div>
+        <h3><a href="https://localnews.wltlh.com/">Harlan Peck Found Dead at Sun Valley Storage Yard After an Overnight Vigil</a></h3>
+        <p class="dek">Police entered the Tuxford Street property with a warrant at first light. The yard served the city&rsquo;s stage and equipment trade.</p>
+        <p class="byline">The Valley · 25 October</p>
+        <p class="desk-line">The Valley, from the stage yards to the costume shops.</p>
+      </div>
+      <div>
+        <ul class="desk-links">
+          <li><a href="https://localnews.wltlh.com/">A Costume Maker&rsquo;s Door Was Closed in the Middle of the Afternoon. Police Found Andor Szabo Inside.</a><p class="byline">The Valley · 24 October</p></li>
+          <li><a href="https://localnews.wltlh.com/">Ernesto Ochoa Stayed Until Every Door Was Locked. He Was Killed Behind the School.</a><p class="byline">Neighborhoods · 21 October</p></li>
+        </ul>
+        <p class="desk-all"><a class="more-link" href="https://localnews.wltlh.com/">All of The Valley <span>→</span></a></p>
+      </div>
+    </div>
+
+    <div class="desk-panel" id="desk-arts">
+      <div class="desk-lead">
+        <div class="ph v3"><span class="tag">Arts &amp; City</span><div class="big">The<br>Concert<em>.</em></div><div class="ph-sub">The tribute, before the applause ended</div></div>
+        <h3><a href="https://localnews.wltlh.com/">The Concert Was a Tribute to Julian Armitage. He Died Before the Applause Ended.</a></h3>
+        <p class="dek">The conductor&rsquo;s former students played in his honour as he sat in a box with his wife. A celebration of his life became a police investigation.</p>
+        <p class="byline">Arts &amp; City · 26 October</p>
+        <p class="desk-line">Arts and the city — the stages, the rooms, and what happens in them.</p>
+      </div>
+      <div>
+        <ul class="desk-links">
+          <li><a href="https://localnews.wltlh.com/">The Man Who Locked the Gym</a><p class="byline">The Neighborhood · 22 October</p></li>
+        </ul>
+        <p class="desk-all"><a class="more-link" href="https://localnews.wltlh.com/">All of Arts &amp; City <span>→</span></a></p>
+      </div>
+    </div>
+
+    <div class="desk-panel" id="desk-la">
+      <div class="desk-lead">
+        <div class="ph v5"><span class="tag">Los Angeles</span><div class="big">The<br>Grand<br>Pacific<em>.</em></div><div class="ph-sub">Four hundred witnesses, one last toast</div></div>
+        <h3><a href="https://localnews.wltlh.com/">Ray Delgado Came to the Grand Pacific for His Last Toast. The Guests Left as Witnesses.</a></h3>
+        <p class="dek">The longtime Milagro Fund leader collapsed before four hundred people at his retirement gala. Detectives are reconstructing a night that everyone saw and nobody can yet explain.</p>
+        <p class="byline">Los Angeles · 20 October</p>
+        <p class="desk-line">Los Angeles, at its grandest — and its most watched.</p>
+      </div>
+      <div>
+        <ul class="desk-links">
+          <li><a href="https://localnews.wltlh.com/">Bootsie Hale Collapsed in Her Own Garden. Ninety Guests Were Asked to Stay.</a><p class="byline">Los Angeles · 23 October</p></li>
+          <li><a href="https://localnews.wltlh.com/">DWP Rate Increases Outpace Inflation for Seventh Straight Year. Oversight Board Has Met Twice.</a><p class="byline">Isaac · 10 min read · 12 November</p></li>
+        </ul>
+        <p class="desk-all"><a class="more-link" href="https://localnews.wltlh.com/">All of Los Angeles <span>→</span></a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- the long read -->
+<section class="wrap longread" aria-label="The long read">
+  <p class="eyebrow"><span class="dot">●</span> The long read</p>
+  <div class="sec-head" style="margin-top:10px">
+    <h2>The Money Behind the Yard Signs: How LA City Council Candidates Launder Donor Intent</h2>
+  </div>
+  <p class="byline" style="margin-top:12px">Investigation · 17 December · A six-month investigation</p>
+  <div class="lr-grid">
+    <div class="lr-visual">
+      <div class="ph v5"><span class="tag">Investigation</span><div class="big">The<br>Wilshire<br>Pipeline<em>.</em></div><div class="ph-sub">Nine firms, one mail drop, $2.1 million</div></div>
+      <p class="ph-cap">The mail drop on Wilshire Boulevard</p>
+    </div>
+    <div>
+      <div class="chapter"><span class="num">01 / 04</span><span class="bar"></span><div><h3>The consulting problem</h3><p>The three firms listed on Brighter Futures LA&rsquo;s disclosure — Pacific Grove Associates, Civic Reach Strategies, and a company called simply Trellis — were each paid between $90,000 and $130,000 for services described as &ldquo;strategic communications consulting.&rdquo; None of the three firms has a website.</p></div></div>
+      <div class="chapter"><span class="num">02 / 04</span><span class="bar"></span><div><h3>Following the money</h3><p>A PAC or campaign committee makes a large payment to a consulting firm. The consulting firm, in many cases, has no visible operations. The money enters the firm and does not reappear in any subsequent public filing.</p></div></div>
+      <div class="chapter"><span class="num">03 / 04</span><span class="bar"></span><div><h3>The Wilshire pipeline</h3><p>The mail drop on Wilshire Boulevard is registered as the business address for at least nine separate consulting entities that have received payments from political committees active in LA city elections over the past six years. Total payments to firms at that single address exceed $2.1 million.</p></div></div>
+      <div class="chapter"><span class="num">04 / 04</span><span class="bar"></span><div><h3>What oversight looks like</h3><p>The Ethics Commission publishes all filings online, which creates an appearance of transparency. The raw data is available. But the filings are designed to record transactions, not to explain them.</p></div></div>
+      <p class="lr-more"><a class="more-link" href="https://localnews.wltlh.com/">Read the full story <span>→</span></a></p>
+    </div>
+  </div>
+</section>
+
+<!-- latest -->
+<section class="wrap latest" id="latest" aria-label="Latest">
+  <div class="sec-head">
+    <div><p class="eyebrow"><span class="dot">●</span> Latest</p><h2 style="margin-top:8px">Filed in the last few days.</h2></div>
+    <a class="more-link" href="https://localnews.wltlh.com/">All stories <span>→</span></a>
+  </div>
+  <div class="latest-grid">
+    <div>
+      <article class="story-row"><div class="thumb">JA</div><div><p class="eyebrow"><span class="dot">●</span> Arts &amp; City</p><h3><a href="https://localnews.wltlh.com/">The Concert Was a Tribute to Julian Armitage. He Died Before the Applause Ended.</a></h3><p class="ex">The conductor&rsquo;s former students played in his honour as he sat in a box with his wife.</p><p class="byline">Arts &amp; City · 26 October 2026</p></div></article>
+      <article class="story-row"><div class="thumb t2">HP</div><div><p class="eyebrow"><span class="dot">●</span> The Valley</p><h3><a href="https://localnews.wltlh.com/">Harlan Peck Found Dead at Sun Valley Storage Yard After an Overnight Vigil</a></h3><p class="ex">Police entered the Tuxford Street property with a warrant at first light.</p><p class="byline">The Valley · 25 October 2026</p></div></article>
+      <article class="story-row"><div class="thumb t3">AS</div><div><p class="eyebrow"><span class="dot">●</span> The Valley</p><h3><a href="https://localnews.wltlh.com/">A Costume Maker&rsquo;s Door Was Closed in the Middle of the Afternoon. Police Found Andor Szabo Inside.</a></h3><p class="ex">The North Hollywood craftsman spent forty years building bodies for film and the stage.</p><p class="byline">The Valley · 24 October 2026</p></div></article>
+      <article class="story-row"><div class="thumb t4">TI</div><div><p class="eyebrow"><span class="dot">●</span> City Life</p><h3><a href="https://localnews.wltlh.com/">The Invitations Keep Coming. The Answers Are Getting Harder.</a></h3><p class="ex">Canceled benefits and anxious guests are changing a charity circuit built on showing up.</p><p class="byline">City Life · 23 October 2026</p></div></article>
+      <article class="story-row"><div class="thumb t5">BH</div><div><p class="eyebrow"><span class="dot">●</span> Los Angeles</p><h3><a href="https://localnews.wltlh.com/">Bootsie Hale Collapsed in Her Own Garden. Ninety Guests Were Asked to Stay.</a></h3><p class="ex">A Hancock Park luncheon ended with paramedics on the lawn and detectives collecting witness accounts.</p><p class="byline">Los Angeles · 23 October 2026</p></div></article>
+      <article class="story-row"><div class="thumb t6">FO</div><div><p class="eyebrow"><span class="dot">●</span> Crime &amp; Courts</p><h3><a href="https://localnews.wltlh.com/">Freddy Ostrander Finished the Auction. He Never Collected His Car.</a></h3><p class="ex">A search after a museum benefit ended in a locked service room.</p><p class="byline">Crime &amp; Courts · 22 October 2026</p></div></article>
+    </div>
+    <aside class="sidebar">
+      <p class="eyebrow"><span class="dot">●</span> The Confessor file</p>
+      <h3 style="margin-top:8px">The case the city is watching.</h3>
+      <p class="side-sub">Witness threads and the deaths the newsroom is following, in the case the city now calls The Confessor.</p>
+      <ol>
+        <li><div><a href="https://localnews.wltlh.com/">The Man in the Back Row: What Kingdom Coast Witnesses Remember</a><p class="byline">Developing · 10 January</p></div></li>
+        <li><div><a href="https://localnews.wltlh.com/">Ray Delgado Came to the Grand Pacific for His Last Toast</a><p class="byline">Los Angeles · 20 October</p></div></li>
+        <li><div><a href="https://localnews.wltlh.com/">Freddy Ostrander Finished the Auction. He Never Collected His Car.</a><p class="byline">Crime &amp; Courts · 22 October</p></div></li>
+        <li><div><a href="https://localnews.wltlh.com/">The Concert Was a Tribute to Julian Armitage</a><p class="byline">Arts &amp; City · 26 October</p></div></li>
+        <li><div><a href="https://localnews.wltlh.com/">Ernesto Ochoa Stayed Until Every Door Was Locked</a><p class="byline">Neighborhoods · 21 October</p></div></li>
+      </ol>
+    </aside>
+  </div>
+</section>
+
+<!-- from the books -->
+<section class="books-band">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot">●</span> From the books</p>
+    <div class="sec-head" style="margin-top:10px">
+      <h2>The Logan Hollister novels behind the newsroom.</h2>
+      <p class="sub">WLTLH is the newsroom at the centre of the series. Logan Hollister, the detective who owns it, is the man chasing the killers it reports on.</p>
+    </div>
+    <div class="book-grid">
+      <article class="book-card">
+        <p class="kicker"><span class="dot">●</span> Book One · The Confessor</p>
+        <blockquote>&ldquo;GET IT.&rdquo; — Kirkus Reviews</blockquote>
+        <p>The Confessor is never wrong. He has built his whole life around being sure of it. Signed first edition, personalised by hand, $150.</p>
+        <a class="card-link" href="https://books.wltlh.com/TheConfessor/">Order the signed copy <span>→</span></a>
+      </article>
+      <article class="book-card">
+        <p class="kicker"><span class="dot">●</span> Book Two · The Rival</p>
+        <h3>Every murder is a performance. Every move earns a grade.</h3>
+        <p>The Rival is staging impossible murders in public — and mailing Logan his grades, in red ink. Signed first edition, $150.</p>
+        <a class="card-link" href="https://books.wltlh.com/TheRival/">Order the signed copy <span>→</span></a>
+      </article>
+      <article class="book-card">
+        <p class="kicker"><span class="dot">●</span> Have a story?</p>
+        <h3>Tell Noah.</h3>
+        <p>Readers can submit stories, photos or short video for review — the newsroom reads everything it is sent.</p>
+        <a class="card-link" href="https://wltlh.com/">Go to wltlh.com <span>→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- the dispatch -->
+<section class="dispatch" id="dispatch">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot">●</span> When the paper trail moves</p>
+    <div class="sec-head" style="margin-top:10px">
+      <h2>The WLTLH Dispatch</h2>
+      <p class="sub">New records, court updates, and newsroom notes when the paper trail moves. You are on the dispatch list. You&rsquo;ll hear from us when the work demands it.</p>
+    </div>
+    <div class="dispatch-grid">
+      <div class="dispatch-visual">
+        <div class="ph v5"><span class="tag">Dispatch</span><div class="big">The<br>Paper<br>Trail<em>.</em></div><div class="ph-sub">Records, court updates, newsroom notes</div></div>
+        <p class="ph-cap">Latest dispatch · 17 December</p>
+      </div>
+      <div class="acc" id="acc">
+        <div class="acc-item open">
+          <button><span class="ep">17 Dec · Investigation</span><span class="t">The Money Behind the Yard Signs</span><span class="pm">−</span></button>
+          <div class="acc-body"><p>A six-month investigation into campaign finance filings reveals a network of consulting firms, shell LLCs, and pass-through payments that obscure who is actually funding local elections in Los Angeles.</p><p class="byline">Investigation · 17 December</p><a class="listen" href="https://localnews.wltlh.com/">Read the dispatch <span>→</span></a></div>
+        </div>
+        <div class="acc-item">
+          <button><span class="ep">10 Dec · 11 min read</span><span class="t">Affordable Housing Funds Approved in 2019 Still Haven&rsquo;t Broken Ground</span><span class="pm">+</span></button>
+          <div class="acc-body"><p>Here&rsquo;s where the money went. With Anthony · 10 December.</p><a class="listen" href="https://localnews.wltlh.com/">Read the dispatch <span>→</span></a></div>
+        </div>
+        <div class="acc-item">
+          <button><span class="ep">03 Dec · Analysis</span><span class="t">LAPD&rsquo;s Body Camera Compliance Rates Drop for Third Consecutive Quarter</span><span class="pm">+</span></button>
+          <div class="acc-body"><p>The department spent $57 million on body-worn cameras. The officers increasingly aren&rsquo;t turning them on. With Danielle · 3 December.</p><a class="listen" href="https://localnews.wltlh.com/">Read the dispatch <span>→</span></a></div>
+        </div>
+        <div class="acc-item">
+          <button><span class="ep">26 Nov · Report</span><span class="t">County Shelter System Reports Record Overnight Turnaway Numbers</span><span class="pm">+</span></button>
+          <div class="acc-body"><p>Los Angeles County added 1,400 shelter beds last year. The waitlist grew by 2,600. With Joshua · 26 November.</p><a class="listen" href="https://localnews.wltlh.com/">Read the dispatch <span>→</span></a></div>
+        </div>
+        <div class="acc-item">
+          <button><span class="ep">19 Nov · Investigation</span><span class="t">The Permit Pipeline: Why Small Businesses in South LA Wait Three Times Longer</span><span class="pm">+</span></button>
+          <div class="acc-body"><p>Same application. Same city. Same fee. Radically different timelines. With Russell · 19 November.</p><a class="listen" href="https://localnews.wltlh.com/">Read the dispatch <span>→</span></a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- why WLTLH -->
+<section class="why">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot">●</span> Why WLTLH</p>
+    <div class="why-grid">
+      <div>
+        <h2 style="font-size:clamp(34px,4.5vw,52px);margin-top:10px">Reported, not repeated.</h2>
+        <p class="lede" style="margin-top:16px">WLTLH is a Los Angeles investigative newsroom built on public records — California Public Records Act requests, campaign filings and court records — reported from the ground, across six desks and five neighbourhoods of the city.</p>
+        <div class="stats">
+          <div class="stat"><div class="fig">06</div><div class="lab">Desks</div></div>
+          <div class="stat"><div class="fig">05</div><div class="lab">Neighbourhoods</div></div>
+          <div class="stat"><div class="fig">2026</div><div class="lab">First edition</div></div>
+        </div>
+        <p style="margin-top:28px"><a class="more-link" href="https://wltlh.com/">About the newsroom <span>→</span></a></p>
+      </div>
+      <div class="where">
+        <p class="eyebrow">Where we report from</p>
+        <div class="big5">05</div>
+        <ul>
+          <li>The Valley</li>
+          <li>Sun Valley</li>
+          <li>North Hollywood</li>
+          <li>Hancock Park</li>
+          <li>Downtown</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- newsletter / dispatch signup -->
+<section class="wrap newsletter">
+  <div class="news-grid">
+    <div class="news-visual">
+      <div class="ph"><span class="tag">Dispatch</span><div class="big">When the<br>Paper<br>Trail<br>Moves<em>.</em></div><div class="ph-sub">New records, court updates, newsroom notes</div></div>
+      <p class="ph-cap">The WLTLH Dispatch — sign up at the newsroom</p>
+    </div>
+    <form class="news-form" id="news-form">
+      <p class="eyebrow"><span class="dot">●</span> When the paper trail moves</p>
+      <h2>The WLTLH Dispatch</h2>
+      <p>The Dispatch in your inbox when the paper trail moves — new records, court updates, and newsroom notes. Nothing else.</p>
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com">
+      <p class="helper">Free · One email when the work demands it · Unsubscribe in one click</p>
+      <button class="pill" type="submit">Subscribe free</button>
+      <a class="alt" href="https://localnews.wltlh.com/">Or read the newsroom →</a>
+      <p class="form-note" id="form-note">Thanks — the Dispatch lives on the newsroom site. Finish signing up at <a href="https://localnews.wltlh.com/">localnews.wltlh.com</a>.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="foot-word" href="#top">WLTLH</a>
+    <div class="foot-rule"></div>
+    <div class="foot-cols">
+      <div>
+        <h4>WLTLH</h4>
+        <p class="tag">Los Angeles investigative newsroom.<br>In print &amp; in fiction.</p>
+        <p class="tag" style="margin-top:14px">The newsroom at the centre of the Logan Hollister novels, by Noah Christopher.</p>
+      </div>
+      <div>
+        <h4>Sections</h4>
+        <ul>
+          <li><a href="#sections">Investigation</a></li>
+          <li><a href="#sections">Crime &amp; Courts</a></li>
+          <li><a href="#sections">City Life</a></li>
+          <li><a href="#sections">The Valley</a></li>
+          <li><a href="#sections">Arts &amp; City</a></li>
+          <li><a href="#sections">Los Angeles</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>The newsroom</h4>
+        <ul>
+          <li><a href="https://wltlh.com/">wltlh.com</a></li>
+          <li><a href="https://localnews.wltlh.com/">localnews.wltlh.com</a></li>
+          <li><a href="https://books.wltlh.com/">books.wltlh.com</a></li>
+          <li><a href="https://wltlh.com/">Have a story? Tell Noah</a></li>
+          <li><a href="#dispatch">The WLTLH Dispatch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>The books</h4>
+        <ul>
+          <li><a href="https://books.wltlh.com/TheConfessor/">The Confessor — Book One</a></li>
+          <li><a href="https://books.wltlh.com/TheRival/">The Rival — Book Two</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 WLTLH · Los Angeles · In Print &amp; In Fiction</span>
+      <span>A story world by Noah Christopher</span>
+      <button id="to-top">Back to top ↑</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  /* live date strip, Los Angeles time */
+  try{
+    var fmt=new Intl.DateTimeFormat("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"America/Los_Angeles"});
+    var tf=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"America/Los_Angeles"});
+    var el=document.getElementById("top-date");
+    var tick=function(){var n=new Date();el.textContent=fmt.format(n)+" · Los Angeles "+tf.format(n);};
+    tick();setInterval(tick,30000);
+  }catch(e){}
+
+  /* hero stories */
+  var stories=[
+    {tag:"Arts & City",big:"The<br>Concert<em>.</em>",cap:"The tribute, before the applause ended",cap2:"A celebration of his life became a police investigation",
+     title:"The concert was a tribute to Julian Armitage. He died before the applause ended.",
+     dek:"The conductor\u2019s former students played in his honour as he sat in a box with his wife. A celebration of his life became a police investigation.",
+     byline:"Arts & City \u00b7 26 October 2026",cls:""},
+    {tag:"The Valley",big:"Sun<br>Valley<em>.</em>",cap:"Tuxford Street, first light",cap2:"Police entered the property with a warrant at first light",
+     title:"Harlan Peck found dead at Sun Valley storage yard after an overnight vigil.",
+     dek:"Police entered the Tuxford Street property with a warrant at first light. The yard served the city\u2019s stage and equipment trade.",
+     byline:"The Valley \u00b7 25 October 2026",cls:"v2"},
+    {tag:"The Valley",big:"North<br>Hollywood<em>.</em>",cap:"The costume shop, mid-afternoon",cap2:"Forty years building bodies for film and the stage",
+     title:"A costume maker\u2019s door was closed in the middle of the afternoon. Police found Andor Szabo inside.",
+     dek:"The North Hollywood craftsman spent forty years building bodies for film and the stage. His small shop became a crime scene on a working afternoon.",
+     byline:"The Valley \u00b7 24 October 2026",cls:"v3"},
+    {tag:"City Life",big:"The<br>Invitations<em>.</em>",cap:"A charity circuit built on showing up",cap2:"The workers behind the evenings are carrying the uncertainty, too",
+     title:"The invitations keep coming. The answers are getting harder.",
+     dek:"Canceled benefits and anxious guests are changing a charity circuit built on showing up. The workers behind the evenings are carrying the uncertainty, too.",
+     byline:"City Life \u00b7 23 October 2026",cls:"v4"},
+    {tag:"Los Angeles",big:"The Grand<br>Pacific<em>.</em>",cap:"Four hundred witnesses, one last toast",cap2:"Detectives are reconstructing a night everyone saw",
+     title:"Ray Delgado came to the Grand Pacific for his last toast. The guests left as witnesses.",
+     dek:"The longtime Milagro Fund leader collapsed before four hundred people at his retirement gala. Detectives are reconstructing a night that everyone saw and nobody can yet explain.",
+     byline:"Los Angeles \u00b7 20 October 2026",cls:"v5"}
+  ];
+  var cur=0, visual=0;
+  var $=function(id){return document.getElementById(id);};
+  function pad(n){return (n<10?"0":"")+n;}
+  function showStory(i,fromList){
+    cur=i;
+    var s=stories[i];
+    $("hero-title").firstChild.textContent=s.title;
+    $("hero-dek").textContent=s.dek;
+    $("hero-byline").textContent=s.byline;
+    $("hero-counter").textContent=pad(i+1)+" / 05";
+    var btns=document.querySelectorAll("#hero-list button");
+    btns.forEach(function(b){b.classList.toggle("active",+b.dataset.i===i);});
+    if(fromList){setVisual(i);}
+  }
+  function setVisual(i){
+    visual=i;
+    var s=stories[i],ph=$("hero-ph");
+    ph.className="ph"+(s.cls?" "+s.cls:"");
+    $("hero-tag").textContent=s.tag;
+    $("hero-big").innerHTML=s.big;
+    $("hero-cap").textContent=s.cap;
+    $("hero-cap2").textContent=s.cap2;
+  }
+  document.querySelectorAll("#hero-list button").forEach(function(b){
+    b.addEventListener("click",function(){showStory(+b.dataset.i,true);});
+  });
+  /* the template's photo cycles on its own, apart from the headline */
+  var heroPh=$("hero-ph");
+  var cycle=setInterval(function(){setVisual((visual+1)%stories.length);},6000);
+  heroPh.addEventListener("mouseenter",function(){clearInterval(cycle);});
+  heroPh.addEventListener("mouseleave",function(){clearInterval(cycle);cycle=setInterval(function(){setVisual((visual+1)%stories.length);},6000);});
+
+  /* desk tabs */
+  document.querySelectorAll(".tabs button").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.querySelectorAll(".tabs button").forEach(function(x){x.classList.remove("active");});
+      b.classList.add("active");
+      document.querySelectorAll(".desk-panel").forEach(function(p){p.classList.remove("active");});
+      document.getElementById("desk-"+b.dataset.desk).classList.add("active");
+    });
+  });
+
+  /* dispatch accordion */
+  document.querySelectorAll(".acc-item>button").forEach(function(b){
+    b.addEventListener("click",function(){
+      var item=b.parentElement,was=item.classList.contains("open");
+      document.querySelectorAll(".acc-item").forEach(function(x){x.classList.remove("open");x.querySelector(".pm").textContent="+";});
+      if(!was){item.classList.add("open");b.querySelector(".pm").textContent="\u2212";}
+    });
+  });
+
+  /* newsletter form: the Dispatch signup lives on the newsroom site */
+  document.getElementById("news-form").addEventListener("submit",function(ev){
+    ev.preventDefault();
+    document.getElementById("form-note").classList.add("show");
+  });
+
+  /* back to top */
+  document.getElementById("to-top").addEventListener("click",function(){
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+})();
+</script>
+</body>
+</html>
