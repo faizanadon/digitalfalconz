@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 
 // Current stable Flash model (verified against Google's official model docs,
-// ai.google.dev/gemini-api/docs/models, 2026-11-14). gemini-2.5-flash is
-// deprecated and no longer available to new keys; gemini-3.8-flash is the
-// current stable Flash. Plain REST fetch — no SDK dependency.
-const MODEL = "gemini-3.8-flash";
+// ai.google.dev/gemini-api/docs/models, 2026-11-15). gemini-2.5-flash is
+// deprecated and no longer available to new keys. gemini-3.8-flash was the
+// current stable Flash, but it returned HTTP 503 ("This model is currently
+// experiencing high demand") from 2026-11-14 ~21:39 PKT through at least
+// 2026-11-15 ~06:41 PKT while Gemini's status page showed operational —
+// a model-specific capacity problem, not a broad outage. Switched to
+// gemini-3.6-flash (also current + Stable, same tier) on Faizan's approval
+// (2026-11-16). If 3.6-flash 503s too, the next fallbacks are
+// gemini-3.5-flash-lite, then gemini-3-flash-preview. Plain REST fetch —
+// no SDK dependency.
+const MODEL = "gemini-3.6-flash";
 
 // Server-side only — never sent to the client.
 const SYSTEM_PROMPT =
