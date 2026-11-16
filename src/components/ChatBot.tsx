@@ -43,17 +43,38 @@ const QUICK_REPLIES = [
 
 type Msg = { role: "user" | "assistant"; text: string; showBook?: boolean };
 
-// Render the booking URL inside a bot reply as a real link.
+// Render **bold** markers as <strong> inside a plain text segment.
+// Unmatched markers (no closing **) or empty ones (****) stay literal —
+// nothing is ever dropped. Single asterisks are left alone on purpose:
+// a naive *italic* parse would mangle ordinary text (e.g. "5 * 3").
+function renderBold(text: string, keyPrefix: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, j) => {
+    if (
+      part.startsWith("**") &&
+      part.endsWith("**") &&
+      part.length > 4
+    ) {
+      return (
+        <strong key={`${keyPrefix}-b${j}`}>{part.slice(2, -2)}</strong>
+      );
+    }
+    return <span key={`${keyPrefix}-t${j}`}>{part}</span>;
+  });
+}
+
+// Render a bot reply: the booking URL becomes a real link, and **bold**
+// markers become proper bold. The link behaviour is unchanged.
 function renderText(text: string) {
   return text.split(BOOKING_URL).map((part, i) =>
     i === 0 ? (
-      <span key={i}>{part}</span>
+      <span key={i}>{renderBold(part, `p${i}`)}</span>
     ) : (
       <span key={i}>
         <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
           {BOOKING_URL}
         </a>
-        {part}
+        {renderBold(part, `p${i}`)}
       </span>
     )
   );

@@ -4641,6 +4641,7 @@ html[data-theme="light"] .indx-hero{background:linear-gradient(180deg,#f5efe0 0%
 .cb-msg.cb-user{align-self:flex-end;align-items:flex-end}
 .cb-msg.cb-assistant{align-self:flex-start;align-items:flex-start}
 .cb-bubble{padding:10px 13px;border-radius:14px;font-size:.92rem;line-height:1.5}
+.cb-bubble strong{font-weight:700}
 .cb-user .cb-bubble{background:var(--gold);color:#000;border-bottom-right-radius:4px}
 .cb-assistant .cb-bubble{background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
 .cb-bubble a{color:var(--gold-dark);font-weight:600;word-break:break-all}
