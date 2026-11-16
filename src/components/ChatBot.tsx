@@ -75,6 +75,60 @@ export default function ChatBot() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  // Notification sound — a soft two-note chime, generated with the Web
+  // Audio API (no audio file to ship). The AudioContext is created and
+  // resumed on the user's send action, because browsers only allow audio
+  // after a user gesture; once running it stays alive, so the chime can
+  // play when the reply arrives ~20s later, panel open or closed.
+  // It never breaks the chat if audio is unavailable or blocked.
+  const audioRef = useRef<AudioContext | null>(null);
+  function ensureAudio() {
+    try {
+      if (!audioRef.current) {
+        const Ctor =
+          window.AudioContext ||
+          (
+            window as unknown as {
+              webkitAudioContext?: typeof AudioContext;
+            }
+          ).webkitAudioContext;
+        if (!Ctor) return null;
+        audioRef.current = new Ctor();
+      }
+      if (audioRef.current.state === "suspended") {
+        void audioRef.current.resume();
+      }
+      return audioRef.current;
+    } catch {
+      return null;
+    }
+  }
+  function playReplySound() {
+    const ctx = audioRef.current;
+    if (!ctx || ctx.state !== "running") return;
+    try {
+      const now = ctx.currentTime;
+      // Two soft sine notes (E5, then A5), gentle fade-out — no click.
+      const notes = [659.25, 880.0];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const t0 = now + i * 0.14;
+        gain.gain.setValueAtTime(0, t0);
+        gain.gain.linearRampToValueAtTime(0.08, t0 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t0);
+        osc.stop(t0 + 0.3);
+      });
+    } catch {
+      // Sound is a nicety — never break the chat if audio fails.
+    }
+  }
+
   useEffect(() => {
     const onScroll = () => {
       if (!scrollingRef.current) {
@@ -115,6 +169,8 @@ export default function ChatBot() {
     const trimmed = text.trim();
     if (!trimmed || typing) return;
     setInput("");
+    // Unlock audio on this user gesture so the reply chime can play later.
+    ensureAudio();
 
     const next: Msg[] = [...messages, { role: "user", text: trimmed }];
 
@@ -129,6 +185,7 @@ export default function ChatBot() {
           showBook: true,
         },
       ]);
+      playReplySound();
       return;
     }
 
@@ -156,6 +213,7 @@ export default function ChatBot() {
             showBook: data?.unavailable === true,
           },
         ]);
+        playReplySound();
         if (data?.unavailable === true) setUnavailable(true);
       }
     } catch {
@@ -169,6 +227,7 @@ export default function ChatBot() {
           showBook: true,
         },
       ]);
+      playReplySound();
     } finally {
       setTyping(false);
     }
