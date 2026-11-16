@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScroll from "@/components/SmoothScroll";
 import { metaFor, orgJsonLd, site } from "@/data/site";
@@ -128,6 +129,8 @@ gtag('js', new Date());`}
         <Script id="google-tag-manager" strategy="afterInteractive" src="https://www.googletagmanager.com/gtm.js?id=GTM-M3QRKDSM" />
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
+        {/* Vercel Analytics — page-view tracking (added 2026-11-16). */}
+        <Analytics />
       </body>
     </html>
   );
