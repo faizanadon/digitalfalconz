@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import SiteChrome from "@/components/SiteChrome";
 import SmoothScroll from "@/components/SmoothScroll";
 import { metaFor, orgJsonLd, site } from "@/data/site";
@@ -131,6 +132,8 @@ gtag('js', new Date());`}
         <SiteChrome>{children}</SiteChrome>
         {/* Vercel Analytics — page-view tracking (added 2026-11-16). */}
         <Analytics />
+        {/* Vercel Speed Insights — performance metrics (added 2026-11-16). */}
+        <SpeedInsights />
       </body>
     </html>
   );
