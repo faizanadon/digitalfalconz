@@ -29,6 +29,10 @@ function FeatureCard({ project, index }: { project: WorkProject; index: number }
   const logo = project.logo;
   const showLogo = !!logo && !logoFailed;
   const num = String(index + 1).padStart(2, "0");
+  // Arrow destination: case-study page first, else the live site. When a
+  // project has neither (e.g. its live site no longer resolves), there is
+  // no arrow at all — never a "#" dead link.
+  const dest = project.caseStudy ? `/work/${project.caseStudy}` : project.liveUrl;
   return (
     <motion.article
       className={`work-ed-card${index % 2 === 0 ? " work-ed-flip" : ""}`}
@@ -107,13 +111,15 @@ function FeatureCard({ project, index }: { project: WorkProject; index: number }
             </div>
           </div>
         )}
-        <Link
-          href={project.caseStudy ? `/work/${project.caseStudy}` : project.liveUrl ?? "#"}
-          className="work-ed-arrow"
-          aria-label={`Open ${project.title}`}
-        >
-          <ArrowUpRight size={20} strokeWidth={2.2} aria-hidden="true" />
-        </Link>
+        {dest && (
+          <Link
+            href={dest}
+            className="work-ed-arrow"
+            aria-label={`Open ${project.title}`}
+          >
+            <ArrowUpRight size={20} strokeWidth={2.2} aria-hidden="true" />
+          </Link>
+        )}
       </div>
     </motion.article>
   );

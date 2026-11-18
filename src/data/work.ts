@@ -14,9 +14,11 @@
 // Descriptions are drawn from the portfolio deck only — no hard metrics are
 // claimed, because the deck text contains none. A live-site link is included
 // only where the brand's site was verified live (Technoor.me, Wise Market
-// Pakistan, Mawa Group). Skyphonez and Wise Market Australia have no live
-// link because their sites no longer resolve; Vitastrong has none because
-// the deck gives no country and several regional Vitastrong stores exist.
+// Pakistan, Mawa Group). Skyphonez, Wise Market Australia and UK Compounding
+// have no live link because their sites no longer resolve (UK Compounding's
+// TLS is broken — ERR_SSL_VERSION_OR_CIPHER_MISMATCH in Chrome, verified
+// 2026-11-18); Vitastrong has none because the deck gives no country and
+// several regional Vitastrong stores exist.
 // These six use the placeholder tile — no dashboard screenshots were added,
 // because binary files cannot be pushed with the current tooling.
 export interface WorkProject {
@@ -231,8 +233,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     category: "WordPress",
     platform: "WordPress",
     role: "WordPress website development.",
-    liveUrl: "https://ukcompounding.com",
-    liveLabel: "ukcompounding.com",
+    liveUrl: null,
+    liveLabel: null,
     image: null,
     filter: "WordPress",
   },
