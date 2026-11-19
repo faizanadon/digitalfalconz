@@ -42,6 +42,8 @@ const cormorant = localFont({
   ],
   variable: "--font-retreat-serif",
   display: "swap",
+  // Template-only font: don't preload it on every site page (speed).
+  preload: false,
 });
 // Manukit-style condensed serif + grotesque sans, used ONLY by the
 // VentSure LEV template (/templates/ventsure-lev-testing). Same pattern:
@@ -53,6 +55,8 @@ const libreCaslonCond = localFont({
   ],
   variable: "--font-lev-serif",
   display: "swap",
+  // Template-only font: don't preload it on every site page (speed).
+  preload: false,
 });
 const ibmPlexSans = localFont({
   src: [
@@ -63,6 +67,8 @@ const ibmPlexSans = localFont({
   ],
   variable: "--font-lev-sans",
   display: "swap",
+  // Template-only font: don't preload it on every site page (speed).
+  preload: false,
 });
 // Poppins — used ONLY by the Yogagrove yoga-studio template
 // (/templates/yogagrove). Same pattern: variable defined here, applied
@@ -78,6 +84,8 @@ const poppins = localFont({
   ],
   variable: "--font-yoga",
   display: "swap",
+  // Template-only font: don't preload it on every site page (speed).
+  preload: false,
 });
 
 const home = metaFor("/");
@@ -87,7 +95,9 @@ export const metadata: Metadata = {
   title: home?.seo_title ?? "DigitalFalconz | Digital Marketing, Software & AI Agency",
   description: home?.meta_description ?? "DigitalFalconz connects performance marketing, websites, software development, branding and AI automation to help ambitious businesses grow.",
   alternates: { canonical: home?.canonical ?? site.domain },
-  icons: { icon: "/logo-mark-hires.png", apple: "/logo-mark-hires.png" },
+  // Favicon: a 64px mark (~6KB) instead of the 2400px PNG (~610KB) that
+  // every page used to download. Apple touch icon keeps the hi-res file.
+  icons: { icon: [{ url: "/favicon-mark.svg", type: "image/svg+xml" }], apple: "/logo-mark-hires.png" },
   // Google Search Console ownership verification (added 2026-11-09).
   verification: { google: "yyWadV4yDStyoaOW6063zh-Etx7V-lUPabzUX12Xz8E" },
   openGraph: {
@@ -113,8 +123,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <a className="skip-link" href="#main">Skip to content</a>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
-        {/* Microsoft Clarity — session recordings & heatmaps (project zb20d9vc6n). */}
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        {/* Microsoft Clarity — session recordings & heatmaps (project zb20d9vc6n).
+            lazyOnload: loads once the page has finished loading, so it never
+            competes with the page itself (speed). */}
+        <Script id="microsoft-clarity" strategy="lazyOnload">
           {`(function(c,l,a,r,i,t,y){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -127,7 +139,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());`}
         </Script>
-        <Script id="google-tag-manager" strategy="afterInteractive" src="https://www.googletagmanager.com/gtm.js?id=GTM-M3QRKDSM" />
+        <Script id="google-tag-manager" strategy="lazyOnload" src="https://www.googletagmanager.com/gtm.js?id=GTM-M3QRKDSM" />
         <SmoothScroll />
         <SiteChrome>{children}</SiteChrome>
         {/* Vercel Analytics — page-view tracking (added 2026-11-16). */}

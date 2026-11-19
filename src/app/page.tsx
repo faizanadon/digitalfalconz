@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { useLoopGate, gate } from "@/components/loopGate";
 import HeroPhone from "@/components/HeroPhone";
 import QuestionsTabs from "@/components/QuestionsTabs";
 import Markdown from "@/components/Markdown";
@@ -137,6 +138,10 @@ export default function HomePage() {
     "The best way to judge an agency is to understand how it approaches the problem. See 22 selected projects by Faizan Nawaz — Shopify storefronts, WordPress builds, GoHighLevel funnels, Webflow sites and independent products — each with its live site and the role played.";
   const buildIntro = buildNext ? buildNext.body.split("**[Start a project")[0].trim() : "";
 
+  // The hero phone float only runs while the hero is on screen (speed).
+  const reduceMotion = useReducedMotion();
+  const [heroFloatRef, heroFloat] = useLoopGate(reduceMotion);
+
   return (
     <>
       <ScrollProgress />
@@ -151,7 +156,9 @@ export default function HomePage() {
               variants={{ hidden: {}, show: { transition: { staggerChildren: 0.09 } } }}
             >
               <motion.p className="label" variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0 } }}>Growth systems for the AI era</motion.p>
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}>Traffic in. <span className="hl">Revenue out.</span><br /><span className="dim">Every step attributed.</span></motion.h1>
+              {/* Headline renders visible from the first paint (it is the page's
+                  largest element, so hiding it until JS loads slowed load time). */}
+              <h1>Traffic in. <span className="hl">Revenue out.</span><br /><span className="dim">Every step attributed.</span></h1>
               <motion.p className="lede" variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0 } }}>That is the whole deal. DigitalFalconz builds one connected system — ads, website, CRM and AI working together — that turns attention into pipeline, and shows you exactly where every enquiry came from.</motion.p>
               <motion.p className="plain" variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0 } }}>No disconnected services. No reports full of numbers that don&rsquo;t tie to money. If a metric can&rsquo;t be tied to revenue, it doesn&rsquo;t make the dashboard.</motion.p>
               <motion.div className="hero-ctas" variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0 } }}>
@@ -160,7 +167,7 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.25 }}>
-              <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
+              <motion.div ref={heroFloatRef} animate={gate(heroFloat, { y: [0, -8, 0] })} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
                 <HeroPhone />
               </motion.div>
             </motion.div>

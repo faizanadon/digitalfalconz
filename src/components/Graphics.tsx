@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useRef, type CSSProperties } from "react";
 import { ArrowRight, Bot, CalendarCheck, Check, Handshake, Mail, MessageSquare, Mic, Play, Rocket, RotateCw, Search, ShieldCheck, ShoppingBag, Sparkles, Star, Target, TrendingUp, X, Zap } from "lucide-react";
 import { graphicForSlug, PAGE_GRAPHICS, type MainPageKey, type GraphicMotion } from "@/data/pageGraphics";
+import { useLoopGate, gate } from "@/components/loopGate";
 
 export const EASE: [number, number, number, number] = [0.22, 0.61, 0.21, 1];
 
@@ -12,14 +13,15 @@ export const EASE: [number, number, number, number] = [0.22, 0.61, 0.21, 1];
 /* ------------------------------------------------------------------ */
 export function MotionDivider() {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
-    <div className="motion-divider" aria-hidden="true">
+    <div ref={gateRef} className="motion-divider" aria-hidden="true">
       <motion.span className="md-line" initial={false} whileInView={{ scaleX: 1 }} viewport={{ once: true }} style={{ scaleX: reduce ? 1 : 0 }} transition={{ duration: 0.9, ease: EASE }} />
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
           className="md-dot"
-          animate={reduce ? {} : { y: [0, -6, 0] }}
+          animate={gate(loop, { y: [0, -6, 0] })}
           transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.22, ease: "easeInOut" }}
         />
       ))}
@@ -38,15 +40,16 @@ const LEAKS = [
 ];
 export function LeakToSystemGraphic() {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
-    <div className="gfx leak-gfx" role="img" aria-label="Disconnected ads, website and AI pieces connecting into one system.">
+    <div ref={gateRef} className="gfx leak-gfx" role="img" aria-label="Disconnected ads, website and AI pieces connecting into one system.">
       <div className="leak-pieces">
         {LEAKS.map((l, i) => (
           <motion.div
             key={l.label}
             className="leak-piece"
             initial={false}
-            whileInView={reduce ? {} : { y: [0, -8, 0], rotate: [0, i === 1 ? 2 : -2, 0] }}
+            whileInView={gate(loop, { y: [0, -8, 0], rotate: [0, i === 1 ? 2 : -2, 0] })}
             viewport={{ once: false, margin: "-40px" }}
             transition={{ duration: 3.2, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }}
           >
@@ -67,7 +70,7 @@ export function LeakToSystemGraphic() {
         </svg>
         <motion.span
           className="leak-dot"
-          animate={reduce ? {} : { left: ["4%", "92%", "4%"] }}
+          animate={gate(loop, { left: ["4%", "92%", "4%"] })}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
@@ -92,9 +95,10 @@ export function LeakToSystemGraphic() {
 /* ------------------------------------------------------------------ */
 export function CapGraphic({ variant }: { variant: number }) {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   const bars = [42, 68, 55, 88];
   return (
-    <div className="gfx cap-gfx" aria-hidden="true">
+    <div ref={gateRef} className="gfx cap-gfx" aria-hidden="true">
       {variant === 0 && (
         <div className="cap-bars">
           {bars.map((h, i) => (
@@ -108,7 +112,7 @@ export function CapGraphic({ variant }: { variant: number }) {
           <span className="cap-browser-bar"><i /><i /><i /></span>
           <motion.span className="cap-browser-line" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: EASE }} />
           <motion.span className="cap-browser-line short" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, ease: EASE }} />
-          <motion.span className="cap-browser-btn" animate={reduce ? {} : { scale: [1, 1.12, 1] }} transition={{ duration: 2, repeat: Infinity }}><ArrowRight size={17} strokeWidth={2.4} /></motion.span>
+          <motion.span className="cap-browser-btn" animate={gate(loop, { scale: [1, 1.12, 1] })} transition={{ duration: 2, repeat: Infinity }}><ArrowRight size={17} strokeWidth={2.4} /></motion.span>
         </div>
       )}
       {variant === 2 && (
@@ -120,7 +124,7 @@ export function CapGraphic({ variant }: { variant: number }) {
       {variant === 3 && (
         <div className="cap-palette">
           {["#fcc04c", "#feda6b", "#000000", "#ffffff"].map((c, i) => (
-            <motion.span key={c} className="cap-swatch" style={{ background: c, border: c === "#ffffff" ? "1px solid #e5ddc9" : undefined }} animate={reduce ? {} : { y: [0, -7, 0], rotate: [0, i % 2 ? 6 : -6, 0] }} transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }} />
+            <motion.span key={c} className="cap-swatch" style={{ background: c, border: c === "#ffffff" ? "1px solid #e5ddc9" : undefined }} animate={gate(loop, { y: [0, -7, 0], rotate: [0, i % 2 ? 6 : -6, 0] })} transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }} />
           ))}
         </div>
       )}
@@ -146,14 +150,15 @@ export function CapGraphic({ variant }: { variant: number }) {
     so 3 steps spread across the full width instead of bunching left. */
 export function JourneyDiagram({ steps }: { steps: { label: string; sub?: string }[] }) {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   const n = steps.length;
   const edge = `${100 / (2 * n)}%`;
   return (
-    <div className="gfx journey" role="img" aria-label={steps.map((s) => s.label).join(" → ")}>
+    <div ref={gateRef} className="gfx journey" role="img" aria-label={steps.map((s) => s.label).join(" → ")}>
       <div className="journey-track" style={{ left: edge, right: edge }} aria-hidden="true">
         <motion.span
           className="journey-dot"
-          animate={reduce ? {} : { left: ["0%", "100%", "0%"] }}
+          animate={gate(loop, { left: ["0%", "100%", "0%"] })}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
@@ -268,8 +273,9 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
   const L = g.lines;
   const m = g.motion;
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
-    <div className="gfx svc-gfx slug-gfx" role="img" aria-label={`Animated graphic: ${g.title}`}>
+    <div ref={gateRef} className="gfx svc-gfx slug-gfx" role="img" aria-label={`Animated graphic: ${g.title}`}>
       <SlugAnim motion={m}>
         <div className="slug-stage">
           {g.kind === "search-rank" && (
@@ -281,9 +287,9 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
           )}
           {g.kind === "sparkle" && (
             <div className="slug-sparkle">
-              <motion.span className="slug-sparkle-core" animate={reduce ? {} : { scale: [1, 1.18, 1], rotate: [0, 90, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}><Sparkles size={40} strokeWidth={1.8} /></motion.span>
+              <motion.span className="slug-sparkle-core" animate={gate(loop, { scale: [1, 1.18, 1], rotate: [0, 90, 0] })} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}><Sparkles size={40} strokeWidth={1.8} /></motion.span>
               {L.map((l, i) => (
-                <motion.span key={l} className="slug-chip" animate={reduce ? {} : { y: [0, -7, 0] }} transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}>{l}</motion.span>
+                <motion.span key={l} className="slug-chip" animate={gate(loop, { y: [0, -7, 0] })} transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}>{l}</motion.span>
               ))}
             </div>
           )}
@@ -299,7 +305,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
               <span className="slug-mic"><Mic size={26} strokeWidth={1.8} /></span>
               <div className="slug-wave-bars" aria-hidden="true">
                 {[10, 22, 34, 18, 30, 14, 26, 36, 20, 28, 12, 24].map((h, i) => (
-                  <motion.span key={i} animate={reduce ? {} : { height: [h * 0.5, h, h * 0.5] }} transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.09, ease: "easeInOut" }} style={{ height: h }} />
+                  <motion.span key={i} animate={gate(loop, { height: [h * 0.5, h, h * 0.5] })} transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.09, ease: "easeInOut" }} style={{ height: h }} />
                 ))}
               </div>
               <SlugRows lines={L} motion="rise" delay={0.2} />
@@ -349,7 +355,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
             <div className="slug-palette">
               <div className="cap-palette">
                 {["#fcc04c", "#feda6b", "#000000"].map((c, i) => (
-                  <motion.span key={c} className="cap-swatch" style={{ background: c }} animate={reduce ? {} : { y: [0, -8, 0], rotate: [0, i % 2 ? 6 : -6, 0] }} transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }} />
+                  <motion.span key={c} className="cap-swatch" style={{ background: c }} animate={gate(loop, { y: [0, -8, 0], rotate: [0, i % 2 ? 6 : -6, 0] })} transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }} />
                 ))}
               </div>
               <SlugRows lines={L} motion="rise" delay={0.2} />
@@ -390,14 +396,14 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
                   <span className="slug-mail-step"><Mail size={18} strokeWidth={1.9} /> {l}</span>
                 </SlugAnim>
               ))}
-              <motion.span className="slug-mail-arrow" animate={reduce ? {} : { x: [0, 8, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }} aria-hidden="true"><ArrowRight size={22} strokeWidth={2.2} /></motion.span>
+              <motion.span className="slug-mail-arrow" animate={gate(loop, { x: [0, 8, 0] })} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }} aria-hidden="true"><ArrowRight size={22} strokeWidth={2.2} /></motion.span>
             </div>
           )}
           {g.kind === "target" && (
             <div className="slug-target">
               <div className="slug-rings" aria-hidden="true">
                 {[0, 1, 2].map((i) => (
-                  <motion.span key={i} className="slug-ring" animate={reduce ? {} : { scale: [1, 1.25, 1], opacity: [0.7, 0.25, 0.7] }} transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }} />
+                  <motion.span key={i} className="slug-ring" animate={gate(loop, { scale: [1, 1.25, 1], opacity: [0.7, 0.25, 0.7] })} transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }} />
                 ))}
                 <span className="slug-ring-core"><Target size={34} strokeWidth={1.8} /></span>
               </div>
@@ -417,7 +423,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
             <div className="slug-landing">
               <motion.span className="slug-land-hero" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.7, ease: EASE }} />
               <span className="slug-land-proof">{L[0]} · {L[1]}</span>
-              <motion.span className="slug-land-cta" animate={reduce ? {} : { scale: [1, 1.07, 1] }} transition={{ duration: 2, repeat: Infinity }}>{L[2]}</motion.span>
+              <motion.span className="slug-land-cta" animate={gate(loop, { scale: [1, 1.07, 1] })} transition={{ duration: 2, repeat: Infinity }}>{L[2]}</motion.span>
             </div>
           )}
           {g.kind === "funnel" && (
@@ -425,7 +431,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
               {L.map((l, i) => (
                 <motion.div key={l} className="svc-funnel-row" style={{ width: `${100 - i * 18}%` }} initial={{ opacity: 0, x: -18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.14, duration: 0.5, ease: EASE }}>
                   <span>{l}</span>
-                  <motion.span className="svc-funnel-pulse" animate={reduce ? {} : { opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }} aria-hidden="true" />
+                  <motion.span className="svc-funnel-pulse" animate={gate(loop, { opacity: [0.4, 1, 0.4] })} transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }} aria-hidden="true" />
                 </motion.div>
               ))}
             </div>
@@ -436,7 +442,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
               {L.map((l, i) => (
                 <SlugAnim key={l} motion="rise" delay={0.2 + i * 0.16}><span className="slug-phone-row">{l}</span></SlugAnim>
               ))}
-              <motion.span className="slug-phone-cta" animate={reduce ? {} : { scale: [1, 1.06, 1] }} transition={{ duration: 2, repeat: Infinity }}>Tap to book →</motion.span>
+              <motion.span className="slug-phone-cta" animate={gate(loop, { scale: [1, 1.06, 1] })} transition={{ duration: 2, repeat: Infinity }}>Tap to book →</motion.span>
             </div>
           )}
           {g.kind === "feed" && (
@@ -471,7 +477,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
               <svg viewBox="0 0 260 80" width="100%" height="80" aria-hidden="true">
                 <motion.path d="M8 72 C 80 70, 160 30, 248 10" fill="none" stroke="#fcc04c" strokeWidth="3" strokeDasharray="7 7" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2, ease: EASE }} />
               </svg>
-              <motion.span className="slug-rocket-ico" animate={reduce ? {} : { y: [0, -8, 0], rotate: [0, 6, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}>
+              <motion.span className="slug-rocket-ico" animate={gate(loop, { y: [0, -8, 0], rotate: [0, 6, 0] })} transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}>
                 <Rocket size={30} strokeWidth={1.8} />
               </motion.span>
               <SlugRows lines={L} motion="rise" delay={0.2} />
@@ -479,7 +485,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
           )}
           {g.kind === "loop" && (
             <div className="slug-loop">
-              <motion.span className="slug-loop-ring" animate={reduce ? {} : { rotate: 360 }} transition={{ duration: 14, repeat: Infinity, ease: "linear" }} aria-hidden="true"><RotateCw size={38} strokeWidth={1.8} /></motion.span>
+              <motion.span className="slug-loop-ring" animate={gate(loop, { rotate: 360 })} transition={{ duration: 14, repeat: Infinity, ease: "linear" }} aria-hidden="true"><RotateCw size={38} strokeWidth={1.8} /></motion.span>
               <SlugRows lines={L} motion="rise" delay={0.2} />
             </div>
           )}
@@ -509,7 +515,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
                 <motion.span className="slug-wire-hero" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.6, ease: EASE }} />
                 <motion.span className="slug-wire-box" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} />
                 <motion.span className="slug-wire-box" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} />
-                <motion.span className="slug-wire-cta" animate={reduce ? {} : { scale: [1, 1.08, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+                <motion.span className="slug-wire-cta" animate={gate(loop, { scale: [1, 1.08, 1] })} transition={{ duration: 2, repeat: Infinity }} />
               </div>
               <SlugRows lines={L} motion="rise" delay={0.2} />
             </div>
@@ -517,7 +523,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
           {g.kind === "playhead" && (
             <div className="slug-play">
               <div className="slug-play-track" aria-hidden="true">
-                <motion.span className="slug-play-head" animate={reduce ? {} : { left: ["4%", "94%", "4%"] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} />
+                <motion.span className="slug-play-head" animate={gate(loop, { left: ["4%", "94%", "4%"] })} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} />
               </div>
               <div className="slug-play-clips" aria-hidden="true">
                 {[0, 1, 2].map((i) => (
@@ -537,7 +543,7 @@ export function SlugHeroGraphic({ slug }: { slug: string }) {
                 ))}
               </div>
               <span className="slug-browser-cap">{L.join(" · ")}</span>
-              <motion.span className="svc-browser-cta" animate={reduce ? {} : { scale: [1, 1.06, 1] }} transition={{ duration: 2.2, repeat: Infinity }}>{L[2]}</motion.span>
+              <motion.span className="svc-browser-cta" animate={gate(loop, { scale: [1, 1.06, 1] })} transition={{ duration: 2.2, repeat: Infinity }}>{L[2]}</motion.span>
             </div>
           )}
           {g.kind === "checklist" && (
@@ -581,9 +587,10 @@ const PAGE_ENTER: Record<string, Record<string, number>> = {
 export function PageHeroGraphic({ page }: { page: MainPageKey }) {
   const meta = PAGE_GRAPHICS[page];
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
     <motion.div
-      className="gfx page-hero-gfx"
+      ref={gateRef} className="gfx page-hero-gfx"
       initial={reduce ? false : PAGE_ENTER[meta.enter]}
       animate={{ opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 }}
       transition={{ duration: 0.65, ease: EASE }}
@@ -592,7 +599,7 @@ export function PageHeroGraphic({ page }: { page: MainPageKey }) {
     >
       {page === "services" && (
         <div className="phg-orbit">
-          <motion.span className="phg-ring" animate={reduce ? {} : { rotate: 360 }} transition={{ duration: 36, repeat: Infinity, ease: "linear" }} aria-hidden="true" />
+          <motion.span className="phg-ring" animate={gate(loop, { rotate: 360 })} transition={{ duration: 36, repeat: Infinity, ease: "linear" }} aria-hidden="true" />
           <span className="phg-core">DF</span>
           {["Growth", "Web", "AI", "Brand", "Analytics"].map((l, i) => (
             <span
@@ -601,7 +608,7 @@ export function PageHeroGraphic({ page }: { page: MainPageKey }) {
               style={{ transform: `rotate(${i * 72}deg) translateY(var(--orbit-r)) rotate(${-i * 72}deg) translate(-50%, -50%)` }}
               aria-hidden="true"
             >
-              <motion.span className="phg-chip" animate={reduce ? {} : { scale: [1, 1.08, 1] }} transition={{ duration: 2.6, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{l}</motion.span>
+              <motion.span className="phg-chip" animate={gate(loop, { scale: [1, 1.08, 1] })} transition={{ duration: 2.6, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}>{l}</motion.span>
             </span>
           ))}
         </div>
@@ -611,13 +618,13 @@ export function PageHeroGraphic({ page }: { page: MainPageKey }) {
           <div className="phg-doc" aria-hidden="true">
             <span /><span /><span /><span className="short" />
           </div>
-          <motion.span className="phg-magnifier" animate={reduce ? {} : { x: [0, 120, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}><Search size={20} strokeWidth={2.2} /></motion.span>
+          <motion.span className="phg-magnifier" animate={gate(loop, { x: [0, 120, 0] })} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}><Search size={20} strokeWidth={2.2} /></motion.span>
           <span className="phg-lens-labels">Challenge · Decisions · Delivery · Evidence · Role</span>
         </div>
       )}
       {page === "industries" && (
         <div className="phg-wheel">
-          <motion.div className="phg-wheel-rotor" animate={reduce ? {} : { rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} aria-hidden="true">
+          <motion.div className="phg-wheel-rotor" animate={gate(loop, { rotate: 360 })} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} aria-hidden="true">
             {["HVAC", "SaaS", "E-commerce", "Healthcare", "Property", "Manufacturing"].map((l, i) => (
               <span key={l} className="phg-wheel-seg" style={{ transform: `rotate(${i * 60}deg) translateY(-78px)` }}>{l}</span>
             ))}
@@ -677,13 +684,14 @@ export function ServiceHeroGraphic({ slug }: { slug: string }) {
 /* ------------------------------------------------------------------ */
 export function DuoWorkGraphic() {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
-    <div className="duo-gfx" aria-hidden="true">
+    <div ref={gateRef} className="duo-gfx" aria-hidden="true">
       <span className="duo-gfx-ico"><Search size={18} strokeWidth={2} /></span>
       <span>Challenge → Decisions → Delivery → Evidence</span>
       <motion.span
         className="duo-gfx-lens"
-        animate={reduce ? {} : { x: [0, 26, 0] }}
+        animate={gate(loop, { x: [0, 26, 0] })}
         transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
       >
         <Search size={18} strokeWidth={2.2} />
@@ -693,13 +701,14 @@ export function DuoWorkGraphic() {
 }
 export function DuoBuildGraphic() {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
-    <div className="duo-gfx" aria-hidden="true">
+    <div ref={gateRef} className="duo-gfx" aria-hidden="true">
       <span className="duo-gfx-ico"><MessageSquare size={18} strokeWidth={2} /></span>
       <span>Brief → Conversation → Proposal</span>
       <motion.span
         className="duo-gfx-dot"
-        animate={reduce ? {} : { scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+        animate={gate(loop, { scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] })}
         transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden="true"
       />

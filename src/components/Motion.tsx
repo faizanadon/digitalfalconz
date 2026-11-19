@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { Briefcase, Building2, CalendarDays, Check, CircleHelp, LayoutGrid, Megaphone, MessageSquare, MousePointerClick, ShieldCheck, Sparkles, TrendingUp, Users } from "lucide-react";
 import { serviceIcon } from "@/data/serviceIcons";
+import { useLoopGate, gate } from "@/components/loopGate";
 
 /** Animated arrow for text CTAs. The arrow itself is static markup;
     the slide happens in CSS on parent hover (.cta-arrow), so it works
@@ -180,14 +181,15 @@ const FLOW_STEPS: { Icon: LucideIcon; label: string; sub: string }[] = [
 ];
 export function FlowDiagram() {
   const reduce = useReducedMotion();
+  const [gateRef, loop] = useLoopGate(reduce);
   return (
-    <div className="flow" role="img" aria-label="Traffic in, through a landing page and CRM, to revenue out — every step attributed.">
+    <div ref={gateRef} className="flow" role="img" aria-label="Traffic in, through a landing page and CRM, to revenue out — every step attributed.">
       {FLOW_STEPS.map((s, i) => (
         <div className="flow-step" key={s.label}>
           <motion.div
             className="flow-dot"
             initial={false}
-            animate={reduce ? {} : { scale: [1, 1.18, 1] }}
+            animate={gate(loop, { scale: [1, 1.18, 1] })}
             transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.45, ease: "easeInOut" }}
           >
             <s.Icon size={24} strokeWidth={2} aria-hidden="true" />
@@ -197,7 +199,7 @@ export function FlowDiagram() {
           {i < FLOW_STEPS.length - 1 && <span className="flow-arrow" aria-hidden="true">→</span>}
         </div>
       ))}
-      <motion.div className="flow-line" initial={false} animate={reduce ? {} : { backgroundPosition: ["0% 0", "200% 0"] }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} aria-hidden="true" />
+      <motion.div className="flow-line" initial={false} animate={gate(loop, { backgroundPosition: ["0% 0", "200% 0"] })} transition={{ duration: 3, repeat: Infinity, ease: "linear" }} aria-hidden="true" />
     </div>
   );
 }
