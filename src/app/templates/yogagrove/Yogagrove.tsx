@@ -991,7 +991,7 @@ export default function Yogagrove() {
             <div>
               <h3 className="yg-footer-col-title">Visit Us</h3>
               <div className="yg-footer-contact-item">
-                <a href="https://maps.google.com" target="_blank" rel="noopener">
+                <a href="https://www.google.com/maps/search/?api=1&query=41+Gertrude+Street%2C+Fitzroy%2C+Melbourne%2C+VIC" target="_blank" rel="noopener">
                   &rarr; {ADDRESS}
                 </a>
               </div>
