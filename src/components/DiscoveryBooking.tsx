@@ -75,7 +75,7 @@ export default function DiscoveryBooking({
       {/* Booking hero — copy left, calendar right */}
       <section className="tight">
         <div className="wrap">
-          <Reveal>
+          {/* Speed: heading visible from first paint; the rest reveals. */}
             <div className="book-hero">
               <div className="book-copy">
                 <div className="book-top">
@@ -85,6 +85,7 @@ export default function DiscoveryBooking({
                 <h1>
                   Let&apos;s make your next move <span className="book-gold">count.</span>
                 </h1>
+                <Reveal delay={0.05}>
                 <p className="book-lede">
                   A focused, 30-minute conversation about your business, your
                   ambitions, and where <strong>marketing, software or AI</strong>{" "}
@@ -118,8 +119,10 @@ export default function DiscoveryBooking({
                   <Asterisk size={16} strokeWidth={2.2} aria-hidden="true" />
                   A considered conversation. No obligation to proceed.
                 </p>
+                </Reveal>
               </div>
               <div className="book-cal">
+                <Reveal delay={0.1}>
                 <iframe
                   src={`https://api.leadconnectorhq.com/widget/booking/${calendarId}`}
                   title="Book a free discovery call with DigitalFalconz"
@@ -134,9 +137,9 @@ export default function DiscoveryBooking({
                   scrolling="no"
                   id={iframeId}
                 />
+                </Reveal>
               </div>
             </div>
-          </Reveal>
         </div>
       </section>
 

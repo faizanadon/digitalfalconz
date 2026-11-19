@@ -51,7 +51,8 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* HERO — copy left, per-service animated graphic right */}
       <div className="wrap page-hero svc-hero">
-        <Reveal>
+        {/* Speed: breadcrumb + heading visible from first paint; the copy
+            below still reveals; the graphic has its own entrance. */}
           <p className="breadcrumb"><Link href="/">Home</Link> / <Link href="/services">Services</Link> / {s.category}</p>
           <div className="svc-hero-grid">
             <div>
@@ -62,6 +63,7 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                   <h1>{s.h1}</h1>
                 </div>
               </div>
+              <Reveal delay={0.05}>
               <span className="hero-rule" aria-hidden="true" />
               <div className="service-meta"><span className="pill">{s.category}</span><span className="pill">{serviceShortLabel(s.slug)}</span></div>
               <Markdown text={s.intro} />
@@ -69,10 +71,10 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
                 <Link className="btn" href="/contact">Discuss this service</Link>{" "}
                 <Link className="btn ghost" href="/services">View all services</Link>
               </p>
+              </Reveal>
             </div>
             <ServiceHeroGraphic slug={s.slug} />
           </div>
-        </Reveal>
       </div>
 
       <section className="tight">

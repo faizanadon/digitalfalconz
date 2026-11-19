@@ -150,22 +150,23 @@ export function TwoColumnHero({ kicker, title, icon, children, graphic, graphicC
   const Icon = icon ? PAGE_ICONS[icon] : undefined;
   return (
     <div className="wrap page-hero">
-      <Reveal>
-        <div className="hero-2col">
-          <div className="hero-2col-copy">
-            {Icon && (
-              <span className="hero-icon-tile" aria-hidden="true">
-                <Icon size={30} strokeWidth={1.9} />
-              </span>
-            )}
-            <span className="mono kicker">{kicker}</span>
-            <h1>{title}</h1>
-            <span className="hero-rule" aria-hidden="true" />
-            {children}
-          </div>
-          <div className={`hero-2col-gfx${graphicClassName ? ` ${graphicClassName}` : ""}`}>{graphic}</div>
+      {/* Speed: the heading is visible from the first paint (it's the
+          page's largest element); the copy below it still reveals, and the
+          graphic keeps its own entrance animation. */}
+      <div className="hero-2col">
+        <div className="hero-2col-copy">
+          {Icon && (
+            <span className="hero-icon-tile" aria-hidden="true">
+              <Icon size={30} strokeWidth={1.9} />
+            </span>
+          )}
+          <span className="mono kicker">{kicker}</span>
+          <h1>{title}</h1>
+          <span className="hero-rule" aria-hidden="true" />
+          {children ? <Reveal delay={0.05}>{children}</Reveal> : null}
         </div>
-      </Reveal>
+        <div className={`hero-2col-gfx${graphicClassName ? ` ${graphicClassName}` : ""}`}>{graphic}</div>
+      </div>
     </div>
   );
 }

@@ -50,7 +50,8 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="wrap page-hero">
-        <Reveal>
+        {/* Speed: breadcrumb, logo and heading visible from first paint;
+            the details below still reveal. */}
           <p className="breadcrumb">
             <Link href="/">Home</Link> / <Link href="/work">Work</Link> / {cs.brand}
           </p>
@@ -75,6 +76,7 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
             </div>
           )}
           <h1>{cs.brand}</h1>
+          <Reveal delay={0.05}>
           <div className="pill-row">
             <span className="pill">{cs.industry}</span>
             {cs.location && <span className="pill">{cs.location}</span>}

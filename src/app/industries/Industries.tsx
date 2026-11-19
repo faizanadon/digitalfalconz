@@ -851,11 +851,13 @@ export default function Industries() {
       {/* 01 — Hero */}
       <section className="indx-hero" aria-labelledby="indx-h1">
         <div className="indx-wrap indx-hero-grid">
-          <BlurReveal className="indx-hero-copy">
+          {/* Speed: heading visible from first paint; the rest still blurs in. */}
+          <div className="indx-hero-copy">
             <Kicker>DigitalFalconz / Industry Solutions</Kicker>
             <h1 id="indx-h1">
               Better bookings. <em>Smoother operations.</em>
             </h1>
+            <BlurReveal delay={0.05}>
             <p className="indx-lede">
               We help retreat operators and corporate offsite planners connect
               marketing, websites, CRM and automation—so more time goes into
@@ -874,7 +876,8 @@ export default function Industries() {
                 Book a Free Consultation
               </a>
             </div>
-          </BlurReveal>
+            </BlurReveal>
+          </div>
           <BlurReveal className="indx-hero-media" delay={0.1}>
             <span className="indx-hero-ring" aria-hidden="true">
               <span className="indx-hero-ring-dot" aria-hidden="true" />
