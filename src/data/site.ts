@@ -87,6 +87,20 @@ export const pageMeta = {
     "source_file": "pages/05-contact.md",
     "publication_priority": "Core"
   },
+  // Dedicated audit landing page (added 2026-11-24, Faizan-approved copy).
+  // The header "Free growth audit" CTAs point here instead of /contact.
+  // No pack source file — the copy is Faizan's own, approved 2026-11-24.
+  "/free-growth-audit": {
+    "page_type": "main",
+    "url_path": "/free-growth-audit",
+    "canonical": "https://www.digitalfalconz.com/free-growth-audit",
+    "seo_title": "Free Growth Audit for Businesses | DigitalFalconz",
+    "title_chars": 49,
+    "meta_description": "Get a free growth audit of your website traffic, sales funnel, CRM and lead follow-up. See where you're losing enquiries and what to fix first.",
+    "description_chars": 143,
+    "h1": "Free growth audit",
+    "publication_priority": "Core"
+  },
   "/terms": {
     "page_type": "main",
     "url_path": "/terms",

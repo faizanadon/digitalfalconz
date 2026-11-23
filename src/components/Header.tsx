@@ -132,7 +132,7 @@ export default function Header() {
                     </div>
                     <div className="mega-foot">
                       <span>Not sure where to start?</span>
-                      <Link href="/contact">Start with a free growth audit <span className="cta-arrow" aria-hidden="true"><ArrowRight size={15} /></span></Link>
+                      <Link href="/free-growth-audit">Start with a free growth audit <span className="cta-arrow" aria-hidden="true"><ArrowRight size={15} /></span></Link>
                     </div>
                   </motion.div>
                 )}
@@ -140,7 +140,7 @@ export default function Header() {
             </div>
             {NAV.map((n) => <Link key={n.href} href={n.href}>{n.label}</Link>)}
             <ThemeToggle />
-            <Link className="btn small" href="/contact">Free growth audit</Link>
+            <Link className="btn small" href="/free-growth-audit">Free growth audit</Link>
           </nav>
           <button className="menu-btn" aria-expanded={mobileOpen} aria-controls="mobileMenu" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />} {mobileOpen ? "Close" : "Menu"}
@@ -190,7 +190,7 @@ export default function Header() {
               )}
             </AnimatePresence>
             {NAV.map((n) => <Link key={n.href} href={n.href} onClick={() => setMobileOpen(false)}>{n.label}</Link>)}
-            <Link href="/contact" onClick={() => setMobileOpen(false)}>Free growth audit</Link>
+            <Link href="/free-growth-audit" onClick={() => setMobileOpen(false)}>Free growth audit</Link>
             <div className="mobile-theme-row"><ThemeToggle withLabel /></div>
             </div>
           </div>,

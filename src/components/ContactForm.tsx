@@ -13,11 +13,20 @@ const INVESTMENT_OPTIONS = [
 ];
 const START_OPTIONS = ["As soon as feasible", "Within 30 days", "1–3 months", "Exploring options"];
 
-export default function ContactForm() {
+/**
+ * The enquiry form (POST /api/contact → HighLevel + Resend).
+ * Used on /contact and, with `audit`, on /free-growth-audit — same backend,
+ * so an audit request lands in the CRM like any enquiry, just labelled as
+ * an audit. Default behaviour (no props) is byte-identical to before.
+ */
+export default function ContactForm({ audit = false }: { audit?: boolean }) {
   const [status, setStatus] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  // On the audit page the request is pre-labelled "Free growth audit" so it
+  // is recognisable in the CRM; the visitor can still change it.
+  const helpOptions = audit ? ["Free growth audit", ...HELP_OPTIONS] : HELP_OPTIONS;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -92,10 +101,14 @@ export default function ContactForm() {
     return (
       <div>
         <div className="form-status show" role="status" style={{ display: "block", gridColumn: "1 / -1" }}>
-          Thank you. Your enquiry has been received. We&apos;ll review the details and respond through the contact information you provided.
+          {audit
+            ? "Thank you. Your audit request has been received. We'll review the details and email you with the next steps."
+            : "Thank you. Your enquiry has been received. We'll review the details and respond through the contact information you provided."}
         </div>
         <p className="form-note" style={{ marginTop: 16 }}>
-          Your enquiry has been received. We&apos;ll review the details and respond through the contact information you provided. If you need immediate assistance, you can also email us directly at{" "}
+          {audit
+            ? "Your audit request has been received. We'll review the details and email you with the next steps. If you need immediate assistance, you can also email us directly at "
+            : "Your enquiry has been received. We'll review the details and respond through the contact information you provided. If you need immediate assistance, you can also email us directly at "}
           <a href={`mailto:${site.email}`}>{site.email}</a>.
         </p>
       </div>
@@ -129,7 +142,7 @@ export default function ContactForm() {
       </div>
       <div>
         <label htmlFor="c-help">What would you like help with? *</label>
-        <select id="c-help" name="help" disabled={isSubmitting}><option value="" disabled>Select what you need help with</option>{HELP_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+        <select id="c-help" name="help" disabled={isSubmitting} defaultValue={audit ? "Free growth audit" : ""}><option value="" disabled>Select what you need help with</option>{helpOptions.map((o) => <option key={o}>{o}</option>)}</select>
       </div>
       <div>
         <label htmlFor="c-investment">Approximate project investment</label>
@@ -141,7 +154,7 @@ export default function ContactForm() {
       </div>
       <div className="full">
         <label htmlFor="c-goals">What are you trying to achieve? *</label>
-        <textarea id="c-goals" name="goals" required placeholder="Tell us about the current challenge, desired outcome and any existing systems or campaigns." disabled={isSubmitting} />
+        <textarea id="c-goals" name="goals" required placeholder={audit ? "Where are you now, and where do you need to be?" : "Tell us about the current challenge, desired outcome and any existing systems or campaigns."} disabled={isSubmitting} />
       </div>
       <div className="full">
         <label htmlFor="c-brief">Link to a brief or supporting document</label>
@@ -152,7 +165,7 @@ export default function ContactForm() {
         <label htmlFor="c-privacy">I understand DigitalFalconz will use my details to respond to this enquiry, as described in its <a href="/privacy-policy">Privacy Policy</a>. *</label>
       </div>
       <button className="btn" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Sending enquiry..." : "Send project enquiry"}
+        {isSubmitting ? (audit ? "Requesting audit..." : "Sending enquiry...") : (audit ? "Request my free audit" : "Send project enquiry")}
       </button>
       <p className="form-note">
         Your enquiry is sent to our senior team and CRM. We respect your privacy and will never share your information.
