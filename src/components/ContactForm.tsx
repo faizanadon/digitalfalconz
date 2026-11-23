@@ -37,10 +37,15 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
     const goals = String(fd.get("goals") ?? "").trim();
     const privacy = fd.get("privacy") === "on";
     const hp = String(fd.get("_hp") ?? "");
+    // An audit needs a website to look at — required here (the enquiry
+    // version keeps it optional).
+    const website = String(fd.get("website") ?? "").trim();
 
-    if (!name || !email || !goals) {
+    if (!name || !email || !goals || (audit && !website)) {
       setIsError(true);
-      setStatus("Please fill in your name, work email and what you are trying to achieve so we can reply with something specific.");
+      setStatus(audit
+        ? "Please fill in your name, work email, the website to audit and what we should look at so we can reply with something specific."
+        : "Please fill in your name, work email and what you are trying to achieve so we can reply with something specific.");
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -59,6 +64,10 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
     setIsSubmitting(true);
 
     try {
+      // The audit form has a "focus" pick (which area to look at first).
+      // The backend has no focus field, so it rides along with the goals —
+      // it lands in the CRM and the notification email as the first line.
+      const focus = String(fd.get("focus") ?? "").trim();
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,12 +75,12 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
           name,
           email,
           company: String(fd.get("company") ?? "").trim(),
-          website: String(fd.get("website") ?? "").trim(),
+          website,
           country: String(fd.get("country") ?? "").trim(),
           help: String(fd.get("help") ?? ""),
           investment: String(fd.get("investment") ?? ""),
           start: String(fd.get("start") ?? ""),
-          goals,
+          goals: focus && focus !== "The full audit — everything" ? `Focus: ${focus}\n\n${goals}` : goals,
           brief: String(fd.get("brief") ?? "").trim(),
           privacy: true,
           _hp: hp,
@@ -133,33 +142,53 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
         <input id="c-company" name="company" type="text" autoComplete="organization" placeholder="Company name" disabled={isSubmitting} />
       </div>
       <div>
-        <label htmlFor="c-website">Website or product URL</label>
-        <input id="c-website" name="website" type="text" inputMode="url" placeholder="yourwebsite.com (optional)" disabled={isSubmitting} />
+        <label htmlFor="c-website">{audit ? "Website to audit *" : "Website or product URL"}</label>
+        <input id="c-website" name="website" type="text" inputMode="url" placeholder="yourwebsite.com" required={audit} disabled={isSubmitting} />
       </div>
-      <div>
-        <label htmlFor="c-country">Country and time zone</label>
-        <input id="c-country" name="country" type="text" placeholder="e.g. United Kingdom (GMT)" disabled={isSubmitting} />
-      </div>
-      <div>
-        <label htmlFor="c-help">What would you like help with? *</label>
-        <select id="c-help" name="help" disabled={isSubmitting} defaultValue={audit ? "Free growth audit" : ""}><option value="" disabled>Select what you need help with</option>{helpOptions.map((o) => <option key={o}>{o}</option>)}</select>
-      </div>
-      <div>
-        <label htmlFor="c-investment">Approximate project investment</label>
-        <select id="c-investment" name="investment" disabled={isSubmitting}><option value="" disabled>Select an approximate investment</option>{INVESTMENT_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
-      </div>
-      <div>
-        <label htmlFor="c-start">Desired start</label>
-        <select id="c-start" name="start" disabled={isSubmitting}><option value="" disabled>Select a desired start</option>{START_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
-      </div>
+      {audit && (
+        <div>
+          <label htmlFor="c-focus">What should we focus on?</label>
+          <select id="c-focus" name="focus" disabled={isSubmitting}>
+            {["The full audit — everything", "Traffic", "Sales funnel", "CRM", "Follow-up"].map((o) => <option key={o}>{o}</option>)}
+          </select>
+        </div>
+      )}
+      {!audit && (
+        <div>
+          <label htmlFor="c-country">Country and time zone</label>
+          <input id="c-country" name="country" type="text" placeholder="e.g. United Kingdom (GMT)" disabled={isSubmitting} />
+        </div>
+      )}
+      {audit ? (
+        <input type="hidden" name="help" value="Free growth audit" />
+      ) : (
+        <div>
+          <label htmlFor="c-help">What would you like help with? *</label>
+          <select id="c-help" name="help" disabled={isSubmitting} defaultValue=""><option value="" disabled>Select what you need help with</option>{helpOptions.map((o) => <option key={o}>{o}</option>)}</select>
+        </div>
+      )}
+      {!audit && (
+        <div>
+          <label htmlFor="c-investment">Approximate project investment</label>
+          <select id="c-investment" name="investment" disabled={isSubmitting}><option value="" disabled>Select an approximate investment</option>{INVESTMENT_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+        </div>
+      )}
+      {!audit && (
+        <div>
+          <label htmlFor="c-start">Desired start</label>
+          <select id="c-start" name="start" disabled={isSubmitting}><option value="" disabled>Select a desired start</option>{START_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+        </div>
+      )}
       <div className="full">
-        <label htmlFor="c-goals">What are you trying to achieve? *</label>
+        <label htmlFor="c-goals">{audit ? "What should we look at? *" : "What are you trying to achieve? *"}</label>
         <textarea id="c-goals" name="goals" required placeholder={audit ? "Where are you now, and where do you need to be?" : "Tell us about the current challenge, desired outcome and any existing systems or campaigns."} disabled={isSubmitting} />
       </div>
-      <div className="full">
-        <label htmlFor="c-brief">Link to a brief or supporting document</label>
-        <input id="c-brief" name="brief" type="text" inputMode="url" placeholder="https://… (optional)" disabled={isSubmitting} />
-      </div>
+      {!audit && (
+        <div className="full">
+          <label htmlFor="c-brief">Link to a brief or supporting document</label>
+          <input id="c-brief" name="brief" type="text" inputMode="url" placeholder="https://… (optional)" disabled={isSubmitting} />
+        </div>
+      )}
       <div className="check-row">
         <input id="c-privacy" name="privacy" type="checkbox" disabled={isSubmitting} />
         <label htmlFor="c-privacy">I understand DigitalFalconz will use my details to respond to this enquiry, as described in its <a href="/privacy-policy">Privacy Policy</a>. *</label>
@@ -168,7 +197,9 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
         {isSubmitting ? (audit ? "Requesting audit..." : "Sending enquiry...") : (audit ? "Request my free audit" : "Send project enquiry")}
       </button>
       <p className="form-note">
-        Your enquiry is sent to our senior team and CRM. We respect your privacy and will never share your information.
+        {audit
+          ? "Your audit request goes to our senior team and CRM. We respect your privacy and will never share your information."
+          : "Your enquiry is sent to our senior team and CRM. We respect your privacy and will never share your information."}
       </p>
       {status && <div className={`form-status show${isError ? " error" : ""}`} role="status">{status}</div>}
     </form>

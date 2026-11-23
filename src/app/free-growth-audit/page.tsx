@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import ContactForm from "@/components/ContactForm";
+import { TwoColumnHero } from "@/components/Motion";
+import { PageHeroGraphic } from "@/components/Graphics";
 import { metaFor } from "@/data/site";
 
 // Dedicated audit landing page (Faizan-approved copy + SEO, 2026-11-24).
@@ -33,49 +35,26 @@ const COVERAGE = [
 export default function FreeGrowthAuditPage() {
   return (
     <>
-      {/* Hero — single column on purpose: this is a focused landing page,
-          and the H1 stays a plain element so it paints with the first
-          render (the speed-pass standard for inner-page headings). */}
-      <div className="wrap page-hero">
-        <span className="mono kicker">DigitalFalconz / Free growth audit</span>
-        <h1>Free growth audit</h1>
-        <span className="hero-rule" aria-hidden="true" />
-        <Reveal delay={0.05}>
-          <p className="lede">See where you&rsquo;re losing leads.</p>
-          <p className="plain-p">
-            We&rsquo;ll review your website traffic, sales funnel, CRM and follow-up.
-            You&rsquo;ll see where enquiries drop off and what to fix first.
-          </p>
-          <p>
-            <a className="btn" href="#request-audit">Request my free audit &rarr;</a>{" "}
-            <Link className="btn ghost" href="/services">Explore services</Link>
-          </p>
-          <p className="plain-p" style={{ marginTop: 18 }}>
-            The findings are yours to keep. No obligation.
-          </p>
-        </Reveal>
-      </div>
+      {/* Two-column hero like the other main pages: copy left, the audit
+          funnel graphic right. The H1 stays a plain element so it paints
+          with the first render (the speed-pass standard). */}
+      <TwoColumnHero kicker="DigitalFalconz / Free growth audit" title="Free growth audit" graphic={<PageHeroGraphic page="audit" />}>
+        <p className="lede">See where you&rsquo;re losing leads.</p>
+        <p className="plain-p">
+          We&rsquo;ll review your website traffic, sales funnel, CRM and follow-up.
+          You&rsquo;ll see where enquiries drop off and what to fix first.
+        </p>
+        <p>
+          <a className="btn" href="#request-audit">Request my free audit &rarr;</a>{" "}
+          <Link className="btn ghost" href="/services">Explore services</Link>
+        </p>
+        <p className="plain-p" style={{ marginTop: 18 }}>
+          The findings are yours to keep. No obligation.
+        </p>
+      </TwoColumnHero>
 
-      <section className="tight">
-        <div className="wrap">
-          <Reveal>
-            <span className="mono kicker">What we review</span>
-            <h2>What does the audit cover?</h2>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <div className="sol-grid">
-              {COVERAGE.map((c) => (
-                <div className="card" key={c.num}>
-                  <span className="tag">{c.num}</span>
-                  <h3>{c.title}</h3>
-                  <p>{c.text}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
+      {/* The form comes right after the hero on purpose (Faizan, 2026-11-24):
+          it was too far down the page for visitors to reach it. */}
       <section className="tight" id="request-audit">
         <div className="wrap">
           <div className="contact-layout">
@@ -101,6 +80,26 @@ export default function FreeGrowthAuditPage() {
               </div>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      <section className="tight">
+        <div className="wrap">
+          <Reveal>
+            <span className="mono kicker">What we review</span>
+            <h2>What does the audit cover?</h2>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <div className="sol-grid">
+              {COVERAGE.map((c) => (
+                <div className="card" key={c.num}>
+                  <span className="tag">{c.num}</span>
+                  <h3>{c.title}</h3>
+                  <p>{c.text}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
     </>

@@ -664,6 +664,26 @@ export function PageHeroGraphic({ page }: { page: MainPageKey }) {
           <span className="phg-privacy-label"><ShieldCheck size={18} strokeWidth={2} /> Used only to reply to your enquiry</span>
         </div>
       )}
+      {page === "audit" && (
+        <div className="phg-audit">
+          {[
+            { label: "Traffic", w: "100%", leak: false },
+            { label: "Enquiries", w: "76%", leak: false },
+            { label: "Follow-up", w: "54%", leak: true },
+            { label: "Booked", w: "34%", leak: false },
+          ].map((s, i) => (
+            <motion.div key={s.label} className="phg-audit-row" initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.18, duration: 0.5, ease: EASE }}>
+              <span className="phg-audit-label">{s.label}</span>
+              <span className="phg-audit-track"><span className={`phg-audit-bar${s.leak ? " leak" : ""}`} style={{ width: s.w }} /></span>
+              {s.leak && (
+                <motion.span className="phg-audit-leak" animate={gate(loop, { opacity: [1, 0.35, 1] })} transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }} aria-hidden="true">
+                  where leads stall
+                </motion.span>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      )}
       <p className="svc-gfx-caption">{meta.title}</p>
     </motion.div>
   );

@@ -59,7 +59,7 @@ export const SLUG_GRAPHIC_COUNT = SLUG_GRAPHICS.length;
 export const SLUG_GRAPHIC_KINDS = new Set(SLUG_GRAPHICS.map((g) => g.kind)).size;
 
 /** Per-page hero graphics — one distinct composition + entrance per main page. */
-export type MainPageKey = "services" | "work" | "industries" | "contact" | "faq" | "privacy";
+export type MainPageKey = "services" | "work" | "industries" | "contact" | "faq" | "privacy" | "audit";
 export const PAGE_GRAPHICS: Record<MainPageKey, { title: string; enter: "scale" | "left" | "rotate" | "right" | "up" | "tilt" }> = {
   services: { title: "Thirty capabilities, one system", enter: "scale" },
   work: { title: "Judged by the thinking", enter: "left" },
@@ -67,4 +67,5 @@ export const PAGE_GRAPHICS: Record<MainPageKey, { title: string; enter: "scale" 
   contact: { title: "Enquiry → reply → next step", enter: "right" },
   faq: { title: "Asked, answered", enter: "up" },
   privacy: { title: "Your details, protected", enter: "tilt" },
+  audit: { title: "Where enquiries drop off", enter: "scale" },
 };

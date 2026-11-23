@@ -812,6 +812,15 @@ nav.links a{transition:color .2s ease}
 .phg-answered{font-size:.92rem;font-weight:600;color:var(--ink-2)}
 .phg-privacy{display:grid;gap:16px;justify-items:center;padding:8px 0}
 .phg-privacy-label{display:flex;align-items:center;gap:9px;font-size:.95rem;font-weight:600;color:var(--ink-2)}
+/* Audit page hero — a funnel that narrows from traffic to booked, with the
+   follow-up stage flagged as where leads stall (the audit's own copy). */
+.phg-audit{display:grid;gap:16px;padding:16px 0 4px}
+.phg-audit-row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:12px}
+.phg-audit-label{font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:700}
+.phg-audit-track{display:block;height:14px;background:var(--beige);border-radius:99px;overflow:hidden}
+.phg-audit-bar{display:block;height:100%;background:var(--gold-light);border-radius:99px}
+.phg-audit-bar.leak{background:var(--gold)}
+.phg-audit-leak{grid-column:2;font-size:.8rem;font-weight:700;color:var(--gold-dark)}
 @media (max-width:640px){
   .mega-top{flex-direction:column;align-items:flex-start;gap:14px}
   .mega-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
