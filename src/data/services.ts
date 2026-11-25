@@ -2720,4 +2720,51 @@ export const services: Service[] = [
   }
 ];
 export const serviceBySlug = (slug: string) => services.find((s) => s.slug === slug);
+
+// Some external tools link to services with base64-encoded words
+// (e.g. /services/d2Vic2l0ZS for "website", /services/bGFuZGluZy for
+// "landing" — both seen live, 2026-11-18 and 2026-11-25). Decode the slug
+// and map the word to the real service so those links redirect instead of
+// 404ing. Only fires when the decoded text is a clean slug-like word that
+// matches a service or a keyword below; anything else stays a 404.
+const SERVICE_KEYWORDS: Record<string, string> = {
+  ai: "ai-chatbots",
+  analytics: "analytics-attribution",
+  api: "api-integrations",
+  app: "app-store-optimisation",
+  branding: "branding-identity",
+  conversion: "conversion-rate-optimisation",
+  crm: "crm-implementation",
+  custom: "custom-software-development",
+  ecommerce: "shopify-ecommerce-development",
+  email: "email-lifecycle-marketing",
+  google: "google-ads-ppc",
+  graphic: "graphic-design",
+  landing: "landing-page-design",
+  lead: "lead-generation",
+  maintenance: "website-maintenance",
+  mobile: "mobile-app-development",
+  paid: "paid-social-advertising",
+  performance: "performance-marketing",
+  ppc: "google-ads-ppc",
+  saas: "saas-mvp-development",
+  sales: "sales-marketing-automation",
+  seo: "seo-local-seo",
+  shopify: "shopify-ecommerce-development",
+  social: "social-media-management",
+  ui: "ui-ux-design",
+  video: "video-editing-motion-graphics",
+  website: "website-design-development",
+  wordpress: "wordpress-cms-development",
+  cms: "wordpress-cms-development",
+};
+export const serviceByEncodedSlug = (slug: string) => {
+  try {
+    const decoded = Buffer.from(slug, "base64").toString("utf8").trim().toLowerCase().replace(/\s+/g, "-");
+    if (!/^[a-z0-9-]+$/.test(decoded)) return undefined;
+    return services.find((s) => s.slug === (SERVICE_KEYWORDS[decoded] ?? decoded));
+  } catch {
+    return undefined;
+  }
+};
 export const serviceCategories = [...new Set(services.map((s) => s.category))];

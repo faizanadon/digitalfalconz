@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Markdown from "@/components/Markdown";
 import Reveal from "@/components/Reveal";
 import { MotionFaq, ServiceIconTile, Stagger, StaggerItem } from "@/components/Motion";
@@ -8,7 +8,7 @@ import {
   ServiceHeroGraphic, JourneyDiagram, ProcessTimeline,
 } from "@/components/Graphics";
 import { capabilityIcon } from "@/data/capabilityIcons";
-import { services, serviceBySlug } from "@/data/services";
+import { services, serviceBySlug, serviceByEncodedSlug } from "@/data/services";
 import { serviceIcon, serviceShortLabel } from "@/data/serviceIcons";
 import { site } from "@/data/site";
 
@@ -29,7 +29,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default function ServicePage({ params }: { params: { slug: string } }) {
   const s = serviceBySlug(params.slug);
-  if (!s) notFound();
+  if (!s) {
+    // External tools sometimes link here with a base64-encoded word
+    // (e.g. "d2Vic2l0ZS" for "website") — send those to the real page.
+    const encoded = serviceByEncodedSlug(params.slug);
+    if (encoded) permanentRedirect(`/services/${encoded.slug}`);
+    notFound();
+  }
   const Icon = serviceIcon(s.slug);
   const jsonLd = {
     "@context": "https://schema.org",

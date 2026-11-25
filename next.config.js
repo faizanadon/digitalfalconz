@@ -27,6 +27,11 @@ const nextConfig = {
         destination: "/services/landing-page-design",
         permanent: true,
       },
+      {
+        source: "/services/d2Vic2l0ZS",
+        destination: "/services/website-design-development",
+        permanent: true,
+      },
     ];
   },
   images: {
