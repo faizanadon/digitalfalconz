@@ -240,6 +240,10 @@ textarea{resize:vertical;min-height:100px}
 .form-status.show{display:block}
 .form-status.error{border-color:var(--red)}
 form.audit-form .btn{grid-column:1/-1;justify-content:center}
+/* Budget field: $ prefix pinned to the left of the input (Faizan, 2026-11-25). */
+.money-input{position:relative}
+.money-input .money-prefix{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--gold-light);pointer-events:none}
+.money-input input{padding-left:30px}
 .check-row{display:flex;gap:10px;align-items:flex-start;grid-column:1/-1}
 .check-row input{width:auto;margin-top:5px;accent-color:var(--gold)}
 .check-row label{margin:0;font-weight:500;font-size:.95rem}

@@ -8,22 +8,26 @@ const HELP_OPTIONS = [
   "Branding & design", "Video editing & motion", "Analytics & CRO",
   "Multiple services", "Not sure yet",
 ];
-const INVESTMENT_OPTIONS = [
-  "Under US$2,500", "US$2,500–5,000", "US$5,000–10,000", "US$10,000–25,000", "US$25,000+", "Prefer to discuss",
-];
 const START_OPTIONS = ["As soon as feasible", "Within 30 days", "1–3 months", "Exploring options"];
 
 /**
  * The enquiry form (POST /api/contact → HighLevel + Resend).
  * Used on /contact and, with `audit`, on /free-growth-audit — same backend,
  * so an audit request lands in the CRM like any enquiry, just labelled as
- * an audit. Default behaviour (no props) is byte-identical to before.
+ * an audit. The audit variant shows a shorter, audit-specific field set.
  */
 export default function ContactForm({ audit = false }: { audit?: boolean }) {
   const [status, setStatus] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  // Budget is a free-text number (Faizan, 2026-11-25): digits only, grouped
+  // with commas as you type, $ shown as a prefix. Optional in both forms.
+  const [budget, setBudget] = useState("");
+  function onBudgetChange(v: string) {
+    const digits = v.replace(/\D/g, "").slice(0, 12);
+    setBudget(digits ? Number(digits).toLocaleString("en-US") : "");
+  }
   // On the audit page the request is pre-labelled "Free growth audit" so it
   // is recognisable in the CRM; the visitor can still change it.
   const helpOptions = audit ? ["Free growth audit", ...HELP_OPTIONS] : HELP_OPTIONS;
@@ -78,7 +82,7 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
           website,
           country: String(fd.get("country") ?? "").trim(),
           help: String(fd.get("help") ?? ""),
-          investment: String(fd.get("investment") ?? ""),
+          investment: budget ? `US$${budget}` : "",
           start: String(fd.get("start") ?? ""),
           goals: focus && focus !== "The full audit — everything" ? `Focus: ${focus}\n\n${goals}` : goals,
           brief: String(fd.get("brief") ?? "").trim(),
@@ -167,12 +171,13 @@ export default function ContactForm({ audit = false }: { audit?: boolean }) {
           <select id="c-help" name="help" disabled={isSubmitting} defaultValue=""><option value="" disabled>Select what you need help with</option>{helpOptions.map((o) => <option key={o}>{o}</option>)}</select>
         </div>
       )}
-      {!audit && (
-        <div>
-          <label htmlFor="c-investment">Approximate project investment</label>
-          <select id="c-investment" name="investment" disabled={isSubmitting}><option value="" disabled>Select an approximate investment</option>{INVESTMENT_OPTIONS.map((o) => <option key={o}>{o}</option>)}</select>
+      <div>
+        <label htmlFor="c-investment">Approximate budget (optional)</label>
+        <div className="money-input">
+          <span className="money-prefix" aria-hidden="true">$</span>
+          <input id="c-investment" name="investment" type="text" inputMode="numeric" autoComplete="off" placeholder="e.g. 5,000" value={budget} onChange={(e) => onBudgetChange(e.target.value)} disabled={isSubmitting} />
         </div>
-      )}
+      </div>
       {!audit && (
         <div>
           <label htmlFor="c-start">Desired start</label>
